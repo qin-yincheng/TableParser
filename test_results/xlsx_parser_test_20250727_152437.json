@@ -1,0 +1,1833 @@
+{
+  "test_data/test.xlsx": {
+    "file_path": "test_data/test.xlsx",
+    "file_size": 13353,
+    "total_chunks": 47,
+    "chunk_types": {
+      "table_full": 1,
+      "table_row": 46
+    },
+    "sheet_info": {
+      "Sheet1": {
+        "chunks": 47,
+        "tables": 1,
+        "rows": 46
+      }
+    },
+    "parse_time": "2025-07-27T15:24:37.770698",
+    "success": true,
+    "chunks": [
+      {
+        "type": "table_full",
+        "content": "<table border='1'>\n<tr><th>序号</th><th>交易方</th><th>关联关系</th><th>是否存在控制关系</th><th>交易金额(元)</th><th>币种</th><th>交易简介</th><th>交易方式</th><th>支付方式</th><th>该年度最新财报的营业收入(元)</th><th>该年度最新财报的净利润(元)</th><th>公告日期</th></tr>\n<tr><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th></tr>\n<tr><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th></tr>\n<tr><td>1</td><td>浙江浙银金融租赁股份有限公司</td><td>其它关联关系</td><td>否</td><td>3.50亿</td><td>人民币</td><td>根据业务发展需要,公司或子公...</td><td>其他流入</td><td>-</td><td>51.71亿</td><td>6.05亿</td><td>2024-12-10 00:00:00</td></tr>\n<tr><td>2</td><td>杭州热联华铁建筑服务有限公司</td><td>参股子公司</td><td>否</td><td>7722.68万</td><td>人民币</td><td>租赁服务设备买卖</td><td>租赁</td><td>-</td><td>44.44亿</td><td>8.01亿</td><td>2023-03-30 00:00:00</td></tr>\n<tr><td>3</td><td>浙江浙银金融租赁股份有限公司</td><td>其它关联关系</td><td>否</td><td>1.00亿</td><td>人民币</td><td>售后回租</td><td>租赁</td><td>-</td><td>44.44亿</td><td>8.01亿</td><td>2023-03-30 00:00:00</td></tr>\n<tr><td>4</td><td>丽水哈勃企业管理合伙企业</td><td>其它关联关系</td><td>否</td><td>-</td><td>-</td><td>公司与关联人共同出资成立控股...</td><td>建立子公司</td><td>-</td><td>32.78亿</td><td>6.40亿</td><td>2022-07-27 00:00:00</td></tr>\n<tr><td>5</td><td>浙江华铁建筑设备有限公司</td><td>联营公司</td><td>否</td><td>93.30万</td><td>人民币</td><td>租赁服务</td><td>租赁</td><td>-</td><td>32.78亿</td><td>6.40亿</td><td>2022-07-27 00:00:00</td></tr>\n<tr><td>6</td><td>浙江华铁建筑支护技术有限公司</td><td>联营公司</td><td>否</td><td>35.93万</td><td>人民币</td><td>购买设备</td><td>购买商品</td><td>-</td><td>32.78亿</td><td>6.40亿</td><td>2022-07-27 00:00:00</td></tr>\n<tr><td>7</td><td>杭州热联华铁建筑服务有限公司</td><td>参股子公司</td><td>否</td><td>1529.73万</td><td>人民币</td><td>租赁服务</td><td>租赁</td><td>-</td><td>32.78亿</td><td>6.40亿</td><td>2022-07-27 00:00:00</td></tr>\n<tr><td>8</td><td>杭州热联华铁建筑服务有限公司</td><td>参股子公司</td><td>否</td><td>1999.36万</td><td>人民币</td><td>租赁服务</td><td>租赁</td><td>-</td><td>32.78亿</td><td>6.40亿</td><td>2022-03-31 00:00:00</td></tr>\n<tr><td>9</td><td>浙江华铁建筑设备有限公司</td><td>联营公司</td><td>否</td><td>127.92万</td><td>人民币</td><td>租赁服务</td><td>租赁</td><td>-</td><td>32.78亿</td><td>6.40亿</td><td>2022-03-31 00:00:00</td></tr>\n<tr><td>10</td><td>杭州热联华铁建筑服务有限公司</td><td>参股子公司</td><td>否</td><td>6161.43万</td><td>人民币</td><td>租赁服务设备买卖</td><td>租赁</td><td>-</td><td>32.78亿</td><td>6.40亿</td><td>2022-03-31 00:00:00</td></tr>\n<tr><td>11</td><td>杭州热联华铁建筑服务有限公司</td><td>参股子公司</td><td>否</td><td>4162.07万</td><td>人民币</td><td>设备买卖</td><td>租赁</td><td>-</td><td>32.78亿</td><td>6.40亿</td><td>2022-03-31 00:00:00</td></tr>\n<tr><td>12</td><td>浙江屹圣建设工程有限公司</td><td>其它关联关系</td><td>否</td><td>1.26亿</td><td>人民币</td><td>2021年5月18日,浙江华铁应急设...</td><td>资产出售</td><td>现金</td><td>32.78亿</td><td>6.40亿</td><td>2022-02-15 00:00:00</td></tr>\n<tr><td>13</td><td>湖州昇程企业管理合伙企业</td><td>其它关联关系</td><td>否</td><td>3.43亿</td><td>人民币</td><td>浙江华铁应急设备科技股份有限...</td><td>资产收购</td><td>-</td><td>26.07亿</td><td>4.98亿</td><td>2021-12-07 00:00:00</td></tr>\n<tr><td>14</td><td>胡丹锋</td><td>实际控制人</td><td>是</td><td>-</td><td>-</td><td>浙江华铁应急设备科技股份有限...</td><td>资产出售</td><td>-</td><td>26.07亿</td><td>4.98亿</td><td>2021-04-07 00:00:00</td></tr>\n<tr><td>15</td><td>天津华铁融资租赁有限公司</td><td>参股子公司</td><td>否</td><td>1.00亿</td><td>人民币</td><td>资金拆借</td><td>借款</td><td>-</td><td>26.07亿</td><td>4.98亿</td><td>2021-03-26 00:00:00</td></tr>\n<tr><td>16</td><td>浙江华铁建筑设备有限公司</td><td>联营公司</td><td>否</td><td>2000.00万</td><td>人民币</td><td>租赁服务</td><td>租赁</td><td>-</td><td>26.07亿</td><td>4.98亿</td><td>2021-03-26 00:00:00</td></tr>\n<tr><td>17</td><td>杭州热联华铁建筑服务有限公司</td><td>参股子公司</td><td>否</td><td>8000.00万</td><td>人民币</td><td>租赁服务、设备买卖</td><td>租赁</td><td>-</td><td>26.07亿</td><td>4.98亿</td><td>2021-03-26 00:00:00</td></tr>\n<tr><td>18</td><td>天津华铁融资租赁有限公司</td><td>参股子公司</td><td>否</td><td>10.00亿</td><td>人民币</td><td>关联担保</td><td>担保</td><td>-</td><td>26.07亿</td><td>4.98亿</td><td>2021-03-26 00:00:00</td></tr>\n<tr><td>19</td><td>天津华铁融资租赁有限公司</td><td>参股子公司</td><td>否</td><td>9.00亿</td><td>人民币</td><td>关联担保</td><td>担保</td><td>-</td><td>26.07亿</td><td>4.98亿</td><td>2021-03-26 00:00:00</td></tr>\n<tr><td>20</td><td>拉萨经济技术开发区聚盛设备租...</td><td>其它关联关系</td><td>否</td><td>1.09亿</td><td>人民币</td><td>浙江华铁应急设备科技股份有限...</td><td>资产收购</td><td>-</td><td>26.07亿</td><td>4.98亿</td><td>2021-01-26 00:00:00</td></tr>\n<tr><td>21</td><td>韦向群</td><td>其它关联关系</td><td>否</td><td>1.52亿</td><td>人民币</td><td>浙江华铁应急设备科技股份有限...</td><td>资产收购</td><td>-</td><td>26.07亿</td><td>4.98亿</td><td>2021-01-26 00:00:00</td></tr>\n<tr><td>22</td><td>贾海彬</td><td>其它关联关系</td><td>否</td><td>1306.56万</td><td>人民币</td><td>浙江华铁应急设备科技股份有限...</td><td>资产收购</td><td>-</td><td>26.07亿</td><td>4.98亿</td><td>2021-01-26 00:00:00</td></tr>\n<tr><td>23</td><td>浙江恒铝科技发展有限公司</td><td>控股子公司</td><td>是</td><td>2.74亿</td><td>人民币</td><td>浙江华铁应急设备科技股份有限...</td><td>资产收购</td><td>-</td><td>26.07亿</td><td>4.98亿</td><td>2021-01-26 00:00:00</td></tr>\n<tr><td>24</td><td>天津华铁融资租赁有限公司</td><td>参股子公司</td><td>否</td><td>-</td><td>-</td><td>关联担保</td><td>担保</td><td>-</td><td>15.24亿</td><td>3.23亿</td><td>2020-08-28 00:00:00</td></tr>\n<tr><td>25</td><td>浙江华铁融资租赁有限公司</td><td>参股子公司</td><td>否</td><td>-</td><td>-</td><td>关联担保</td><td>担保</td><td>-</td><td>15.24亿</td><td>3.23亿</td><td>2020-08-28 00:00:00</td></tr>\n<tr><td>26</td><td>浙江华铁宇硕建筑支护设备有限...</td><td>全资子公司</td><td>是</td><td>4.00亿</td><td>人民币</td><td>公司为全资子公司浙江华铁宇硕...</td><td>担保</td><td>-</td><td>15.24亿</td><td>3.23亿</td><td>2020-04-15 00:00:00</td></tr>\n<tr><td>27</td><td>浙江大黄蜂建筑机械设备有限公...</td><td>全资子公司</td><td>是</td><td>1800.00万</td><td>人民币</td><td>浙江大黄蜂建筑机械设备有限公...</td><td>担保</td><td>-</td><td>15.24亿</td><td>3.23亿</td><td>2020-04-15 00:00:00</td></tr>\n<tr><td>28</td><td>浙江吉通地空建筑科技有限公司</td><td>控股子公司</td><td>是</td><td>1.00亿</td><td>人民币</td><td>公司为控股子公司浙江吉通地空...</td><td>担保</td><td>-</td><td>15.24亿</td><td>3.23亿</td><td>2020-04-15 00:00:00</td></tr>\n<tr><td>29</td><td>浙江华铁建筑支护技术有限公司</td><td>全资子公司</td><td>是</td><td>5.00亿</td><td>人民币</td><td>浙江华铁建筑支护技术有限公司...</td><td>担保</td><td>-</td><td>15.24亿</td><td>3.23亿</td><td>2020-04-15 00:00:00</td></tr>\n<tr><td>30</td><td>浙江华铁宇硕建筑支护设备有限公司</td><td>全资子公司</td><td>是</td><td>7.00亿</td><td>人民币</td><td>浙江华铁宇硕建筑支护设备有限...</td><td>担保</td><td>-</td><td>15.24亿</td><td>3.23亿</td><td>2020-04-15 00:00:00</td></tr>\n<tr><td>31</td><td>天津华铁融资租赁有限公司</td><td>参股子公司</td><td>否</td><td>1.00亿</td><td>人民币</td><td>因正常生产经营需要,公司参股...</td><td>借款</td><td>-</td><td>11.54亿</td><td>2.76亿</td><td>2019-12-05 00:00:00</td></tr>\n<tr><td>32</td><td>天津华铁融资租赁有限公司</td><td>控股子公司</td><td>是</td><td>2950.00万</td><td>人民币</td><td>天津华铁融资租赁有限公司向本...</td><td>借款</td><td>-</td><td>11.54亿</td><td>2.76亿</td><td>2019-11-09 00:00:00</td></tr>\n<tr><td>33</td><td>天津华铁融资租赁有限公司</td><td>控股子公司</td><td>是</td><td>-</td><td>-</td><td>2016年1月,华铁租赁与海安县洪...</td><td>担保</td><td>-</td><td>11.54亿</td><td>2.76亿</td><td>2019-09-28 00:00:00</td></tr>\n<tr><td>34</td><td>浙江维安建筑支护科技有限公司</td><td>参股子公司</td><td>否</td><td>2000.00万</td><td>人民币</td><td>向关联方提供房屋租赁、租赁服...</td><td>租赁</td><td>-</td><td>8.88亿</td><td>2878.82万</td><td>2018-06-16 00:00:00</td></tr>\n<tr><td>35</td><td>天津华铁融资租赁有限公司</td><td>控股子公司</td><td>是</td><td>5.00亿</td><td>人民币</td><td>天津华铁融资租赁有限公司为公...</td><td>担保</td><td>-</td><td>6.94亿</td><td>3217.65万</td><td>2017-04-26 00:00:00</td></tr>\n<tr><td>36</td><td>天津华铁商业保理有限公司</td><td>全资子公司</td><td>是</td><td>3.00亿</td><td>人民币</td><td>公司为全资子公司天津华铁商业...</td><td>担保</td><td>-</td><td>6.94亿</td><td>3217.65万</td><td>2017-04-26 00:00:00</td></tr>\n<tr><td>37</td><td>胡丹锋及其近亲属</td><td>实际控制人</td><td>是</td><td>10.00亿</td><td>人民币</td><td>胡丹锋及其近亲属为公司提供不...</td><td>担保</td><td>-</td><td>6.94亿</td><td>3217.65万</td><td>2017-04-26 00:00:00</td></tr>\n<tr><td>38</td><td>浙江华铁融资租赁有限公司</td><td>参股子公司</td><td>否</td><td>5.00亿</td><td>人民币</td><td>浙江华铁融资租赁有限公司为公...</td><td>担保</td><td>-</td><td>6.94亿</td><td>3217.65万</td><td>2017-04-26 00:00:00</td></tr>\n<tr><td>39</td><td>浙江华铁建筑设备有限公司</td><td>全资子公司</td><td>是</td><td>5.00亿</td><td>人民币</td><td>浙江华铁建筑设备有限公司为公...</td><td>担保</td><td>-</td><td>6.94亿</td><td>3217.65万</td><td>2017-04-26 00:00:00</td></tr>\n<tr><td>40</td><td>浙江华铁建筑支护技术有限公司</td><td>全资子公司</td><td>是</td><td>2.00亿</td><td>人民币</td><td>浙江华铁建筑支护技术有限公司...</td><td>担保</td><td>-</td><td>6.94亿</td><td>3217.65万</td><td>2017-04-26 00:00:00</td></tr>\n<tr><td>41</td><td>浙江华铁宇硕建筑支护设备有限公司</td><td>全资子公司</td><td>是</td><td>2.00亿</td><td>人民币</td><td>公司为全资子公司浙江华铁宇硕...</td><td>担保</td><td>-</td><td>6.94亿</td><td>3217.65万</td><td>2017-04-26 00:00:00</td></tr>\n<tr><td>42</td><td>浙江华铁宇硕建筑支护设备有限公司</td><td>全资子公司</td><td>是</td><td>3.00亿</td><td>人民币</td><td>浙江华铁宇硕建筑支护设备有限...</td><td>担保</td><td>-</td><td>6.94亿</td><td>3217.65万</td><td>2017-04-26 00:00:00</td></tr>\n<tr><td>43</td><td>天津华铁融资租赁有限公司</td><td>控股子公司</td><td>是</td><td>10.00亿</td><td>人民币</td><td>公司为控股子公司天津华铁融资...</td><td>担保</td><td>-</td><td>6.94亿</td><td>3217.65万</td><td>2017-04-26 00:00:00</td></tr>\n<tr><td>44</td><td>杭州德洋建筑设备租赁有限公司</td><td>其它关联关系</td><td>否</td><td>100.35万</td><td>人民币</td><td>建筑设备租赁服务</td><td>提供劳务</td><td>转账</td><td>4.79亿</td><td>5426.13万</td><td>2016-04-29 00:00:00</td></tr>\n<tr><td>45</td><td>杭州德洋建筑设备租赁有限公司</td><td>其它关联关系</td><td>否</td><td>3000.00万</td><td>人民币</td><td>短期借款</td><td>借款</td><td>转账</td><td>4.79亿</td><td>5426.13万</td><td>2016-04-29 00:00:00</td></tr>\n<tr><td>46</td><td>杭州德洋建筑设备租赁有限公司</td><td>其它关联关系</td><td>否</td><td>4000.00万</td><td>人民币</td><td>短期借款</td><td>借款</td><td>转账</td><td>4.79亿</td><td>5426.13万</td><td>2016-04-29 00:00:00</td></tr>\n</table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "table_id": "Sheet1_table_1",
+          "start_row": 0,
+          "end_row": 48,
+          "header_rows": 3,
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "merged_cells": [
+            {
+              "coord": "A1:A3",
+              "min_row": 1,
+              "max_row": 3,
+              "min_col": 1,
+              "max_col": 1
+            },
+            {
+              "coord": "D1:D3",
+              "min_row": 1,
+              "max_row": 3,
+              "min_col": 4,
+              "max_col": 4
+            },
+            {
+              "coord": "B1:B3",
+              "min_row": 1,
+              "max_row": 3,
+              "min_col": 2,
+              "max_col": 2
+            },
+            {
+              "coord": "G1:G3",
+              "min_row": 1,
+              "max_row": 3,
+              "min_col": 7,
+              "max_col": 7
+            },
+            {
+              "coord": "C1:C3",
+              "min_row": 1,
+              "max_row": 3,
+              "min_col": 3,
+              "max_col": 3
+            },
+            {
+              "coord": "K1:K3",
+              "min_row": 1,
+              "max_row": 3,
+              "min_col": 11,
+              "max_col": 11
+            },
+            {
+              "coord": "F1:F3",
+              "min_row": 1,
+              "max_row": 3,
+              "min_col": 6,
+              "max_col": 6
+            },
+            {
+              "coord": "H1:H3",
+              "min_row": 1,
+              "max_row": 3,
+              "min_col": 8,
+              "max_col": 8
+            },
+            {
+              "coord": "E1:E3",
+              "min_row": 1,
+              "max_row": 3,
+              "min_col": 5,
+              "max_col": 5
+            },
+            {
+              "coord": "I1:I3",
+              "min_row": 1,
+              "max_row": 3,
+              "min_col": 9,
+              "max_col": 9
+            },
+            {
+              "coord": "L1:L3",
+              "min_row": 1,
+              "max_row": 3,
+              "min_col": 12,
+              "max_col": 12
+            },
+            {
+              "coord": "J1:J3",
+              "min_row": 1,
+              "max_row": 3,
+              "min_col": 10,
+              "max_col": 10
+            }
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "该表格记录了浙江华铁应急设备科技股份有限公司与各关联方之间的交易详情，包括交易金额、币种、交易简介、交易方式、支付方式以及交易发生时的公司财务状况，涵盖了从2016年至2024年的交易数据。",
+          "keywords": [
+            "浙江华铁应急设备科技股份有限公司",
+            "关联交易",
+            "财务数据",
+            "交易详情",
+            "年度财报"
+          ]
+        },
+        "context": "上一行：。下一行：",
+        "parent_id": null,
+        "chunk_id": "test.xlsx_1"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>1</td><td>浙江浙银金融租赁股份有限公司</td><td>其它关联关系</td><td>否</td><td>3.50亿</td><td>人民币</td><td>根据业务发展需要,公司或子公...</td><td>其他流入</td><td>-</td><td>51.71亿</td><td>6.05亿</td><td>2024-12-10 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 4,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "浙江浙银金融租赁股份有限公司作为交易方，与公司存在其他关联关系但无控制关系，交易金额为3.50亿人民币，用于业务发展需要，交易方式为其他流入。该公司该年度最新财报显示营业收入为51.71亿，净利润为6.05亿，公告日期为2024年12月10日。",
+          "keywords": [
+            "浙江浙银金融租赁",
+            "其他关联关系",
+            "3.50亿",
+            "业务发展",
+            "其他流入",
+            "51.71亿营业收入",
+            "6.05亿净利润",
+            "2024-12-10"
+          ]
+        },
+        "context": "上一行：。下一行：2 | 杭州热联华铁建筑服务有限公司 | 参股子公司 | 否 | 7722.68万 | 人民币 | 租赁服务设备买卖 | 租赁 | - | 44.44亿 | 8.01亿 | 2023-03-30 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_2"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>2</td><td>杭州热联华铁建筑服务有限公司</td><td>参股子公司</td><td>否</td><td>7722.68万</td><td>人民币</td><td>租赁服务设备买卖</td><td>租赁</td><td>-</td><td>44.44亿</td><td>8.01亿</td><td>2023-03-30 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 5,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "杭州热联华铁建筑服务有限公司作为参股子公司，于2023年3月30日进行了一笔7722.68万元的租赁服务设备买卖交易，交易方式为租赁，币种为人民币，公司该年度最新财报显示营业收入为44.44亿，净利润为8.01亿。",
+          "keywords": [
+            "杭州热联华铁建筑服务有限公司",
+            "参股子公司",
+            "租赁服务设备买卖",
+            "租赁",
+            "7722.68万",
+            "2023-03-30"
+          ]
+        },
+        "context": "上一行：1 | 浙江浙银金融租赁股份有限公司 | 其它关联关系 | 否 | 3.50亿 | 人民币 | 根据业务发展需要,公司或子公... | 其他流入 | - | 51.71亿 | 6.05亿 | 2024-12-10 00:00:00。下一行：3 | 浙江浙银金融租赁股份有限公司 | 其它关联关系 | 否 | 1.00亿 | 人民币 | 售后回租 | 租赁 | - | 44.44亿 | 8.01亿 | 2023-03-30 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_3"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>3</td><td>浙江浙银金融租赁股份有限公司</td><td>其它关联关系</td><td>否</td><td>1.00亿</td><td>人民币</td><td>售后回租</td><td>租赁</td><td>-</td><td>44.44亿</td><td>8.01亿</td><td>2023-03-30 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 6,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "浙江浙银金融租赁股份有限公司作为交易方，与公司存在其它关联关系但无控制关系，进行了1.00亿人民币的售后回租交易，交易方式为租赁。该年度最新财报显示营业收入为44.44亿，净利润为8.01亿，公告日期为2023年3月30日。",
+          "keywords": [
+            "浙江浙银金融租赁",
+            "售后回租",
+            "租赁交易",
+            "关联关系",
+            "2023年财报"
+          ]
+        },
+        "context": "上一行：2 | 杭州热联华铁建筑服务有限公司 | 参股子公司 | 否 | 7722.68万 | 人民币 | 租赁服务设备买卖 | 租赁 | - | 44.44亿 | 8.01亿 | 2023-03-30 00:00:00。下一行：4 | 丽水哈勃企业管理合伙企业 | 其它关联关系 | 否 | - | - | 公司与关联人共同出资成立控股... | 建立子公司 | - | 32.78亿 | 6.40亿 | 2022-07-27 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_4"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>4</td><td>丽水哈勃企业管理合伙企业</td><td>其它关联关系</td><td>否</td><td>-</td><td>-</td><td>公司与关联人共同出资成立控股...</td><td>建立子公司</td><td>-</td><td>32.78亿</td><td>6.40亿</td><td>2022-07-27 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 7,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "丽水哈勃企业管理合伙企业与公司存在其它关联关系，但无控制关系。双方共同出资成立控股子公司，交易金额和币种未披露。该企业最新财报显示营业收入32.78亿，净利润6.40亿，公告日期为2022年7月27日。",
+          "keywords": [
+            "丽水哈勃",
+            "共同出资",
+            "控股子公司",
+            "关联关系",
+            "财报"
+          ]
+        },
+        "context": "上一行：3 | 浙江浙银金融租赁股份有限公司 | 其它关联关系 | 否 | 1.00亿 | 人民币 | 售后回租 | 租赁 | - | 44.44亿 | 8.01亿 | 2023-03-30 00:00:00。下一行：5 | 浙江华铁建筑设备有限公司 | 联营公司 | 否 | 93.30万 | 人民币 | 租赁服务 | 租赁 | - | 32.78亿 | 6.40亿 | 2022-07-27 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_5"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>5</td><td>浙江华铁建筑设备有限公司</td><td>联营公司</td><td>否</td><td>93.30万</td><td>人民币</td><td>租赁服务</td><td>租赁</td><td>-</td><td>32.78亿</td><td>6.40亿</td><td>2022-07-27 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 8,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "浙江华铁建筑设备有限公司作为联营公司，于2022年7月27日与公司进行租赁服务交易，交易金额为93.30万人民币，公司当年营业收入为32.78亿，净利润为6.40亿。",
+          "keywords": [
+            "浙江华铁建筑设备有限公司",
+            "联营公司",
+            "租赁服务",
+            "93.30万",
+            "2022-07-27"
+          ]
+        },
+        "context": "上一行：4 | 丽水哈勃企业管理合伙企业 | 其它关联关系 | 否 | - | - | 公司与关联人共同出资成立控股... | 建立子公司 | - | 32.78亿 | 6.40亿 | 2022-07-27 00:00:00。下一行：6 | 浙江华铁建筑支护技术有限公司 | 联营公司 | 否 | 35.93万 | 人民币 | 购买设备 | 购买商品 | - | 32.78亿 | 6.40亿 | 2022-07-27 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_6"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>6</td><td>浙江华铁建筑支护技术有限公司</td><td>联营公司</td><td>否</td><td>35.93万</td><td>人民币</td><td>购买设备</td><td>购买商品</td><td>-</td><td>32.78亿</td><td>6.40亿</td><td>2022-07-27 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 9,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "浙江华铁建筑支护技术有限公司作为联营公司，于2022年7月27日以35.93万元人民币购买了设备，交易方式为购买商品，该公司当年财报显示营业收入为32.78亿，净利润为6.40亿。",
+          "keywords": [
+            "浙江华铁建筑支护技术有限公司",
+            "联营公司",
+            "购买设备",
+            "35.93万",
+            "2022-07-27"
+          ]
+        },
+        "context": "上一行：5 | 浙江华铁建筑设备有限公司 | 联营公司 | 否 | 93.30万 | 人民币 | 租赁服务 | 租赁 | - | 32.78亿 | 6.40亿 | 2022-07-27 00:00:00。下一行：7 | 杭州热联华铁建筑服务有限公司 | 参股子公司 | 否 | 1529.73万 | 人民币 | 租赁服务 | 租赁 | - | 32.78亿 | 6.40亿 | 2022-07-27 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_7"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>7</td><td>杭州热联华铁建筑服务有限公司</td><td>参股子公司</td><td>否</td><td>1529.73万</td><td>人民币</td><td>租赁服务</td><td>租赁</td><td>-</td><td>32.78亿</td><td>6.40亿</td><td>2022-07-27 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 10,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "杭州热联华铁建筑服务有限公司作为参股子公司，于2022年7月27日进行了一笔1529.73万元的租赁服务交易，交易方式为租赁，币种为人民币，公司该年度最新财报显示营业收入为32.78亿，净利润为6.40亿，且不存在控制关系。",
+          "keywords": [
+            "杭州热联华铁建筑服务有限公司",
+            "参股子公司",
+            "租赁服务",
+            "1529.73万",
+            "2022-07-27"
+          ]
+        },
+        "context": "上一行：6 | 浙江华铁建筑支护技术有限公司 | 联营公司 | 否 | 35.93万 | 人民币 | 购买设备 | 购买商品 | - | 32.78亿 | 6.40亿 | 2022-07-27 00:00:00。下一行：8 | 杭州热联华铁建筑服务有限公司 | 参股子公司 | 否 | 1999.36万 | 人民币 | 租赁服务 | 租赁 | - | 32.78亿 | 6.40亿 | 2022-03-31 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_8"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>8</td><td>杭州热联华铁建筑服务有限公司</td><td>参股子公司</td><td>否</td><td>1999.36万</td><td>人民币</td><td>租赁服务</td><td>租赁</td><td>-</td><td>32.78亿</td><td>6.40亿</td><td>2022-03-31 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 11,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "杭州热联华铁建筑服务有限公司作为参股子公司，于2022年3月31日进行了一笔1999.36万元的租赁服务交易，交易方式为租赁，币种为人民币，公司当年最新财报显示营业收入为32.78亿，净利润为6.40亿，且不存在控制关系。",
+          "keywords": [
+            "杭州热联华铁建筑服务有限公司",
+            "参股子公司",
+            "租赁服务",
+            "1999.36万",
+            "2022-03-31"
+          ]
+        },
+        "context": "上一行：7 | 杭州热联华铁建筑服务有限公司 | 参股子公司 | 否 | 1529.73万 | 人民币 | 租赁服务 | 租赁 | - | 32.78亿 | 6.40亿 | 2022-07-27 00:00:00。下一行：9 | 浙江华铁建筑设备有限公司 | 联营公司 | 否 | 127.92万 | 人民币 | 租赁服务 | 租赁 | - | 32.78亿 | 6.40亿 | 2022-03-31 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_9"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>9</td><td>浙江华铁建筑设备有限公司</td><td>联营公司</td><td>否</td><td>127.92万</td><td>人民币</td><td>租赁服务</td><td>租赁</td><td>-</td><td>32.78亿</td><td>6.40亿</td><td>2022-03-31 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 12,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "浙江华铁建筑设备有限公司作为联营公司，于2022年3月31日进行了一笔127.92万元的租赁服务交易，交易方式为租赁，无控制关系，币种为人民币，该公司该年度最新财报显示营业收入为32.78亿，净利润为6.40亿。",
+          "keywords": [
+            "浙江华铁建筑设备有限公司",
+            "联营公司",
+            "租赁服务",
+            "127.92万",
+            "2022-03-31"
+          ]
+        },
+        "context": "上一行：8 | 杭州热联华铁建筑服务有限公司 | 参股子公司 | 否 | 1999.36万 | 人民币 | 租赁服务 | 租赁 | - | 32.78亿 | 6.40亿 | 2022-03-31 00:00:00。下一行：10 | 杭州热联华铁建筑服务有限公司 | 参股子公司 | 否 | 6161.43万 | 人民币 | 租赁服务设备买卖 | 租赁 | - | 32.78亿 | 6.40亿 | 2022-03-31 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_10"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>10</td><td>杭州热联华铁建筑服务有限公司</td><td>参股子公司</td><td>否</td><td>6161.43万</td><td>人民币</td><td>租赁服务设备买卖</td><td>租赁</td><td>-</td><td>32.78亿</td><td>6.40亿</td><td>2022-03-31 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 13,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "杭州热联华铁建筑服务有限公司作为参股子公司，于2022年3月31日进行了租赁服务及设备买卖交易，交易金额为6161.43万人民币，采用租赁方式，无控制关系，相关财务数据显示该年度营业收入为32.78亿，净利润为6.40亿。",
+          "keywords": [
+            "杭州热联华铁建筑服务有限公司",
+            "参股子公司",
+            "租赁服务",
+            "设备买卖",
+            "6161.43万",
+            "2022-03-31"
+          ]
+        },
+        "context": "上一行：9 | 浙江华铁建筑设备有限公司 | 联营公司 | 否 | 127.92万 | 人民币 | 租赁服务 | 租赁 | - | 32.78亿 | 6.40亿 | 2022-03-31 00:00:00。下一行：11 | 杭州热联华铁建筑服务有限公司 | 参股子公司 | 否 | 4162.07万 | 人民币 | 设备买卖 | 租赁 | - | 32.78亿 | 6.40亿 | 2022-03-31 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_11"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>11</td><td>杭州热联华铁建筑服务有限公司</td><td>参股子公司</td><td>否</td><td>4162.07万</td><td>人民币</td><td>设备买卖</td><td>租赁</td><td>-</td><td>32.78亿</td><td>6.40亿</td><td>2022-03-31 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 14,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "杭州热联华铁建筑服务有限公司作为参股子公司，于2022年3月31日进行了一笔4162.07万元的设备买卖交易，交易方式为租赁，未涉及控制关系，该年度公司营业收入为32.78亿，净利润为6.40亿。",
+          "keywords": [
+            "杭州热联华铁建筑服务有限公司",
+            "参股子公司",
+            "设备买卖",
+            "租赁",
+            "4162.07万",
+            "2022-03-31"
+          ]
+        },
+        "context": "上一行：10 | 杭州热联华铁建筑服务有限公司 | 参股子公司 | 否 | 6161.43万 | 人民币 | 租赁服务设备买卖 | 租赁 | - | 32.78亿 | 6.40亿 | 2022-03-31 00:00:00。下一行：12 | 浙江屹圣建设工程有限公司 | 其它关联关系 | 否 | 1.26亿 | 人民币 | 2021年5月18日,浙江华铁应急设... | 资产出售 | 现金 | 32.78亿 | 6.40亿 | 2022-02-15 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_12"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>12</td><td>浙江屹圣建设工程有限公司</td><td>其它关联关系</td><td>否</td><td>1.26亿</td><td>人民币</td><td>2021年5月18日,浙江华铁应急设...</td><td>资产出售</td><td>现金</td><td>32.78亿</td><td>6.40亿</td><td>2022-02-15 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 15,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "浙江屹圣建设工程有限公司作为交易方，与公司存在其它关联关系但无控制关系，于2021年5月18日进行资产出售，交易金额为1.26亿人民币，支付方式为现金。该交易在2022年2月15日公告，当年最新财报显示营业收入为32.78亿，净利润为6.40亿。",
+          "keywords": [
+            "浙江屹圣建设工程有限公司",
+            "资产出售",
+            "1.26亿",
+            "现金支付",
+            "2022年财报"
+          ]
+        },
+        "context": "上一行：11 | 杭州热联华铁建筑服务有限公司 | 参股子公司 | 否 | 4162.07万 | 人民币 | 设备买卖 | 租赁 | - | 32.78亿 | 6.40亿 | 2022-03-31 00:00:00。下一行：13 | 湖州昇程企业管理合伙企业 | 其它关联关系 | 否 | 3.43亿 | 人民币 | 浙江华铁应急设备科技股份有限... | 资产收购 | - | 26.07亿 | 4.98亿 | 2021-12-07 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_13"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>13</td><td>湖州昇程企业管理合伙企业</td><td>其它关联关系</td><td>否</td><td>3.43亿</td><td>人民币</td><td>浙江华铁应急设备科技股份有限...</td><td>资产收购</td><td>-</td><td>26.07亿</td><td>4.98亿</td><td>2021-12-07 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 16,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "湖州昇程企业管理合伙企业作为交易方，与浙江华铁应急设备科技股份有限公司存在其它关联关系，但无控制关系。于2021年12月7日进行资产收购，交易金额为3.43亿人民币。该年度最新财报显示营业收入为26.07亿，净利润为4.98亿。",
+          "keywords": [
+            "湖州昇程企业管理合伙企业",
+            "资产收购",
+            "3.43亿",
+            "浙江华铁应急",
+            "2021年12月7日"
+          ]
+        },
+        "context": "上一行：12 | 浙江屹圣建设工程有限公司 | 其它关联关系 | 否 | 1.26亿 | 人民币 | 2021年5月18日,浙江华铁应急设... | 资产出售 | 现金 | 32.78亿 | 6.40亿 | 2022-02-15 00:00:00。下一行：14 | 胡丹锋 | 实际控制人 | 是 | - | - | 浙江华铁应急设备科技股份有限... | 资产出售 | - | 26.07亿 | 4.98亿 | 2021-04-07 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_14"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>14</td><td>胡丹锋</td><td>实际控制人</td><td>是</td><td>-</td><td>-</td><td>浙江华铁应急设备科技股份有限...</td><td>资产出售</td><td>-</td><td>26.07亿</td><td>4.98亿</td><td>2021-04-07 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 17,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "实际控制人胡丹锋于2021年4月7日进行资产出售，交易对象为浙江华铁应急设备科技股份有限公司，交易金额未披露，该年度公司营业收入为26.07亿，净利润为4.98亿。",
+          "keywords": [
+            "胡丹锋",
+            "实际控制人",
+            "资产出售",
+            "浙江华铁应急设备科技",
+            "未披露金额",
+            "2021年"
+          ]
+        },
+        "context": "上一行：13 | 湖州昇程企业管理合伙企业 | 其它关联关系 | 否 | 3.43亿 | 人民币 | 浙江华铁应急设备科技股份有限... | 资产收购 | - | 26.07亿 | 4.98亿 | 2021-12-07 00:00:00。下一行：15 | 天津华铁融资租赁有限公司 | 参股子公司 | 否 | 1.00亿 | 人民币 | 资金拆借 | 借款 | - | 26.07亿 | 4.98亿 | 2021-03-26 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_15"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>15</td><td>天津华铁融资租赁有限公司</td><td>参股子公司</td><td>否</td><td>1.00亿</td><td>人民币</td><td>资金拆借</td><td>借款</td><td>-</td><td>26.07亿</td><td>4.98亿</td><td>2021-03-26 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 18,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "天津华铁融资租赁有限公司作为参股子公司，于2021年3月26日进行1亿人民币的资金拆借交易，交易方式为借款，该年度公司营业收入为26.07亿，净利润为4.98亿。",
+          "keywords": [
+            "天津华铁融资租赁有限公司",
+            "参股子公司",
+            "资金拆借",
+            "借款",
+            "1亿人民币",
+            "2021-03-26"
+          ]
+        },
+        "context": "上一行：14 | 胡丹锋 | 实际控制人 | 是 | - | - | 浙江华铁应急设备科技股份有限... | 资产出售 | - | 26.07亿 | 4.98亿 | 2021-04-07 00:00:00。下一行：16 | 浙江华铁建筑设备有限公司 | 联营公司 | 否 | 2000.00万 | 人民币 | 租赁服务 | 租赁 | - | 26.07亿 | 4.98亿 | 2021-03-26 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_16"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>16</td><td>浙江华铁建筑设备有限公司</td><td>联营公司</td><td>否</td><td>2000.00万</td><td>人民币</td><td>租赁服务</td><td>租赁</td><td>-</td><td>26.07亿</td><td>4.98亿</td><td>2021-03-26 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 19,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "浙江华铁建筑设备有限公司作为联营公司，于2021年3月26日进行了一笔2000万元的租赁服务交易，交易方式为租赁，币种为人民币，公司当年营业收入为26.07亿，净利润为4.98亿。",
+          "keywords": [
+            "浙江华铁建筑设备有限公司",
+            "联营公司",
+            "租赁服务",
+            "2000万",
+            "2021-03-26"
+          ]
+        },
+        "context": "上一行：15 | 天津华铁融资租赁有限公司 | 参股子公司 | 否 | 1.00亿 | 人民币 | 资金拆借 | 借款 | - | 26.07亿 | 4.98亿 | 2021-03-26 00:00:00。下一行：17 | 杭州热联华铁建筑服务有限公司 | 参股子公司 | 否 | 8000.00万 | 人民币 | 租赁服务、设备买卖 | 租赁 | - | 26.07亿 | 4.98亿 | 2021-03-26 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_17"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>17</td><td>杭州热联华铁建筑服务有限公司</td><td>参股子公司</td><td>否</td><td>8000.00万</td><td>人民币</td><td>租赁服务、设备买卖</td><td>租赁</td><td>-</td><td>26.07亿</td><td>4.98亿</td><td>2021-03-26 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 20,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "杭州热联华铁建筑服务有限公司作为参股子公司，于2021年3月26日进行了8000万元人民币的租赁服务和设备买卖交易，无控制关系，支付方式未明确，当年财报显示营业收入26.07亿，净利润4.98亿。",
+          "keywords": [
+            "杭州热联华铁",
+            "参股子公司",
+            "租赁服务",
+            "设备买卖",
+            "8000万",
+            "2021-03-26"
+          ]
+        },
+        "context": "上一行：16 | 浙江华铁建筑设备有限公司 | 联营公司 | 否 | 2000.00万 | 人民币 | 租赁服务 | 租赁 | - | 26.07亿 | 4.98亿 | 2021-03-26 00:00:00。下一行：18 | 天津华铁融资租赁有限公司 | 参股子公司 | 否 | 10.00亿 | 人民币 | 关联担保 | 担保 | - | 26.07亿 | 4.98亿 | 2021-03-26 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_18"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>18</td><td>天津华铁融资租赁有限公司</td><td>参股子公司</td><td>否</td><td>10.00亿</td><td>人民币</td><td>关联担保</td><td>担保</td><td>-</td><td>26.07亿</td><td>4.98亿</td><td>2021-03-26 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 21,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "天津华铁融资租赁有限公司作为参股子公司，于2021年3月26日进行了一笔10亿人民币的关联担保交易，该交易不涉及控制关系，支付方式未明确。该公司在该年度的最新财报显示营业收入为26.07亿，净利润为4.98亿。",
+          "keywords": [
+            "天津华铁融资租赁",
+            "参股子公司",
+            "关联担保",
+            "10亿人民币",
+            "2021-03-26",
+            "26.07亿营业收入",
+            "4.98亿净利润"
+          ]
+        },
+        "context": "上一行：17 | 杭州热联华铁建筑服务有限公司 | 参股子公司 | 否 | 8000.00万 | 人民币 | 租赁服务、设备买卖 | 租赁 | - | 26.07亿 | 4.98亿 | 2021-03-26 00:00:00。下一行：19 | 天津华铁融资租赁有限公司 | 参股子公司 | 否 | 9.00亿 | 人民币 | 关联担保 | 担保 | - | 26.07亿 | 4.98亿 | 2021-03-26 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_19"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>19</td><td>天津华铁融资租赁有限公司</td><td>参股子公司</td><td>否</td><td>9.00亿</td><td>人民币</td><td>关联担保</td><td>担保</td><td>-</td><td>26.07亿</td><td>4.98亿</td><td>2021-03-26 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 22,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "序号19的交易记录显示，天津华铁融资租赁有限公司作为参股子公司，与主体公司不存在控制关系，进行了9.00亿人民币的关联担保交易，采用担保方式，无具体支付方式。该交易在2021年3月26日公告，当时公司最新财报显示营业收入为26.07亿，净利润为4.98亿。",
+          "keywords": [
+            "天津华铁融资租赁有限公司",
+            "参股子公司",
+            "关联担保",
+            "9.00亿",
+            "2021-03-26"
+          ]
+        },
+        "context": "上一行：18 | 天津华铁融资租赁有限公司 | 参股子公司 | 否 | 10.00亿 | 人民币 | 关联担保 | 担保 | - | 26.07亿 | 4.98亿 | 2021-03-26 00:00:00。下一行：20 | 拉萨经济技术开发区聚盛设备租... | 其它关联关系 | 否 | 1.09亿 | 人民币 | 浙江华铁应急设备科技股份有限... | 资产收购 | - | 26.07亿 | 4.98亿 | 2021-01-26 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_20"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>20</td><td>拉萨经济技术开发区聚盛设备租...</td><td>其它关联关系</td><td>否</td><td>1.09亿</td><td>人民币</td><td>浙江华铁应急设备科技股份有限...</td><td>资产收购</td><td>-</td><td>26.07亿</td><td>4.98亿</td><td>2021-01-26 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 23,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "序号20的交易记录显示，拉萨经济技术开发区聚盛设备租赁公司作为交易方，与浙江华铁应急设备科技股份有限公司进行资产收购，交易金额为1.09亿人民币，不存在控制关系，公告日期为2021年1月26日。该年度最新财报显示营业收入为26.07亿，净利润为4.98亿。",
+          "keywords": [
+            "资产收购",
+            "拉萨经济技术开发区聚盛设备租赁",
+            "浙江华铁应急设备科技",
+            "1.09亿",
+            "2021-01-26"
+          ]
+        },
+        "context": "上一行：19 | 天津华铁融资租赁有限公司 | 参股子公司 | 否 | 9.00亿 | 人民币 | 关联担保 | 担保 | - | 26.07亿 | 4.98亿 | 2021-03-26 00:00:00。下一行：21 | 韦向群 | 其它关联关系 | 否 | 1.52亿 | 人民币 | 浙江华铁应急设备科技股份有限... | 资产收购 | - | 26.07亿 | 4.98亿 | 2021-01-26 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_21"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>21</td><td>韦向群</td><td>其它关联关系</td><td>否</td><td>1.52亿</td><td>人民币</td><td>浙江华铁应急设备科技股份有限...</td><td>资产收购</td><td>-</td><td>26.07亿</td><td>4.98亿</td><td>2021-01-26 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 24,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "该行记录了序号为21的交易，交易方为韦向群，与浙江华铁应急设备科技股份有限公司存在其它关联关系但无控制关系，交易金额为1.52亿人民币，交易方式为资产收购，公告日期为2021年1月26日。该年度公司财报显示营业收入为26.07亿，净利润为4.98亿。",
+          "keywords": [
+            "韦向群",
+            "资产收购",
+            "浙江华铁应急设备科技",
+            "1.52亿",
+            "2021-01-26"
+          ]
+        },
+        "context": "上一行：20 | 拉萨经济技术开发区聚盛设备租... | 其它关联关系 | 否 | 1.09亿 | 人民币 | 浙江华铁应急设备科技股份有限... | 资产收购 | - | 26.07亿 | 4.98亿 | 2021-01-26 00:00:00。下一行：22 | 贾海彬 | 其它关联关系 | 否 | 1306.56万 | 人民币 | 浙江华铁应急设备科技股份有限... | 资产收购 | - | 26.07亿 | 4.98亿 | 2021-01-26 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_22"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>22</td><td>贾海彬</td><td>其它关联关系</td><td>否</td><td>1306.56万</td><td>人民币</td><td>浙江华铁应急设备科技股份有限...</td><td>资产收购</td><td>-</td><td>26.07亿</td><td>4.98亿</td><td>2021-01-26 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 25,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "该行记录了序号为22的交易，交易方为贾海彬，与浙江华铁应急设备科技股份有限公司存在其它关联关系但无控制关系，交易金额为1306.56万人民币，交易方式为资产收购，公告日期为2021年1月26日。该年度公司财报显示营业收入为26.07亿，净利润为4.98亿。",
+          "keywords": [
+            "贾海彬",
+            "资产收购",
+            "浙江华铁应急设备科技",
+            "1306.56万",
+            "2021-01-26"
+          ]
+        },
+        "context": "上一行：21 | 韦向群 | 其它关联关系 | 否 | 1.52亿 | 人民币 | 浙江华铁应急设备科技股份有限... | 资产收购 | - | 26.07亿 | 4.98亿 | 2021-01-26 00:00:00。下一行：23 | 浙江恒铝科技发展有限公司 | 控股子公司 | 是 | 2.74亿 | 人民币 | 浙江华铁应急设备科技股份有限... | 资产收购 | - | 26.07亿 | 4.98亿 | 2021-01-26 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_23"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>23</td><td>浙江恒铝科技发展有限公司</td><td>控股子公司</td><td>是</td><td>2.74亿</td><td>人民币</td><td>浙江华铁应急设备科技股份有限...</td><td>资产收购</td><td>-</td><td>26.07亿</td><td>4.98亿</td><td>2021-01-26 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 26,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "浙江恒铝科技发展有限公司作为控股子公司，于2021年1月26日进行了2.74亿人民币的资产收购交易，该交易不涉及支付方式，当年公司营业收入为26.07亿，净利润为4.98亿。",
+          "keywords": [
+            "浙江恒铝科技",
+            "控股子公司",
+            "资产收购",
+            "2.74亿",
+            "2021-01-26"
+          ]
+        },
+        "context": "上一行：22 | 贾海彬 | 其它关联关系 | 否 | 1306.56万 | 人民币 | 浙江华铁应急设备科技股份有限... | 资产收购 | - | 26.07亿 | 4.98亿 | 2021-01-26 00:00:00。下一行：24 | 天津华铁融资租赁有限公司 | 参股子公司 | 否 | - | - | 关联担保 | 担保 | - | 15.24亿 | 3.23亿 | 2020-08-28 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_24"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>24</td><td>天津华铁融资租赁有限公司</td><td>参股子公司</td><td>否</td><td>-</td><td>-</td><td>关联担保</td><td>担保</td><td>-</td><td>15.24亿</td><td>3.23亿</td><td>2020-08-28 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 27,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "天津华铁融资租赁有限公司作为参股子公司，于2020年8月28日进行关联担保交易，未涉及具体交易金额，该年度营业收入为15.24亿，净利润为3.23亿。",
+          "keywords": [
+            "天津华铁融资租赁",
+            "参股子公司",
+            "关联担保",
+            "2020年",
+            "营业收入",
+            "净利润"
+          ]
+        },
+        "context": "上一行：23 | 浙江恒铝科技发展有限公司 | 控股子公司 | 是 | 2.74亿 | 人民币 | 浙江华铁应急设备科技股份有限... | 资产收购 | - | 26.07亿 | 4.98亿 | 2021-01-26 00:00:00。下一行：25 | 浙江华铁融资租赁有限公司 | 参股子公司 | 否 | - | - | 关联担保 | 担保 | - | 15.24亿 | 3.23亿 | 2020-08-28 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_25"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>25</td><td>浙江华铁融资租赁有限公司</td><td>参股子公司</td><td>否</td><td>-</td><td>-</td><td>关联担保</td><td>担保</td><td>-</td><td>15.24亿</td><td>3.23亿</td><td>2020-08-28 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 28,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "浙江华铁融资租赁有限公司作为参股子公司，于2020年8月28日进行了关联担保交易，未涉及具体交易金额和支付方式，该年度财报显示营业收入15.24亿，净利润3.23亿。",
+          "keywords": [
+            "浙江华铁融资租赁有限公司",
+            "参股子公司",
+            "关联担保",
+            "2020年财报"
+          ]
+        },
+        "context": "上一行：24 | 天津华铁融资租赁有限公司 | 参股子公司 | 否 | - | - | 关联担保 | 担保 | - | 15.24亿 | 3.23亿 | 2020-08-28 00:00:00。下一行：26 | 浙江华铁宇硕建筑支护设备有限... | 全资子公司 | 是 | 4.00亿 | 人民币 | 公司为全资子公司浙江华铁宇硕... | 担保 | - | 15.24亿 | 3.23亿 | 2020-04-15 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_26"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>26</td><td>浙江华铁宇硕建筑支护设备有限...</td><td>全资子公司</td><td>是</td><td>4.00亿</td><td>人民币</td><td>公司为全资子公司浙江华铁宇硕...</td><td>担保</td><td>-</td><td>15.24亿</td><td>3.23亿</td><td>2020-04-15 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 29,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "浙江华铁宇硕建筑支护设备有限公司作为全资子公司，存在控制关系，公司为其提供4亿人民币的担保，该交易公告于2020年4月15日。当年公司营业收入为15.24亿，净利润为3.23亿。",
+          "keywords": [
+            "浙江华铁宇硕",
+            "全资子公司",
+            "担保",
+            "4亿人民币",
+            "2020年4月15日",
+            "15.24亿营业收入",
+            "3.23亿净利润"
+          ]
+        },
+        "context": "上一行：25 | 浙江华铁融资租赁有限公司 | 参股子公司 | 否 | - | - | 关联担保 | 担保 | - | 15.24亿 | 3.23亿 | 2020-08-28 00:00:00。下一行：27 | 浙江大黄蜂建筑机械设备有限公... | 全资子公司 | 是 | 1800.00万 | 人民币 | 浙江大黄蜂建筑机械设备有限公... | 担保 | - | 15.24亿 | 3.23亿 | 2020-04-15 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_27"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>27</td><td>浙江大黄蜂建筑机械设备有限公...</td><td>全资子公司</td><td>是</td><td>1800.00万</td><td>人民币</td><td>浙江大黄蜂建筑机械设备有限公...</td><td>担保</td><td>-</td><td>15.24亿</td><td>3.23亿</td><td>2020-04-15 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 30,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "浙江大黄蜂建筑机械设备有限公司作为全资子公司，于2020年4月15日进行了1800万元人民币的担保交易，公司存在控制关系，该年度财报显示营业收入15.24亿，净利润3.23亿。",
+          "keywords": [
+            "浙江大黄蜂",
+            "全资子公司",
+            "担保交易",
+            "1800万",
+            "2020-04-15"
+          ]
+        },
+        "context": "上一行：26 | 浙江华铁宇硕建筑支护设备有限... | 全资子公司 | 是 | 4.00亿 | 人民币 | 公司为全资子公司浙江华铁宇硕... | 担保 | - | 15.24亿 | 3.23亿 | 2020-04-15 00:00:00。下一行：28 | 浙江吉通地空建筑科技有限公司 | 控股子公司 | 是 | 1.00亿 | 人民币 | 公司为控股子公司浙江吉通地空... | 担保 | - | 15.24亿 | 3.23亿 | 2020-04-15 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_28"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>28</td><td>浙江吉通地空建筑科技有限公司</td><td>控股子公司</td><td>是</td><td>1.00亿</td><td>人民币</td><td>公司为控股子公司浙江吉通地空...</td><td>担保</td><td>-</td><td>15.24亿</td><td>3.23亿</td><td>2020-04-15 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 31,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "浙江吉通地空建筑科技有限公司作为控股子公司，在2020年4月15日进行了一笔1.00亿人民币的担保交易，该交易方的年度财报显示营业收入为15.24亿，净利润为3.23亿。",
+          "keywords": [
+            "浙江吉通地空建筑科技有限公司",
+            "控股子公司",
+            "担保交易",
+            "1.00亿",
+            "2020-04-15"
+          ]
+        },
+        "context": "上一行：27 | 浙江大黄蜂建筑机械设备有限公... | 全资子公司 | 是 | 1800.00万 | 人民币 | 浙江大黄蜂建筑机械设备有限公... | 担保 | - | 15.24亿 | 3.23亿 | 2020-04-15 00:00:00。下一行：29 | 浙江华铁建筑支护技术有限公司 | 全资子公司 | 是 | 5.00亿 | 人民币 | 浙江华铁建筑支护技术有限公司... | 担保 | - | 15.24亿 | 3.23亿 | 2020-04-15 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_29"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>29</td><td>浙江华铁建筑支护技术有限公司</td><td>全资子公司</td><td>是</td><td>5.00亿</td><td>人民币</td><td>浙江华铁建筑支护技术有限公司...</td><td>担保</td><td>-</td><td>15.24亿</td><td>3.23亿</td><td>2020-04-15 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 32,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "浙江华铁建筑支护技术有限公司作为全资子公司，于2020年4月15日进行了一笔5亿人民币的担保交易，该年度公司营业收入为15.24亿，净利润为3.23亿。",
+          "keywords": [
+            "浙江华铁建筑支护技术有限公司",
+            "全资子公司",
+            "担保交易",
+            "5亿人民币",
+            "2020-04-15",
+            "营业收入15.24亿",
+            "净利润3.23亿"
+          ]
+        },
+        "context": "上一行：28 | 浙江吉通地空建筑科技有限公司 | 控股子公司 | 是 | 1.00亿 | 人民币 | 公司为控股子公司浙江吉通地空... | 担保 | - | 15.24亿 | 3.23亿 | 2020-04-15 00:00:00。下一行：30 | 浙江华铁宇硕建筑支护设备有限公司 | 全资子公司 | 是 | 7.00亿 | 人民币 | 浙江华铁宇硕建筑支护设备有限... | 担保 | - | 15.24亿 | 3.23亿 | 2020-04-15 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_30"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>30</td><td>浙江华铁宇硕建筑支护设备有限公司</td><td>全资子公司</td><td>是</td><td>7.00亿</td><td>人民币</td><td>浙江华铁宇硕建筑支护设备有限...</td><td>担保</td><td>-</td><td>15.24亿</td><td>3.23亿</td><td>2020-04-15 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 33,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "浙江华铁宇硕建筑支护设备有限公司作为浙江华铁建筑支护技术有限公司的全资子公司，于2020年4月15日进行了一笔7亿人民币的担保交易，该年度其营业收入为15.24亿，净利润为3.23亿。",
+          "keywords": [
+            "浙江华铁宇硕",
+            "全资子公司",
+            "担保交易",
+            "7亿人民币",
+            "2020年4月15日"
+          ]
+        },
+        "context": "上一行：29 | 浙江华铁建筑支护技术有限公司 | 全资子公司 | 是 | 5.00亿 | 人民币 | 浙江华铁建筑支护技术有限公司... | 担保 | - | 15.24亿 | 3.23亿 | 2020-04-15 00:00:00。下一行：31 | 天津华铁融资租赁有限公司 | 参股子公司 | 否 | 1.00亿 | 人民币 | 因正常生产经营需要,公司参股... | 借款 | - | 11.54亿 | 2.76亿 | 2019-12-05 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_31"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>31</td><td>天津华铁融资租赁有限公司</td><td>参股子公司</td><td>否</td><td>1.00亿</td><td>人民币</td><td>因正常生产经营需要,公司参股...</td><td>借款</td><td>-</td><td>11.54亿</td><td>2.76亿</td><td>2019-12-05 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 34,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "天津华铁融资租赁有限公司作为参股子公司，于2019年12月5日因正常生产经营需要向公司借款1.00亿人民币，该年度其营业收入为11.54亿，净利润为2.76亿。",
+          "keywords": [
+            "天津华铁融资租赁有限公司",
+            "参股子公司",
+            "借款",
+            "1.00亿",
+            "2019-12-05"
+          ]
+        },
+        "context": "上一行：30 | 浙江华铁宇硕建筑支护设备有限公司 | 全资子公司 | 是 | 7.00亿 | 人民币 | 浙江华铁宇硕建筑支护设备有限... | 担保 | - | 15.24亿 | 3.23亿 | 2020-04-15 00:00:00。下一行：32 | 天津华铁融资租赁有限公司 | 控股子公司 | 是 | 2950.00万 | 人民币 | 天津华铁融资租赁有限公司向本... | 借款 | - | 11.54亿 | 2.76亿 | 2019-11-09 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_32"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>32</td><td>天津华铁融资租赁有限公司</td><td>控股子公司</td><td>是</td><td>2950.00万</td><td>人民币</td><td>天津华铁融资租赁有限公司向本...</td><td>借款</td><td>-</td><td>11.54亿</td><td>2.76亿</td><td>2019-11-09 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 35,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "天津华铁融资租赁有限公司作为控股子公司，于2019年11月9日向本公司借款2950万元人民币，用于正常生产经营需要。该公司该年度最新财报显示营业收入为11.54亿元，净利润为2.76亿元。",
+          "keywords": [
+            "天津华铁融资租赁有限公司",
+            "控股子公司",
+            "借款",
+            "2950万",
+            "2019年11月9日",
+            "营业收入11.54亿",
+            "净利润2.76亿"
+          ]
+        },
+        "context": "上一行：31 | 天津华铁融资租赁有限公司 | 参股子公司 | 否 | 1.00亿 | 人民币 | 因正常生产经营需要,公司参股... | 借款 | - | 11.54亿 | 2.76亿 | 2019-12-05 00:00:00。下一行：33 | 天津华铁融资租赁有限公司 | 控股子公司 | 是 | - | - | 2016年1月,华铁租赁与海安县洪... | 担保 | - | 11.54亿 | 2.76亿 | 2019-09-28 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_33"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>33</td><td>天津华铁融资租赁有限公司</td><td>控股子公司</td><td>是</td><td>-</td><td>-</td><td>2016年1月,华铁租赁与海安县洪...</td><td>担保</td><td>-</td><td>11.54亿</td><td>2.76亿</td><td>2019-09-28 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 36,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "天津华铁融资租赁有限公司作为控股子公司，于2016年1月与海安县洪进行担保交易，该年度营业收入为11.54亿，净利润为2.76亿，公告日期为2019年9月28日。",
+          "keywords": [
+            "天津华铁融资租赁有限公司",
+            "控股子公司",
+            "担保交易",
+            "11.54亿营业收入",
+            "2.76亿净利润",
+            "2019-09-28"
+          ]
+        },
+        "context": "上一行：32 | 天津华铁融资租赁有限公司 | 控股子公司 | 是 | 2950.00万 | 人民币 | 天津华铁融资租赁有限公司向本... | 借款 | - | 11.54亿 | 2.76亿 | 2019-11-09 00:00:00。下一行：34 | 浙江维安建筑支护科技有限公司 | 参股子公司 | 否 | 2000.00万 | 人民币 | 向关联方提供房屋租赁、租赁服... | 租赁 | - | 8.88亿 | 2878.82万 | 2018-06-16 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_34"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>34</td><td>浙江维安建筑支护科技有限公司</td><td>参股子公司</td><td>否</td><td>2000.00万</td><td>人民币</td><td>向关联方提供房屋租赁、租赁服...</td><td>租赁</td><td>-</td><td>8.88亿</td><td>2878.82万</td><td>2018-06-16 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 37,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "该行记录了序号为34的交易，交易方为浙江维安建筑支护科技有限公司，属于参股子公司，不存在控制关系。交易金额为2000万元人民币，交易方式为租赁，涉及房屋租赁和租赁服务。该年度最新财报显示营业收入为8.88亿元，净利润为2878.82万元，公告日期为2018年6月16日。",
+          "keywords": [
+            "浙江维安建筑支护科技有限公司",
+            "参股子公司",
+            "租赁",
+            "2000万",
+            "2018-06-16"
+          ]
+        },
+        "context": "上一行：33 | 天津华铁融资租赁有限公司 | 控股子公司 | 是 | - | - | 2016年1月,华铁租赁与海安县洪... | 担保 | - | 11.54亿 | 2.76亿 | 2019-09-28 00:00:00。下一行：35 | 天津华铁融资租赁有限公司 | 控股子公司 | 是 | 5.00亿 | 人民币 | 天津华铁融资租赁有限公司为公... | 担保 | - | 6.94亿 | 3217.65万 | 2017-04-26 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_35"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>35</td><td>天津华铁融资租赁有限公司</td><td>控股子公司</td><td>是</td><td>5.00亿</td><td>人民币</td><td>天津华铁融资租赁有限公司为公...</td><td>担保</td><td>-</td><td>6.94亿</td><td>3217.65万</td><td>2017-04-26 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 38,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "天津华铁融资租赁有限公司作为控股子公司，于2017年4月26日进行了一笔5亿人民币的担保交易，该年度其营业收入为6.94亿，净利润为3217.65万。",
+          "keywords": [
+            "天津华铁融资租赁有限公司",
+            "控股子公司",
+            "担保交易",
+            "5亿人民币",
+            "2017年4月26日",
+            "营业收入6.94亿",
+            "净利润3217.65万"
+          ]
+        },
+        "context": "上一行：34 | 浙江维安建筑支护科技有限公司 | 参股子公司 | 否 | 2000.00万 | 人民币 | 向关联方提供房屋租赁、租赁服... | 租赁 | - | 8.88亿 | 2878.82万 | 2018-06-16 00:00:00。下一行：36 | 天津华铁商业保理有限公司 | 全资子公司 | 是 | 3.00亿 | 人民币 | 公司为全资子公司天津华铁商业... | 担保 | - | 6.94亿 | 3217.65万 | 2017-04-26 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_36"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>36</td><td>天津华铁商业保理有限公司</td><td>全资子公司</td><td>是</td><td>3.00亿</td><td>人民币</td><td>公司为全资子公司天津华铁商业...</td><td>担保</td><td>-</td><td>6.94亿</td><td>3217.65万</td><td>2017-04-26 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 39,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "该行记录了序号为36的交易，交易方为天津华铁商业保理有限公司，该公司为全资子公司，存在控制关系。交易金额为3.00亿人民币，交易方式为担保，无支付方式信息。该年度最新财报显示营业收入为6.94亿，净利润为3217.65万，公告日期为2017年4月26日。",
+          "keywords": [
+            "天津华铁商业保理有限公司",
+            "全资子公司",
+            "担保",
+            "3.00亿",
+            "2017-04-26"
+          ]
+        },
+        "context": "上一行：35 | 天津华铁融资租赁有限公司 | 控股子公司 | 是 | 5.00亿 | 人民币 | 天津华铁融资租赁有限公司为公... | 担保 | - | 6.94亿 | 3217.65万 | 2017-04-26 00:00:00。下一行：37 | 胡丹锋及其近亲属 | 实际控制人 | 是 | 10.00亿 | 人民币 | 胡丹锋及其近亲属为公司提供不... | 担保 | - | 6.94亿 | 3217.65万 | 2017-04-26 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_37"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>37</td><td>胡丹锋及其近亲属</td><td>实际控制人</td><td>是</td><td>10.00亿</td><td>人民币</td><td>胡丹锋及其近亲属为公司提供不...</td><td>担保</td><td>-</td><td>6.94亿</td><td>3217.65万</td><td>2017-04-26 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 40,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "胡丹锋及其近亲属作为公司实际控制人，为公司提供10亿人民币的担保，交易方式为担保，无支付方式信息，该年度公司营业收入为6.94亿，净利润为3217.65万，公告日期为2017年4月26日。",
+          "keywords": [
+            "胡丹锋",
+            "实际控制人",
+            "担保",
+            "10亿人民币",
+            "2017年4月26日"
+          ]
+        },
+        "context": "上一行：36 | 天津华铁商业保理有限公司 | 全资子公司 | 是 | 3.00亿 | 人民币 | 公司为全资子公司天津华铁商业... | 担保 | - | 6.94亿 | 3217.65万 | 2017-04-26 00:00:00。下一行：38 | 浙江华铁融资租赁有限公司 | 参股子公司 | 否 | 5.00亿 | 人民币 | 浙江华铁融资租赁有限公司为公... | 担保 | - | 6.94亿 | 3217.65万 | 2017-04-26 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_38"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>38</td><td>浙江华铁融资租赁有限公司</td><td>参股子公司</td><td>否</td><td>5.00亿</td><td>人民币</td><td>浙江华铁融资租赁有限公司为公...</td><td>担保</td><td>-</td><td>6.94亿</td><td>3217.65万</td><td>2017-04-26 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 41,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "浙江华铁融资租赁有限公司作为参股子公司，与公司进行了一笔5亿人民币的担保交易，不存在控制关系，该年度公司营业收入为6.94亿，净利润为3217.65万，公告日期为2017年4月26日。",
+          "keywords": [
+            "浙江华铁融资租赁有限公司",
+            "参股子公司",
+            "担保交易",
+            "5亿人民币",
+            "2017年4月26日"
+          ]
+        },
+        "context": "上一行：37 | 胡丹锋及其近亲属 | 实际控制人 | 是 | 10.00亿 | 人民币 | 胡丹锋及其近亲属为公司提供不... | 担保 | - | 6.94亿 | 3217.65万 | 2017-04-26 00:00:00。下一行：39 | 浙江华铁建筑设备有限公司 | 全资子公司 | 是 | 5.00亿 | 人民币 | 浙江华铁建筑设备有限公司为公... | 担保 | - | 6.94亿 | 3217.65万 | 2017-04-26 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_39"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>39</td><td>浙江华铁建筑设备有限公司</td><td>全资子公司</td><td>是</td><td>5.00亿</td><td>人民币</td><td>浙江华铁建筑设备有限公司为公...</td><td>担保</td><td>-</td><td>6.94亿</td><td>3217.65万</td><td>2017-04-26 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 42,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "浙江华铁建筑设备有限公司作为全资子公司，存在控制关系，交易金额为5亿人民币，采用担保方式，无具体支付方式，该年度营业收入为6.94亿，净利润为3217.65万，公告日期为2017年4月26日。",
+          "keywords": [
+            "浙江华铁建筑设备有限公司",
+            "全资子公司",
+            "控制关系",
+            "5亿人民币",
+            "担保",
+            "6.94亿营业收入",
+            "3217.65万净利润",
+            "2017-04-26"
+          ]
+        },
+        "context": "上一行：38 | 浙江华铁融资租赁有限公司 | 参股子公司 | 否 | 5.00亿 | 人民币 | 浙江华铁融资租赁有限公司为公... | 担保 | - | 6.94亿 | 3217.65万 | 2017-04-26 00:00:00。下一行：40 | 浙江华铁建筑支护技术有限公司 | 全资子公司 | 是 | 2.00亿 | 人民币 | 浙江华铁建筑支护技术有限公司... | 担保 | - | 6.94亿 | 3217.65万 | 2017-04-26 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_40"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>40</td><td>浙江华铁建筑支护技术有限公司</td><td>全资子公司</td><td>是</td><td>2.00亿</td><td>人民币</td><td>浙江华铁建筑支护技术有限公司...</td><td>担保</td><td>-</td><td>6.94亿</td><td>3217.65万</td><td>2017-04-26 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 43,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "浙江华铁建筑支护技术有限公司作为全资子公司，存在控制关系，交易金额为2.00亿人民币，采用担保方式，无具体支付方式，该年度营业收入为6.94亿，净利润为3217.65万，公告日期为2017年4月26日。",
+          "keywords": [
+            "浙江华铁建筑支护技术有限公司",
+            "全资子公司",
+            "担保",
+            "2.00亿",
+            "2017-04-26"
+          ]
+        },
+        "context": "上一行：39 | 浙江华铁建筑设备有限公司 | 全资子公司 | 是 | 5.00亿 | 人民币 | 浙江华铁建筑设备有限公司为公... | 担保 | - | 6.94亿 | 3217.65万 | 2017-04-26 00:00:00。下一行：41 | 浙江华铁宇硕建筑支护设备有限公司 | 全资子公司 | 是 | 2.00亿 | 人民币 | 公司为全资子公司浙江华铁宇硕... | 担保 | - | 6.94亿 | 3217.65万 | 2017-04-26 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_41"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>41</td><td>浙江华铁宇硕建筑支护设备有限公司</td><td>全资子公司</td><td>是</td><td>2.00亿</td><td>人民币</td><td>公司为全资子公司浙江华铁宇硕...</td><td>担保</td><td>-</td><td>6.94亿</td><td>3217.65万</td><td>2017-04-26 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 44,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "浙江华铁宇硕建筑支护设备有限公司作为浙江华铁建筑支护技术有限公司的全资子公司，于2017年4月26日进行了一笔2亿人民币的担保交易，该年度公司营业收入为6.94亿，净利润为3217.65万。",
+          "keywords": [
+            "浙江华铁宇硕",
+            "全资子公司",
+            "担保交易",
+            "2亿人民币",
+            "2017年4月26日",
+            "6.94亿营业收入",
+            "3217.65万净利润"
+          ]
+        },
+        "context": "上一行：40 | 浙江华铁建筑支护技术有限公司 | 全资子公司 | 是 | 2.00亿 | 人民币 | 浙江华铁建筑支护技术有限公司... | 担保 | - | 6.94亿 | 3217.65万 | 2017-04-26 00:00:00。下一行：42 | 浙江华铁宇硕建筑支护设备有限公司 | 全资子公司 | 是 | 3.00亿 | 人民币 | 浙江华铁宇硕建筑支护设备有限... | 担保 | - | 6.94亿 | 3217.65万 | 2017-04-26 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_42"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>42</td><td>浙江华铁宇硕建筑支护设备有限公司</td><td>全资子公司</td><td>是</td><td>3.00亿</td><td>人民币</td><td>浙江华铁宇硕建筑支护设备有限...</td><td>担保</td><td>-</td><td>6.94亿</td><td>3217.65万</td><td>2017-04-26 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 45,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "该行记录了序号为42的交易，交易方为浙江华铁宇硕建筑支护设备有限公司，该公司为全资子公司，存在控制关系。交易金额为3.00亿人民币，交易方式为担保，未指定支付方式。该年度最新财报显示营业收入为6.94亿，净利润为3217.65万，公告日期为2017年4月26日。",
+          "keywords": [
+            "浙江华铁宇硕",
+            "全资子公司",
+            "担保",
+            "3.00亿",
+            "2017-04-26"
+          ]
+        },
+        "context": "上一行：41 | 浙江华铁宇硕建筑支护设备有限公司 | 全资子公司 | 是 | 2.00亿 | 人民币 | 公司为全资子公司浙江华铁宇硕... | 担保 | - | 6.94亿 | 3217.65万 | 2017-04-26 00:00:00。下一行：43 | 天津华铁融资租赁有限公司 | 控股子公司 | 是 | 10.00亿 | 人民币 | 公司为控股子公司天津华铁融资... | 担保 | - | 6.94亿 | 3217.65万 | 2017-04-26 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_43"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>43</td><td>天津华铁融资租赁有限公司</td><td>控股子公司</td><td>是</td><td>10.00亿</td><td>人民币</td><td>公司为控股子公司天津华铁融资...</td><td>担保</td><td>-</td><td>6.94亿</td><td>3217.65万</td><td>2017-04-26 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 46,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "天津华铁融资租赁有限公司作为控股子公司，在2017年4月26日进行了一笔10亿人民币的担保交易，该年度其营业收入为6.94亿，净利润为3217.65万。",
+          "keywords": [
+            "天津华铁融资租赁",
+            "控股子公司",
+            "担保交易",
+            "10亿人民币",
+            "2017年"
+          ]
+        },
+        "context": "上一行：42 | 浙江华铁宇硕建筑支护设备有限公司 | 全资子公司 | 是 | 3.00亿 | 人民币 | 浙江华铁宇硕建筑支护设备有限... | 担保 | - | 6.94亿 | 3217.65万 | 2017-04-26 00:00:00。下一行：44 | 杭州德洋建筑设备租赁有限公司 | 其它关联关系 | 否 | 100.35万 | 人民币 | 建筑设备租赁服务 | 提供劳务 | 转账 | 4.79亿 | 5426.13万 | 2016-04-29 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_44"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>44</td><td>杭州德洋建筑设备租赁有限公司</td><td>其它关联关系</td><td>否</td><td>100.35万</td><td>人民币</td><td>建筑设备租赁服务</td><td>提供劳务</td><td>转账</td><td>4.79亿</td><td>5426.13万</td><td>2016-04-29 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 47,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "杭州德洋建筑设备租赁有限公司作为其它关联方，于2016年4月29日通过转账方式提供建筑设备租赁服务，交易金额为100.35万人民币，该年度公司营业收入为4.79亿，净利润为5426.13万。",
+          "keywords": [
+            "杭州德洋建筑设备租赁有限公司",
+            "建筑设备租赁",
+            "100.35万",
+            "2016-04-29",
+            "4.79亿营业收入",
+            "5426.13万净利润"
+          ]
+        },
+        "context": "上一行：43 | 天津华铁融资租赁有限公司 | 控股子公司 | 是 | 10.00亿 | 人民币 | 公司为控股子公司天津华铁融资... | 担保 | - | 6.94亿 | 3217.65万 | 2017-04-26 00:00:00。下一行：45 | 杭州德洋建筑设备租赁有限公司 | 其它关联关系 | 否 | 3000.00万 | 人民币 | 短期借款 | 借款 | 转账 | 4.79亿 | 5426.13万 | 2016-04-29 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_45"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>45</td><td>杭州德洋建筑设备租赁有限公司</td><td>其它关联关系</td><td>否</td><td>3000.00万</td><td>人民币</td><td>短期借款</td><td>借款</td><td>转账</td><td>4.79亿</td><td>5426.13万</td><td>2016-04-29 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 48,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "杭州德洋建筑设备租赁有限公司在2016年4月29日通过转账方式进行了3000万元人民币的短期借款交易，不存在控制关系，属于其它关联关系。该公司该年度财报显示营业收入为4.79亿元，净利润为5426.13万元。",
+          "keywords": [
+            "杭州德洋建筑设备租赁有限公司",
+            "短期借款",
+            "3000万",
+            "人民币",
+            "转账",
+            "2016-04-29",
+            "4.79亿营业收入",
+            "5426.13万净利润"
+          ]
+        },
+        "context": "上一行：44 | 杭州德洋建筑设备租赁有限公司 | 其它关联关系 | 否 | 100.35万 | 人民币 | 建筑设备租赁服务 | 提供劳务 | 转账 | 4.79亿 | 5426.13万 | 2016-04-29 00:00:00。下一行：46 | 杭州德洋建筑设备租赁有限公司 | 其它关联关系 | 否 | 4000.00万 | 人民币 | 短期借款 | 借款 | 转账 | 4.79亿 | 5426.13万 | 2016-04-29 00:00:00",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_46"
+      },
+      {
+        "type": "table_row",
+        "content": "<table border='1'><tr><td>46</td><td>杭州德洋建筑设备租赁有限公司</td><td>其它关联关系</td><td>否</td><td>4000.00万</td><td>人民币</td><td>短期借款</td><td>借款</td><td>转账</td><td>4.79亿</td><td>5426.13万</td><td>2016-04-29 00:00:00</td></tr></table>",
+        "metadata": {
+          "doc_id": "test.xlsx",
+          "sheet": "Sheet1",
+          "row": 49,
+          "table_id": "Sheet1_table_1",
+          "header": [
+            "序号",
+            "交易方",
+            "关联关系",
+            "是否存在控制关系",
+            "交易金额(元)",
+            "币种",
+            "交易简介",
+            "交易方式",
+            "支付方式",
+            "该年度最新财报的营业收入(元)",
+            "该年度最新财报的净利润(元)",
+            "公告日期"
+          ],
+          "parent_table_info": "表头: ['序号', '交易方', '关联关系', '是否存在控制关系', '交易金额(元)', '币种', '交易简介', '交易方式', '支付方式', '该年度最新财报的营业收入(元)', '该年度最新财报的净利润(元)', '公告日期'] 合并单元格: [{'coord': 'A1:A3', 'min_row': 1, 'max_row': 3, 'min_col': 1, 'max_col': 1}, {'coord': 'D1:D3', 'min_row': 1, 'max_row': 3, 'min_col': 4, 'max_col': 4}, {'coord': 'B1:B3', 'min_row': 1, 'max_row': 3, 'min_col': 2, 'max_col': 2}, {'coord': 'G1:G3', 'min_row': 1, 'max_row': 3, 'min_col': 7, 'max_col': 7}, {'coord': 'C1:C3', 'min_row': 1, 'max_row': 3, 'min_col': 3, 'max_col': 3}, {'coord': 'K1:K3', 'min_row': 1, 'max_row': 3, 'min_col': 11, 'max_col': 11}, {'coord': 'F1:F3', 'min_row': 1, 'max_row': 3, 'min_col': 6, 'max_col': 6}, {'coord': 'H1:H3', 'min_row': 1, 'max_row': 3, 'min_col': 8, 'max_col': 8}, {'coord': 'E1:E3', 'min_row': 1, 'max_row': 3, 'min_col': 5, 'max_col': 5}, {'coord': 'I1:I3', 'min_row': 1, 'max_row': 3, 'min_col': 9, 'max_col': 9}, {'coord': 'L1:L3', 'min_row': 1, 'max_row': 3, 'min_col': 12, 'max_col': 12}, {'coord': 'J1:J3', 'min_row': 1, 'max_row': 3, 'min_col': 10, 'max_col': 10}]",
+          "description": "杭州德洋建筑设备租赁有限公司在2016年4月29日通过转账方式进行了4000万元人民币的短期借款交易，不存在控制关系，属于其它关联关系。该年度公司营业收入为4.79亿元，净利润为5426.13万元。",
+          "keywords": [
+            "杭州德洋建筑设备租赁有限公司",
+            "短期借款",
+            "4000万",
+            "人民币",
+            "2016-04-29",
+            "营业收入4.79亿",
+            "净利润5426.13万"
+          ]
+        },
+        "context": "上一行：45 | 杭州德洋建筑设备租赁有限公司 | 其它关联关系 | 否 | 3000.00万 | 人民币 | 短期借款 | 借款 | 转账 | 4.79亿 | 5426.13万 | 2016-04-29 00:00:00。下一行：",
+        "parent_id": "Sheet1_table_1",
+        "chunk_id": "test.xlsx_47"
+      }
+    ]
+  }
+}

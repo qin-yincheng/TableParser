@@ -1,0 +1,10 @@
+{
+  "test_time": "2025-07-27T21:41:47.901676",
+  "doc_type": "mixed",
+  "total_chunks": 10,
+  "vectorization_success": 10,
+  "storage_success": 10,
+  "vectorization_time": 7.234051704406738,
+  "storage_time": 0.46494626998901367,
+  "total_time": 7.698997974395752
+}

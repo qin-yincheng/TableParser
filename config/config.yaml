@@ -1,0 +1,20 @@
+# Weaviate向量数据库配置
+database:
+  weaviate:
+    host: "localhost"      # Docker主机地址
+    port: 8089            # Docker映射的HTTP端口
+    grpc_host: "localhost" # Docker主机地址
+    grpc_port: 50055      # Docker映射的gRPC端口
+    scheme: "http"         # 协议类型
+    api_key: null          # Docker配置中禁用了API key
+    timeout: [5, 30]       # 连接超时设置
+
+# 其他配置可以根据需要添加
+# embedding:
+#   model: "text-embedding-ada-002"
+#   api_key: "your-api-key"
+
+# llm:
+#   provider: "openai"
+#   model: "gpt-3.5-turbo"
+#   api_key: "your-api-key" 

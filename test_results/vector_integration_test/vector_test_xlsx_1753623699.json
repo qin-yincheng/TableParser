@@ -1,0 +1,10 @@
+{
+  "test_time": "2025-07-27T21:41:39.502254",
+  "doc_type": "xlsx",
+  "total_chunks": 10,
+  "vectorization_success": 10,
+  "storage_success": 10,
+  "vectorization_time": 7.225393533706665,
+  "storage_time": 0.5058116912841797,
+  "total_time": 7.731205224990845
+}
