@@ -15,7 +15,7 @@ class QAService:
     def __init__(self):
         """初始化问答服务"""
         self.query_service = QueryService()
-        self.max_context_length = 4000  # 上下文最大长度
+        self.max_context_length = 10000  # 上下文最大长度
         self.max_results = 8  # 最大检索结果数
 
     async def answer_question(
@@ -175,7 +175,7 @@ class QAService:
                 prompt=user_prompt,
                 system_prompt=system_prompt,
                 temperature=0.3,
-                max_tokens=1000,
+                max_tokens=8192,
             )
 
             return answer.strip() if answer else None
@@ -296,8 +296,8 @@ class QAService:
             "sources": [
                 {
                     "content": (
-                        result.get("content", "")[:200] + "..."
-                        if len(result.get("content", "")) > 200
+                        result.get("content", "")[:500] + "..."
+                        if len(result.get("content", "")) > 500
                         else result.get("content", "")
                     ),
                     "chunk_type": result.get("chunk_type", "text"),

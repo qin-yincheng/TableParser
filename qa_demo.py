@@ -15,7 +15,7 @@ class QADemo:
     def __init__(self):
         """初始化演示"""
         self.qa_service = QAService()
-        self.kb_id = 1  # 默认知识库ID
+        self.kb_id = 2  # 默认知识库ID
 
     async def interactive_qa(self):
         """交互式问答"""
@@ -101,10 +101,10 @@ class QADemo:
         print("=" * 60)
 
         demo_questions = [
-            "Cedar 大学在2005年招收了多少名本科新生？",
-            "表格中显示了哪些大学的招生数据？",
-            "为什么选择Cedar大学？",
-            "招生数据统计表包含哪些信息？",
+            "在 2021 年 1 月 26 日，有哪些资产收购行为？交易金额分别是多少？",
+            "胡丹锋及其近亲属在 2017 年是否曾为公司提供 10 亿元人民币的担保？该笔交易的公告日期是哪天？",
+            "公司是否在 2019 年 9 月 28 日对控股子公司天津华铁融资租赁有限公司提供过担保？该公司当年的净利润是多少？",
+            "浙江华铁建筑支护技术有限公司是否曾有两笔分别为 2 亿和 5 亿的担保记录？是否都是在 2017 年？",
         ]
 
         for i, question in enumerate(demo_questions, 1):
@@ -116,7 +116,7 @@ class QADemo:
             )
 
             if result.get("success"):
-                print(f"答案: {result.get('answer', '')[:200]}...")
+                print(f"答案: {result.get('answer', '')[:500]}...")
                 print(f"来源数: {result.get('metadata', {}).get('total_sources', 0)}")
             else:
                 print(f"失败: {result.get('error', '')}")
