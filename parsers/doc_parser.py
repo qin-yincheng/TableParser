@@ -14,10 +14,16 @@ import asyncio
 from utils.zhipu_client import zhipu_complete_async, parse_json_response
 from utils.chunk_prompts import SYSTEM_PROMPTS, STRUCTURED_PROMPTS
 from utils.config import LLM_CONFIG
+from .fragment_manager import FragmentManager
+from .fragment_config import FragmentConfig
 
 
 class DocFileParser:
     """DOC/DOCX文件解析器，docx用python-docx，doc用textract/antiword，输出分块结构"""
+
+    def __init__(self, fragment_config: Optional[FragmentConfig] = None):
+        """初始化解析器"""
+        self.fragment_manager = FragmentManager(fragment_config) if fragment_config else None
 
     def process(self, file_path: str) -> List[Dict]:
         logger.info(f"开始解析Word文档: {file_path}")
@@ -34,6 +40,13 @@ class DocFileParser:
         else:
             logger.error(f"不支持的Word文档格式: {ext}")
             return []
+
+        # 新增：智能分片处理
+        if self.fragment_manager:
+            chunks = self.fragment_manager.process_chunks(chunks)
+            # 输出分片统计信息
+            stats = self.fragment_manager.get_fragment_statistics(chunks)
+            logger.info(f"分片统计: {stats}")
 
         # 为每个分块添加chunk_id
         for idx, chunk in enumerate(chunks):
@@ -380,26 +393,50 @@ ZHIPU_API_KEY = os.getenv("ZHIPUAI_API_KEY")
 def build_prompt_for_chunk(chunk: dict, with_context: bool = True) -> str:
     """根据分块类型和元数据动态生成Prompt，支持有无上下文。"""
     chunk_type = chunk.get("type", "text")
+    
+    # 检查是否为分片chunk
+    if chunk.get("metadata", {}).get("is_fragment"):
+        chunk_type = "text_fragment"
+    
     if with_context:
         from utils.chunk_prompts import STRUCTURED_PROMPTS_WITH_CONTEXT as PROMPTS
     else:
         from utils.chunk_prompts import STRUCTURED_PROMPTS as PROMPTS
+    
     metadata = chunk.get("metadata", {})
-    prompt = PROMPTS.get(chunk_type, PROMPTS["text"]).format(
-        content=chunk.get("content", ""),
-        paragraph_index=metadata.get("paragraph_index", ""),
-        table_title=metadata.get("table_title", ""),
-        sheet=metadata.get("sheet", ""),
-        header=metadata.get("header", ""),
-        parent_table_info=metadata.get("parent_table_info", ""),
-        context=chunk.get("context", ""),
-    )
+    
+    # 根据chunk类型构建不同的prompt参数
+    if chunk_type == "text_fragment":
+        prompt = PROMPTS.get(chunk_type, PROMPTS["text"]).format(
+            content=chunk.get("content", ""),
+            paragraph_index=metadata.get("paragraph_index", ""),
+            fragment_index=metadata.get("fragment_index", ""),
+            total_fragments=metadata.get("total_fragments", ""),
+            original_content=metadata.get("original_content", ""),
+            context=chunk.get("context", ""),
+        )
+    else:
+        prompt = PROMPTS.get(chunk_type, PROMPTS["text"]).format(
+            content=chunk.get("content", ""),
+            paragraph_index=metadata.get("paragraph_index", ""),
+            table_title=metadata.get("table_title", ""),
+            sheet=metadata.get("sheet", ""),
+            header=metadata.get("header", ""),
+            parent_table_info=metadata.get("parent_table_info", ""),
+            context=chunk.get("context", ""),
+        )
+    
     return prompt
 
 
 def get_system_prompt_for_chunk(chunk: dict) -> str:
     """根据分块类型获取系统提示词。"""
     chunk_type = chunk.get("type", "text")
+    
+    # 检查是否为分片chunk
+    if chunk.get("metadata", {}).get("is_fragment"):
+        chunk_type = "text_fragment"
+    
     return SYSTEM_PROMPTS.get(chunk_type, SYSTEM_PROMPTS["text"])
 
 

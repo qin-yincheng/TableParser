@@ -8,9 +8,11 @@ import os
 from typing import List, Dict, Any
 from parsers.doc_parser import DocFileParser
 from parsers.xlsx_parser import XlsxFileParser
+from parsers.fragment_config import FragmentConfig
 from embedding_service import EmbeddingService
 from vector_service import VectorService
 from utils.logger import logger
+from utils.config_manager import ConfigManager
 
 
 class MainProcessor:
@@ -18,7 +20,26 @@ class MainProcessor:
 
     def __init__(self):
         """初始化主处理器"""
-        self.doc_parser = DocFileParser()
+        # 加载配置
+        self.config_manager = ConfigManager()
+        fragmentation_config = self.config_manager.get_fragmentation_config()
+        
+        # 根据配置创建文档解析器
+        if fragmentation_config.get("enable", False):
+            # 只传递实际使用的配置项
+            fragment_config = FragmentConfig(
+                enable_fragmentation=True,
+                max_chunk_size=fragmentation_config.get("max_chunk_size", 1000),
+                min_fragment_size=fragmentation_config.get("min_fragment_size", 200),
+                chunk_overlap=fragmentation_config.get("chunk_overlap", 100),
+                enable_context_rebuild=fragmentation_config.get("enable_context_rebuild", True)
+            )
+            self.doc_parser = DocFileParser(fragment_config=fragment_config)
+            logger.info("启用分片功能")
+        else:
+            self.doc_parser = DocFileParser()
+            logger.info("未启用分片功能")
+        
         self.xlsx_parser = XlsxFileParser()
         self.embedding_service = EmbeddingService()
         self.vector_service = VectorService()

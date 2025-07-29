@@ -9,6 +9,7 @@ from typing import Dict
 # 系统提示词（按分块类型）
 SYSTEM_PROMPTS: Dict[str, str] = {
     "text": "你是一名专业的内容分析师，请对下方文本内容进行简明、准确的分析和总结。",
+    "text_fragment": "你是一名专业的内容分析师，请对下方文本分片内容进行简明、准确的分析和总结，注意这是完整段落的一部分。",
     "table_full": "你是一名专业的数据分析师，请对下方表格内容进行详细、专业的分析和主题总结。",
     "table_row": "你是一名专业的数据分析师，请结合表头和父表格信息，对下方表格行数据进行简明、准确的分析和总结。",
     # "future_type": "..."
@@ -23,6 +24,16 @@ STRUCTURED_PROMPTS: Dict[str, str] = {
         '  "keywords": ["关键词1", "关键词2", "关键词3"]\n'
         "}}\n"
         "文本内容：\n{content}\n"
+        "只输出JSON，不要其他内容。"
+    ),
+    "text_fragment": (
+        "请用简洁准确的语言总结第{paragraph_index}段文本的分片内容（分片{fragment_index}/{total_fragments}），输出如下JSON结构：\n"
+        "{{\n"
+        '  "description": "高度概括该分片的主要内容和语义要点，注意这是完整段落的一部分",\n'
+        '  "keywords": ["关键词1", "关键词2", "关键词3"]\n'
+        "}}\n"
+        "原始段落内容：{original_content}\n"
+        "分片内容：\n{content}\n"
         "只输出JSON，不要其他内容。"
     ),
     "table_full": (
@@ -59,6 +70,17 @@ STRUCTURED_PROMPTS_WITH_CONTEXT: Dict[str, str] = {
         "}}\n"
         "上下文内容：{context}\n"
         "文本内容：{content}\n"
+        "只输出JSON，不要其他内容。"
+    ),
+    "text_fragment": (
+        "请结合上下文，用简洁准确的语言总结第{paragraph_index}段文本的分片内容（分片{fragment_index}/{total_fragments}），必要时补充上下文关键信息，输出如下JSON结构：\n"
+        "{{\n"
+        '  "description": "高度概括该分片的主要内容和语义要点，注意这是完整段落的一部分，必要时结合上下文补充信息",\n'
+        '  "keywords": ["关键词1", "关键词2", "关键词3"]\n'
+        "}}\n"
+        "上下文内容：{context}\n"
+        "原始段落内容：{original_content}\n"
+        "分片内容：\n{content}\n"
         "只输出JSON，不要其他内容。"
     ),
     "table_full": (

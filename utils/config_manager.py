@@ -79,6 +79,16 @@ class ConfigManager:
         config = self.get_config()
         return config.get("database", {}).get("weaviate", {})
 
+    def get_fragmentation_config(self) -> Dict[str, Any]:
+        """
+        获取分片配置
+
+        Returns:
+            Dict[str, Any]: 分片配置字典
+        """
+        config = self.get_config()
+        return config.get("fragmentation", {})
+
     def reload_config(self) -> None:
         """重新加载配置文件"""
         self._config = None
