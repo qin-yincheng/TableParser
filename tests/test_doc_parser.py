@@ -70,7 +70,7 @@ def test_doc_with_fragmentation():
     input_path = os.path.join(os.path.dirname(__file__), "../test_data/testData.doc")
     result = parser.process(input_path)
     output_path = os.path.join(
-        os.path.dirname(__file__), "../test_data/test_doc_result_with_frag.json"
+        os.path.dirname(__file__), "../test_data/test_doc_result_with_frag1.json"
     )
     import json
 
@@ -128,12 +128,12 @@ if __name__ == "__main__":
     # test_fragmentation_comparison()
     
     # 2. 测试docx文件（有分片）
-    print("\n=== 测试DOCX文件（启用分片） ===")
-    test_docx_with_fragmentation()
+    # print("\n=== 测试DOCX文件（启用分片） ===")
+    # test_docx_with_fragmentation()
     
     # 3. 测试doc文件（有分片）
-    # print("\n=== 测试DOC文件（启用分片） ===")
-    # test_doc_with_fragmentation()
+    print("\n=== 测试DOC文件（启用分片） ===")
+    test_doc_with_fragmentation()
     
     print("\n=== 所有测试完成 ===")
     print("结果文件保存在 test_data/ 目录下")

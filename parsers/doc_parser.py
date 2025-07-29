@@ -1,21 +1,154 @@
 """
-DOC/DOCX文件解析器实现（docx用python-docx，doc用textract/antiword）
+DOC/DOCX文件解析器实现（docx用python-docx，doc用LibreOffice转换）
 """
 
 import os
-from typing import List, Dict, Any, Optional
+import subprocess
+import tempfile
+import platform
+from typing import List, Dict, Optional
 from utils.logger import logger
 
 from docx.table import Table
 from docx.text.paragraph import Paragraph
 from dotenv import load_dotenv
-import os
 import asyncio
 from utils.zhipu_client import zhipu_complete_async, parse_json_response
 from utils.chunk_prompts import SYSTEM_PROMPTS, STRUCTURED_PROMPTS
 from utils.config import LLM_CONFIG
 from .fragment_manager import FragmentManager
 from .fragment_config import FragmentConfig
+
+
+class LibreOfficeNotFoundError(Exception):
+    """LibreOffice未安装或无法找到"""
+    pass
+
+
+class ConversionError(Exception):
+    """DOC转DOCX转换失败"""
+    pass
+
+
+class ConversionTimeoutError(Exception):
+    """转换超时"""
+    pass
+
+
+def check_libreoffice_installation() -> bool:
+    """检测LibreOffice是否已安装"""
+    system = platform.system().lower()
+    
+    if system == "windows":
+        # Windows路径检查
+        possible_paths = [
+            r"C:\Program Files\LibreOffice\program\soffice.exe",
+            r"C:\Program Files (x86)\LibreOffice\program\soffice.exe"
+        ]
+        for path in possible_paths:
+            if os.path.exists(path):
+                return True
+        return False
+    else:
+        # Linux/macOS使用which命令检查
+        try:
+            result = subprocess.run(
+                ["which", "libreoffice"], 
+                stdout=subprocess.PIPE, 
+                stderr=subprocess.PIPE,
+                timeout=10
+            )
+            return result.returncode == 0
+        except (subprocess.TimeoutExpired, FileNotFoundError):
+            return False
+
+
+def get_libreoffice_command() -> str:
+    """获取LibreOffice命令路径"""
+    system = platform.system().lower()
+    
+    if system == "windows":
+        possible_paths = [
+            r"C:\Program Files\LibreOffice\program\soffice.exe",
+            r"C:\Program Files (x86)\LibreOffice\program\soffice.exe"
+        ]
+        for path in possible_paths:
+            if os.path.exists(path):
+                return path
+        raise LibreOfficeNotFoundError("Windows系统未找到LibreOffice安装")
+    else:
+        # Linux/macOS
+        try:
+            result = subprocess.run(
+                ["which", "libreoffice"], 
+                stdout=subprocess.PIPE, 
+                stderr=subprocess.PIPE,
+                timeout=10
+            )
+            if result.returncode == 0:
+                return "libreoffice"
+            raise LibreOfficeNotFoundError("系统未找到libreoffice命令")
+        except subprocess.TimeoutExpired:
+            raise LibreOfficeNotFoundError("检测libreoffice命令超时")
+
+
+def convert_doc_to_docx(doc_path: str, output_dir: Optional[str] = None) -> str:
+    """使用LibreOffice将DOC文件转换为DOCX格式"""
+    if not os.path.exists(doc_path):
+        raise FileNotFoundError(f"DOC文件不存在: {doc_path}")
+    
+    # 检查LibreOffice安装
+    if not check_libreoffice_installation():
+        raise LibreOfficeNotFoundError("系统未安装LibreOffice，无法转换DOC文件")
+    
+    # 获取输出目录
+    if output_dir is None:
+        output_dir = tempfile.mkdtemp(prefix="doc_conversion_")
+    else:
+        os.makedirs(output_dir, exist_ok=True)
+    
+    # 获取LibreOffice命令
+    libreoffice_cmd = get_libreoffice_command()
+    
+    # 构建转换命令
+    cmd = [
+        libreoffice_cmd,
+        "--headless",
+        "--convert-to", "docx",
+        "--outdir", output_dir,
+        doc_path
+    ]
+    
+    try:
+        # 执行转换命令
+        result = subprocess.run(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            timeout=60  # 60秒超时
+        )
+        
+        if result.returncode != 0:
+            error_msg = result.stderr.decode('utf-8', errors='ignore')
+            raise ConversionError(f"LibreOffice转换失败: {error_msg}")
+        
+        # 检查转换结果
+        doc_filename = os.path.basename(doc_path)
+        docx_filename = os.path.splitext(doc_filename)[0] + ".docx"
+        docx_path = os.path.join(output_dir, docx_filename)
+        
+        if not os.path.exists(docx_path):
+            raise ConversionError(f"转换后的DOCX文件不存在: {docx_path}")
+        
+        logger.info(f"成功将DOC文件转换为DOCX: {docx_path}")
+        return docx_path
+        
+    except subprocess.TimeoutExpired:
+        raise ConversionTimeoutError("DOC转DOCX转换超时（60秒）")
+    except Exception as e:
+        if isinstance(e, (ConversionError, ConversionTimeoutError)):
+            raise
+        raise ConversionError(f"转换过程中发生未知错误: {str(e)}")
 
 
 class DocFileParser:
@@ -34,9 +167,17 @@ class DocFileParser:
         ext = ext.lower().lstrip(".")
         doc_id = os.path.basename(file_path)
         if ext == "docx":
-            chunks = self._process_docx(file_path, doc_id)
+            try:
+                chunks = self._process_docx(file_path, doc_id)
+            except Exception as e:
+                logger.error(f"DOCX文件处理失败: {str(e)}")
+                return []
         elif ext == "doc":
-            chunks = self._process_doc(file_path, doc_id)
+            try:
+                chunks = self._process_doc(file_path, doc_id)
+            except (LibreOfficeNotFoundError, ConversionError, ConversionTimeoutError) as e:
+                logger.error(f"DOC文件处理失败: {str(e)}")
+                return []  # 转换失败时返回空列表
         else:
             logger.error(f"不支持的Word文档格式: {ext}")
             return []
@@ -77,6 +218,7 @@ class DocFileParser:
             return chunks  # 如果增强失败，返回原始分块
 
     def _process_docx(self, file_path: str, doc_id: str) -> List[Dict]:
+        """解析DOCX文件，提取段落和表格内容"""
         try:
             from docx import Document
 
@@ -129,40 +271,37 @@ class DocFileParser:
             return all_chunks
         except ImportError:
             logger.error("未安装python-docx库，无法解析DOCX文件")
-            return []
+            raise
         except Exception as e:
             logger.error(f"解析DOCX文件出错: {file_path}, 错误: {str(e)}")
-            return []
+            raise
 
     def _process_doc(self, file_path: str, doc_id: str) -> List[Dict]:
+        """使用LibreOffice转换DOC文件为DOCX，然后解析"""
+        docx_path = None
         try:
-            import textract
-
-            text = textract.process(file_path).decode("utf-8")
-        except ImportError:
-            try:
-                import subprocess
-
-                result = subprocess.run(
-                    ["antiword", file_path],
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
-                )
-                if result.returncode == 0:
-                    text = result.stdout.decode("utf-8")
-                else:
-                    logger.error(
-                        f"使用antiword解析DOC文件失败: {result.stderr.decode('utf-8')}"
-                    )
-                    return []
-            except Exception:
-                logger.error("未安装textract或antiword，无法解析DOC文件")
-                return []
+            # 使用LibreOffice将DOC文件转换为DOCX
+            docx_path = convert_doc_to_docx(file_path)
+            # 使用现有的DOCX解析逻辑
+            chunks = self._process_docx(docx_path, doc_id)
+            return chunks
+        except (LibreOfficeNotFoundError, ConversionError, ConversionTimeoutError) as e:
+            logger.error(f"DOC文件转换失败: {file_path}, 错误: {str(e)}")
+            raise  # 转换失败直接抛出异常，不进行备选解析
         except Exception as e:
             logger.error(f"解析DOC文件出错: {file_path}, 错误: {str(e)}")
-            return []
-        paragraphs = [p.strip() for p in text.split("\n") if p.strip()]
-        return self._split_paragraphs(paragraphs, doc_id)
+            raise
+        finally:
+            # 清理临时转换文件
+            if docx_path and os.path.exists(docx_path):
+                try:
+                    os.remove(docx_path)
+                    # 尝试删除临时目录（如果为空）
+                    temp_dir = os.path.dirname(docx_path)
+                    if os.path.exists(temp_dir) and not os.listdir(temp_dir):
+                        os.rmdir(temp_dir)
+                except Exception as e:
+                    logger.warning(f"清理临时文件失败: {str(e)}")
 
     def _split_paragraphs(self, paragraphs: List[str], doc_id: str) -> List[Dict]:
         chunks = []
