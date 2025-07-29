@@ -31,4 +31,4 @@ def delete_kb_collection(kb_id: int):
 
 if __name__ == "__main__":
     # 删除 Kb_1 集合
-    delete_kb_collection(1)
+    delete_kb_collection(999)

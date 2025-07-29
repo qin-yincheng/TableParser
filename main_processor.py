@@ -221,8 +221,8 @@ async def process_multiple_documents(
 if __name__ == "__main__":
     # 示例：处理单个文档
     async def example_single():
-        file_path = "test_data/test.xlsx"
-        kb_id = 2
+        file_path = "test_data/test.doc"
+        kb_id = 3
         result = await process_single_document(file_path, kb_id)
         print(f"处理结果: {result}")
 

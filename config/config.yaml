@@ -12,9 +12,9 @@ database:
 # 分片配置
 fragmentation:
   enable: true                    # 是否启用分片功能
-  max_chunk_size: 1000           # 最大chunk大小
-  min_fragment_size: 200         # 最小分片大小
-  chunk_overlap: 100             # 分片重叠大小
+  max_chunk_size: 500           # 最大chunk大小
+  min_fragment_size: 100         # 最小分片大小
+  chunk_overlap: 50             # 分片重叠大小
   enable_context_rebuild: true   # 是否重构上下文
 
 # 其他配置可以根据需要添加
