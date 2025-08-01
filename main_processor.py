@@ -8,7 +8,7 @@ import os
 from typing import List, Dict, Any
 from parsers.doc_parser import DocFileParser
 from parsers.xlsx_parser import XlsxFileParser
-from parsers.fragment_config import FragmentConfig
+from parsers.fragment_config import FragmentConfig, TableProcessingConfig
 from embedding_service import EmbeddingService
 from vector_service import VectorService
 from utils.logger import logger
@@ -24,6 +24,12 @@ class MainProcessor:
         self.config_manager = ConfigManager()
         fragmentation_config = self.config_manager.get_fragmentation_config()
         
+        # 创建默认的表格处理配置：Markdown格式 + 只生成完整表格块
+        default_table_config = TableProcessingConfig(
+            table_format="markdown",
+            table_chunking_strategy="full_only"
+        )
+        
         # 根据配置创建文档解析器
         if fragmentation_config.get("enable", False):
             # 只传递实际使用的配置项
@@ -32,15 +38,19 @@ class MainProcessor:
                 max_chunk_size=fragmentation_config.get("max_chunk_size", 1000),
                 min_fragment_size=fragmentation_config.get("min_fragment_size", 200),
                 chunk_overlap=fragmentation_config.get("chunk_overlap", 100),
-                enable_context_rebuild=fragmentation_config.get("enable_context_rebuild", True)
+                enable_context_rebuild=fragmentation_config.get("enable_context_rebuild", True),
+                table_processing=default_table_config
             )
             self.doc_parser = DocFileParser(fragment_config=fragment_config)
-            logger.info("启用分片功能")
+            logger.info("启用分片功能，使用Markdown格式和只生成完整表格块")
         else:
-            self.doc_parser = DocFileParser()
-            logger.info("未启用分片功能")
+            # 即使不启用分片，也使用表格配置
+            fragment_config = FragmentConfig(table_processing=default_table_config)
+            self.doc_parser = DocFileParser(fragment_config=fragment_config)
+            logger.info("未启用分片功能，使用Markdown格式和只生成完整表格块")
         
-        self.xlsx_parser = XlsxFileParser()
+        # Excel解析器也使用相同的表格配置
+        self.xlsx_parser = XlsxFileParser(fragment_config=FragmentConfig(table_processing=default_table_config))
         self.embedding_service = EmbeddingService()
         self.vector_service = VectorService()
 
@@ -221,8 +231,8 @@ async def process_multiple_documents(
 if __name__ == "__main__":
     # 示例：处理单个文档
     async def example_single():
-        file_path = "test_data/test.doc"
-        kb_id = 3
+        file_path = "test_data/testLong.xlsx"
+        kb_id = 4
         result = await process_single_document(file_path, kb_id)
         print(f"处理结果: {result}")
 

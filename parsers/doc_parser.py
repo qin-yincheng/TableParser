@@ -6,7 +6,7 @@ import os
 import subprocess
 import tempfile
 import platform
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Tuple
 from utils.logger import logger
 
 from docx.table import Table
@@ -17,7 +17,7 @@ from utils.zhipu_client import zhipu_complete_async, parse_json_response
 from utils.chunk_prompts import SYSTEM_PROMPTS, STRUCTURED_PROMPTS
 from utils.config import LLM_CONFIG
 from .fragment_manager import FragmentManager
-from .fragment_config import FragmentConfig
+from .fragment_config import FragmentConfig, TableProcessingConfig
 
 
 class LibreOfficeNotFoundError(Exception):
@@ -157,6 +157,8 @@ class DocFileParser:
     def __init__(self, fragment_config: Optional[FragmentConfig] = None):
         """初始化解析器"""
         self.fragment_manager = FragmentManager(fragment_config) if fragment_config else None
+        self.table_config = fragment_config.table_processing if fragment_config else TableProcessingConfig()
+        self.table_config = fragment_config.table_processing if fragment_config else TableProcessingConfig()
 
     def process(self, file_path: str) -> List[Dict]:
         logger.info(f"开始解析Word文档: {file_path}")
@@ -327,14 +329,17 @@ class DocFileParser:
         parent_table_info: Optional[str] = None,
     ) -> List[Dict]:
         """
-        处理合并单元格，生成整表和行级分块，记录合并信息和上下文段落内容。
+        处理合并单元格，根据配置生成表格分块，记录合并信息和上下文段落内容。
         paragraphs: 所有段落内容列表，用于查找上下文内容
         headers: 可选，表头内容
         parent_table_info: 可选，父表格信息
         """
         all_chunks = []
         table_id = f"table_{id(table)}"
-        table_html, table_headers, merged_cells = self._table_to_html_with_merge(table)
+        
+        # 根据配置获取表格格式
+        table_content, table_headers, merged_cells = self._convert_table_to_format(table)
+        
         # 获取上下文段落内容
         preceding_content = (
             self.get_paragraph_content_by_index(paragraphs, preceding)
@@ -347,55 +352,53 @@ class DocFileParser:
             else None
         )
         context = self._get_context_for_table(preceding_content, following_content)
+        
         # 构造 parent_table_info
         parent_info = (
             parent_table_info
             if parent_table_info is not None
             else f"表头: {table_headers} 合并单元格: {merged_cells}"
         )
-        table_chunk = {
-            "type": "table_full",
-            "content": table_html,
-            "metadata": {
-                "doc_id": doc_id,
-                "table_id": table_id,
-                "preceding_paragraph_index": preceding,
-                "following_paragraph_index": following,
-                "preceding_paragraph_content": preceding_content,
-                "following_paragraph_content": following_content,
-                "header": table_headers,
-                "merged_cells": merged_cells,
-                "parent_table_info": parent_info,
-            },
-            "context": context,
-        }
-        all_chunks.append(table_chunk)
-        # 行级分块
-        for r_idx, row in enumerate(table.rows):
-            if r_idx == 0:
-                continue  # 跳过表头
-            row_html = self._row_to_html_with_merge(row, table_headers)
-            row_chunk = {
-                "type": "table_row",
-                "content": row_html,
+        
+        # 根据配置决定是否生成完整表格块
+        if self.table_config.table_chunking_strategy in ["full_only", "full_and_rows"]:
+            table_chunk = {
+                "type": "table_full",
+                "content": table_content,
                 "metadata": {
                     "doc_id": doc_id,
                     "table_id": table_id,
-                    "row": r_idx + 1,
                     "preceding_paragraph_index": preceding,
                     "following_paragraph_index": following,
                     "preceding_paragraph_content": preceding_content,
                     "following_paragraph_content": following_content,
                     "header": table_headers,
+                    "merged_cells": merged_cells,
                     "parent_table_info": parent_info,
+                    "table_format": self.table_config.table_format,
                 },
-                "parent_id": table_id,
                 "context": context,
             }
-            all_chunks.append(row_chunk)
+            all_chunks.append(table_chunk)
+        
+        # 根据配置决定是否生成表格行数据
+        if self.table_config.table_chunking_strategy == "full_and_rows":
+            row_chunks = self._generate_table_row_chunks(
+                table, doc_id, table_id, preceding, following, 
+                preceding_content, following_content, table_headers, parent_info, context
+            )
+            all_chunks.extend(row_chunks)
+        
         return all_chunks
 
-    def _table_to_html_with_merge(self, table: Table) -> (str, List[str], List[Dict]):
+    def _convert_table_to_format(self, table: Table) -> Tuple[str, List[str], List[Dict]]:
+        """根据配置将表格转换为指定格式"""
+        if self.table_config.table_format == "markdown":
+            return self._table_to_markdown_with_merge(table)
+        else:
+            return self._table_to_html_with_merge(table)
+
+    def _table_to_html_with_merge(self, table: Table) -> Tuple[str, List[str], List[Dict]]:
         """
         生成带合并信息的HTML表格和合并单元格元数据
         返回: (html字符串, headers, merged_cells)
@@ -441,10 +444,100 @@ class DocFileParser:
         html.append("</table>")
         return "\n".join(html), headers, merged_cells
 
-    def _row_to_html_with_merge(self, row, headers: List[str]) -> str:
+    def _table_to_markdown_with_merge(self, table: Table) -> Tuple[str, List[str], List[Dict]]:
         """
-        生成单行HTML字符串
+        生成带合并信息的Markdown表格和合并单元格元数据
+        返回: (markdown字符串, headers, merged_cells)
         """
+        rows = []
+        merged_cells = []
+        for r_idx, row in enumerate(table.rows):
+            row_cells = []
+            for c_idx, cell in enumerate(row.cells):
+                text = cell.text.strip()
+                rowspan, colspan = self._get_cell_span(cell)
+                cell_info = {
+                    "text": text,
+                    "rowspan": rowspan,
+                    "colspan": colspan,
+                    "row": r_idx,
+                    "col": c_idx,
+                }
+                if rowspan > 1 or colspan > 1:
+                    merged_cells.append(cell_info)
+                row_cells.append(cell_info)
+            rows.append(row_cells)
+        
+        if not rows:
+            return "", [], merged_cells
+        
+        headers = [cell["text"] for cell in rows[0]]
+        markdown_lines = []
+        
+        # 表头
+        header_row = "| " + " | ".join([cell["text"] for cell in rows[0]]) + " |"
+        markdown_lines.append(header_row)
+        
+        # 分隔线
+        separator_row = "| " + " | ".join(["---"] * len(rows[0])) + " |"
+        markdown_lines.append(separator_row)
+        
+        # 表体
+        for row in rows[1:]:
+            data_row = "| " + " | ".join([cell["text"] for cell in row]) + " |"
+            markdown_lines.append(data_row)
+        
+        return "\n".join(markdown_lines), headers, merged_cells
+
+    def _generate_table_row_chunks(
+        self, 
+        table: Table, 
+        doc_id: str, 
+        table_id: str, 
+        preceding: Optional[int], 
+        following: Optional[int],
+        preceding_content: Optional[str],
+        following_content: Optional[str],
+        table_headers: List[str],
+        parent_info: str,
+        context: str
+    ) -> List[Dict]:
+        """生成表格行分块"""
+        row_chunks = []
+        for r_idx, row in enumerate(table.rows):
+            if r_idx == 0:
+                continue  # 跳过表头
+            row_content = self._row_to_format(row, table_headers)
+            row_chunk = {
+                "type": "table_row",
+                "content": row_content,
+                "metadata": {
+                    "doc_id": doc_id,
+                    "table_id": table_id,
+                    "row": r_idx + 1,
+                    "preceding_paragraph_index": preceding,
+                    "following_paragraph_index": following,
+                    "preceding_paragraph_content": preceding_content,
+                    "following_paragraph_content": following_content,
+                    "header": table_headers,
+                    "parent_table_info": parent_info,
+                    "table_format": self.table_config.table_format,
+                },
+                "parent_id": table_id,
+                "context": context,
+            }
+            row_chunks.append(row_chunk)
+        return row_chunks
+
+    def _row_to_format(self, row, headers: List[str]) -> str:
+        """根据配置将表格行转换为指定格式"""
+        if self.table_config.table_format == "markdown":
+            return self._row_to_markdown(row, headers)
+        else:
+            return self._row_to_html(row, headers)
+
+    def _row_to_html(self, row, headers: List[str]) -> str:
+        """生成单行HTML字符串"""
         cells = [cell.text.strip() for cell in row.cells]
         html = "<table border='1'><tr>"
         for cell in cells:
@@ -452,7 +545,13 @@ class DocFileParser:
         html += "</tr></table>"
         return html
 
-    def _get_cell_span(self, cell) -> (int, int):
+    def _row_to_markdown(self, row, headers: List[str]) -> str:
+        """生成单行Markdown字符串"""
+        cells = [cell.text.strip() for cell in row.cells]
+        markdown = "| " + " | ".join(cells) + " |"
+        return markdown
+
+    def _get_cell_span(self, cell) -> Tuple[int, int]:
         # 检测合并单元格的行/列跨度
         tc = cell._tc
         rowspan = 1

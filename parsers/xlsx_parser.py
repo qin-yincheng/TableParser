@@ -2,7 +2,7 @@
 # Excel文档解析器（待实现）
 
 import os
-from typing import List, Dict, Optional, Tuple, Any
+from typing import List, Dict, Optional, Tuple
 import pandas as pd
 from utils.logger import logger
 from openpyxl import load_workbook
@@ -15,11 +15,16 @@ from utils.chunk_prompts import (
     STRUCTURED_PROMPTS_WITH_CONTEXT,
 )
 from utils.config import LLM_CONFIG
+from .fragment_config import FragmentConfig, TableProcessingConfig
 import asyncio
 
 
 class XlsxFileParser:
     """Excel（.xlsx）文件解析器，输出分块结构，支持多Sheet和多表格。"""
+
+    def __init__(self, fragment_config: Optional[FragmentConfig] = None):
+        """初始化解析器"""
+        self.table_config = fragment_config.table_processing if fragment_config else TableProcessingConfig()
 
     def parse(self, file_path: str) -> List[Dict]:
         """
@@ -49,51 +54,44 @@ class XlsxFileParser:
                         continue
                     header_rows = self._detect_header_rows(ws, start_row, end_row)
                     headers = self._get_multi_headers(block_df, header_rows)
-                    table_html = self._df_to_html_multiheader(block_df, header_rows)
+                    
+                    # 根据配置获取表格格式
+                    table_content, table_headers, table_merged_cells = self._convert_table_to_format(block_df, header_rows)
+                    
                     parent_table_info = self._get_parent_table_info(
                         headers, merged_cells
                     )
                     context = self._get_context_for_table(df, start_row, end_row)
-                    table_chunk = {
-                        "type": "table_full",
-                        "content": table_html,
-                        "metadata": {
-                            "doc_id": doc_id,
-                            "sheet": sheet_name,
-                            "table_id": table_id,
-                            "start_row": int(start_row),
-                            "end_row": int(end_row),
-                            "header_rows": header_rows,
-                            "header": headers,
-                            "merged_cells": merged_cells,
-                            "parent_table_info": parent_table_info,
-                        },
-                        "context": context,
-                        "parent_id": None,
-                    }
-                    all_chunks.append(table_chunk)
-                    # 行级分块
-                    if block_df.shape[0] > header_rows:
-                        for r_idx in range(header_rows, block_df.shape[0]):
-                            row_html = self._row_to_html(block_df.iloc[r_idx], headers)
-                            row_context = self._get_context_for_row(
-                                block_df, r_idx, header_rows
-                            )
-                            row_chunk = {
-                                "type": "table_row",
-                                "content": row_html,
-                                "metadata": {
-                                    "doc_id": doc_id,
-                                    "sheet": sheet_name,
-                                    "row": int(start_row + r_idx + 1),
-                                    "table_id": table_id,
-                                    "header": headers,
-                                    "parent_table_info": parent_table_info,
-                                },
-                                "context": row_context,
-                                "parent_id": table_id,
-                            }
-                            all_chunks.append(row_chunk)
+                    
+                    # 根据配置决定是否生成完整表格块
+                    if self.table_config.table_chunking_strategy in ["full_only", "full_and_rows"]:
+                        table_chunk = {
+                            "type": "table_full",
+                            "content": table_content,
+                            "metadata": {
+                                "doc_id": doc_id,
+                                "sheet": sheet_name,
+                                "table_id": table_id,
+                                "start_row": int(start_row),
+                                "end_row": int(end_row),
+                                "header_rows": header_rows,
+                                "header": headers,
+                                "merged_cells": merged_cells,
+                                "parent_table_info": parent_table_info,
+                                "table_format": self.table_config.table_format,
+                            },
+                            "context": context,
+                            "parent_id": None,
+                        }
+                        all_chunks.append(table_chunk)
+                    
+                    # 根据配置决定是否生成行级分块
+                    if self.table_config.table_chunking_strategy == "full_and_rows":
+                        row_chunks = self._generate_table_row_chunks(
+                            block_df, doc_id, sheet_name, table_id, start_row, 
+                            headers, parent_table_info, header_rows
+                        )
+                        all_chunks.extend(row_chunks)
         except Exception as e:
             logger.error(f"解析Excel文件出错: {file_path}, 错误: {str(e)}")
             return []
@@ -131,6 +129,60 @@ class XlsxFileParser:
         except Exception as e:
             logger.error(f"LLM增强分块失败: {str(e)}")
             return all_chunks  # 如果增强失败，返回原始分块
+
+    def _convert_table_to_format(self, df: pd.DataFrame, header_rows: int) -> Tuple[str, List[str], List[Dict]]:
+        """根据配置将表格转换为指定格式"""
+        try:
+            if self.table_config.table_format == "markdown":
+                return self._df_to_markdown_multiheader(df, header_rows)
+            else:
+                return self._df_to_html_multiheader(df, header_rows)
+        except Exception as e:
+            logger.warning(f"格式转换失败，回退到HTML格式: {str(e)}")
+            return self._df_to_html_multiheader(df, header_rows)
+
+    def _generate_table_row_chunks(
+        self, 
+        block_df: pd.DataFrame, 
+        doc_id: str, 
+        sheet_name: str, 
+        table_id: str, 
+        start_row: int,
+        headers: List[str], 
+        parent_table_info: str,
+        header_rows: int
+    ) -> List[Dict]:
+        """生成表格行分块"""
+        row_chunks = []
+        for r_idx in range(header_rows, block_df.shape[0]):
+            row_content = self._row_to_format(block_df.iloc[r_idx], headers)
+            row_context = self._get_context_for_row(
+                block_df, r_idx, header_rows
+            )
+            row_chunk = {
+                "type": "table_row",
+                "content": row_content,
+                "metadata": {
+                    "doc_id": doc_id,
+                    "sheet": sheet_name,
+                    "row": int(start_row + r_idx + 1),
+                    "table_id": table_id,
+                    "header": headers,
+                    "parent_table_info": parent_table_info,
+                    "table_format": self.table_config.table_format,
+                },
+                "context": row_context,
+                "parent_id": table_id,
+            }
+            row_chunks.append(row_chunk)
+        return row_chunks
+
+    def _row_to_format(self, row: pd.Series, headers: List[str]) -> str:
+        """根据配置将表格行转换为指定格式"""
+        if self.table_config.table_format == "markdown":
+            return self._row_to_markdown(row, headers)
+        else:
+            return self._row_to_html(row, headers)
 
     def _detect_header_rows(
         self, ws: Worksheet, start_row: int, end_row: int, max_header_rows: int = 3
@@ -197,10 +249,10 @@ class XlsxFileParser:
             headers.append(header)
         return headers
 
-    def _df_to_html_multiheader(self, df: pd.DataFrame, header_rows: int) -> str:
+    def _df_to_html_multiheader(self, df: pd.DataFrame, header_rows: int) -> Tuple[str, List[str], List[Dict]]:
         """将多级表头的DataFrame转为HTML表格。"""
         if df.shape[0] == 0 or header_rows == 0:
-            return "<table></table>"
+            return "<table></table>", [], []
         headers = self._get_multi_headers(df, header_rows)
         html = ["<table border='1'>"]
         # 多级表头
@@ -225,7 +277,36 @@ class XlsxFileParser:
                 + "</tr>"
             )
         html.append("</table>")
-        return "\n".join(html)
+        return "\n".join(html), headers, []
+
+    def _df_to_markdown_multiheader(self, df: pd.DataFrame, header_rows: int) -> Tuple[str, List[str], List[Dict]]:
+        """将多级表头的DataFrame转为Markdown表格。"""
+        if df.shape[0] == 0 or header_rows == 0:
+            return "", [], []
+        
+        headers = self._get_multi_headers(df, header_rows)
+        markdown_lines = []
+        
+        # 处理多级表头
+        if header_rows > 1:
+            # 多级表头转换为单级表头
+            header_row = "| " + " | ".join(headers) + " |"
+            markdown_lines.append(header_row)
+        else:
+            # 单级表头
+            header_row = "| " + " | ".join([str(df.iloc[0, col]) if pd.notna(df.iloc[0, col]) else "" for col in range(df.shape[1])]) + " |"
+            markdown_lines.append(header_row)
+        
+        # 分隔线
+        separator_row = "| " + " | ".join(["---"] * df.shape[1]) + " |"
+        markdown_lines.append(separator_row)
+        
+        # 表体
+        for i in range(header_rows, df.shape[0]):
+            data_row = "| " + " | ".join([str(x) if pd.notna(x) else "" for x in df.iloc[i]]) + " |"
+            markdown_lines.append(data_row)
+        
+        return "\n".join(markdown_lines), headers, []
 
     def _row_to_html(self, row: pd.Series, headers: List[str]) -> str:
         """将单行转为HTML表格。"""
@@ -235,9 +316,15 @@ class XlsxFileParser:
         html += "</tr></table>"
         return html
 
-    def _get_merged_cells(self, ws: Worksheet) -> List[Dict[str, Any]]:
+    def _row_to_markdown(self, row: pd.Series, headers: List[str]) -> str:
+        """将单行转为Markdown表格。"""
+        cells = [str(cell) if pd.notna(cell) else "" for cell in row]
+        markdown = "| " + " | ".join(cells) + " |"
+        return markdown
+
+    def _get_merged_cells(self, ws: Worksheet) -> List[Dict[str, int]]:
         """获取合并单元格信息。"""
-        merged: List[Dict[str, Any]] = []
+        merged: List[Dict[str, int]] = []
         for mc in ws.merged_cells.ranges:
             merged.append(
                 {
@@ -251,7 +338,7 @@ class XlsxFileParser:
         return merged
 
     def _get_parent_table_info(
-        self, headers: List[str], merged_cells: List[Dict[str, Any]]
+        self, headers: List[str], merged_cells: List[Dict[str, int]]
     ) -> str:
         """生成父表格信息描述。"""
         return f"表头: {headers} 合并单元格: {merged_cells}"

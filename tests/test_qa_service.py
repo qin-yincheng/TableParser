@@ -16,8 +16,8 @@ async def test_basic_qa():
     qa_service = QAService()
     try:
         # 测试一般性问题
-        question = "是否存在浙江维安建筑支护科技有限公司在 2018 年 6 月 16 日发生的房屋租赁及租赁服务类交易？金额为多少？"
-        kb_id = 2
+        question = "2025年6月26日的融资融券余额是多少？"
+        kb_id = 4
 
         result = await qa_service.answer_question(question=question, kb_id=kb_id)
 

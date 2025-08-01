@@ -11,6 +11,8 @@ TableParser 是一个基于 RAG（检索增强生成）技术的智能文档解�
 - **Excel 文档支持**：XLSX 格式，支持多工作表解析
 - **表格识别**：自动识别文档中的表格结构，处理合并单元格
 - **智能分块**：支持文本段落和表格的智能分块处理
+- **表格格式配置**：支持 HTML 和 Markdown 格式的表格输出
+- **分块策略配置**：可选择只生成完整表格块或同时生成表格行数据
 
 ### 🧠 语义增强
 - **LLM 增强**：基于智普 AI 的语义描述和关键词提取
@@ -36,6 +38,7 @@ TableParser 是一个基于 RAG（检索增强生成）技术的智能文档解�
 │ • DOC/DOCX      │───▶│ • LLM 增强      │───▶│ • 向量嵌入      │
 │ • XLSX          │    │ • 语义描述      │    │ • Weaviate      │
 │ • 表格识别      │    │ • 关键词提取    │    │ • 知识库管理    │
+│ • 格式配置      │    │ • 上下文感知    │    │ • 批量操作      │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
                                 │
                                 ▼
@@ -133,6 +136,101 @@ response = qa_service.ask_question("什么是人工智能？", kb_id=1)
 print(f"回答: {response}")
 ```
 
+## 表格处理配置
+
+### 表格格式配置
+系统支持两种表格输出格式：
+
+#### HTML 格式（默认）
+```python
+from parsers.fragment_config import TableProcessingConfig, FragmentConfig
+
+# 配置HTML格式
+table_config = TableProcessingConfig(
+    table_format="html",
+    table_chunking_strategy="full_only"
+)
+```
+
+#### Markdown 格式
+```python
+# 配置Markdown格式
+table_config = TableProcessingConfig(
+    table_format="markdown",
+    table_chunking_strategy="full_only"
+)
+```
+
+### 分块策略配置
+
+#### 只生成完整表格块
+```python
+# 只生成完整表格块，不生成行级数据
+table_config = TableProcessingConfig(
+    table_format="markdown",
+    table_chunking_strategy="full_only"
+)
+```
+
+#### 生成完整表格块和行数据
+```python
+# 生成完整表格块和行级数据
+table_config = TableProcessingConfig(
+    table_format="markdown",
+    table_chunking_strategy="full_and_rows"
+)
+```
+
+### 在解析器中使用配置
+
+#### Word 文档解析器
+```python
+from parsers.doc_parser import DocFileParser
+from parsers.fragment_config import FragmentConfig, TableProcessingConfig
+
+# 创建表格配置
+table_config = TableProcessingConfig(
+    table_format="markdown",
+    table_chunking_strategy="full_only"
+)
+
+# 创建解析器配置
+fragment_config = FragmentConfig(
+    enable_fragmentation=True,
+    max_chunk_size=1000,
+    table_processing=table_config
+)
+
+# 初始化解析器
+parser = DocFileParser(fragment_config=fragment_config)
+chunks = parser.process("document.docx")
+```
+
+#### Excel 文档解析器
+```python
+from parsers.xlsx_parser import XlsxFileParser
+from parsers.fragment_config import FragmentConfig, TableProcessingConfig
+
+# 创建表格配置
+table_config = TableProcessingConfig(
+    table_format="markdown",
+    table_chunking_strategy="full_only"
+)
+
+# 创建解析器配置
+fragment_config = FragmentConfig(table_processing=table_config)
+
+# 初始化解析器
+parser = XlsxFileParser(fragment_config=fragment_config)
+chunks = parser.parse("document.xlsx")
+```
+
+### 默认配置
+系统默认使用以下配置：
+- **表格格式**：Markdown
+- **分块策略**：只生成完整表格块
+- **向后兼容**：保持与现有代码的兼容性
+
 ## 项目结构
 
 ```
@@ -143,7 +241,7 @@ TableParser/
 │   ├── xlsx_parser.py          # Excel文档解析
 │   ├── chunker.py              # 智能分块处理
 │   ├── fragment_manager.py     # 分片管理
-│   ├── fragment_config.py      # 分片配置
+│   ├── fragment_config.py      # 分片配置（包含表格处理配置）
 │   ├── context_rebuilder.py    # 上下文重建
 │   └── position_mapper.py      # 位置映射
 │
@@ -168,13 +266,15 @@ TableParser/
 │   ├── test_doc_parser.py      # 文档解析测试
 │   ├── test_xlsx_parser.py     # Excel解析测试
 │   ├── test_embedding.py       # 向量化测试
-│   └── test_vector_integration.py # 向量集成测试
+│   ├── test_vector_integration.py # 向量集成测试
+│   └── test_main_processor_config.py # 主处理器配置测试
 │
 ├── docs/                       # 文档资料
 │   ├── RAG系统开发方案.md       # 系统开发方案
 │   ├── DOCKER_DEPLOYMENT.md    # Docker部署指南
 │   ├── QA_SERVICE_GUIDE.md     # 问答服务指南
-│   └── TEST_GUIDE.md           # 测试指南
+│   ├── TEST_GUIDE.md           # 测试指南
+│   └── table_config_guide.md   # 表格配置指南
 │
 ├── main_processor.py           # 主处理流程
 ├── operations.py               # 操作流程
@@ -193,6 +293,14 @@ fragmentation:
   min_fragment_size: 200
   chunk_overlap: 100
   enable_context_rebuild: true
+```
+
+### 表格处理配置
+```yaml
+table_processing:
+  table_format: "markdown"        # "html" 或 "markdown"
+  table_chunking_strategy: "full_only"  # "full_only" 或 "full_and_rows"
+  enable_table_processing: true
 ```
 
 ### LLM 配置
@@ -224,6 +332,9 @@ vector_db:
 - **合并单元格**：完整保留表格的合并单元格信息
 - **表头识别**：自动识别和提取表格表头
 - **行列关系**：保持表格的行列结构和关系
+- **格式配置**：支持 HTML 和 Markdown 格式输出
+- **分块策略**：可选择只生成完整表格块或同时生成行数据
+- **多级表头**：Excel 文档支持多级表头处理
 
 ### 🎯 语义增强
 - **多类型支持**：针对文本、表格、分片等不同类型内容
@@ -246,12 +357,20 @@ python -m pytest tests/
 python -m pytest tests/test_doc_parser.py
 python -m pytest tests/test_xlsx_parser.py
 python -m pytest tests/test_vector_integration.py
+python -m pytest tests/test_main_processor_config.py
 ```
 
 ### 测试数据
 测试数据位于 `test_data/` 目录，包含：
 - `testData.doc` / `testData.docx`：Word 文档测试
 - `testData.xlsx`：Excel 文档测试
+
+### 表格配置测试
+```bash
+# 测试表格配置功能
+python tests/test_doc_parser.py
+python tests/test_xlsx_parser.py
+```
 
 ## 部署
 
