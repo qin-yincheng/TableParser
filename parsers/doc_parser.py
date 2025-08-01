@@ -392,102 +392,234 @@ class DocFileParser:
         return all_chunks
 
     def _convert_table_to_format(self, table: Table) -> Tuple[str, List[str], List[Dict]]:
-        """根据配置将表格转换为指定格式"""
-        if self.table_config.table_format == "markdown":
-            return self._table_to_markdown_with_merge(table)
-        else:
-            return self._table_to_html_with_merge(table)
+        """根据配置将表格转换为指定格式，包含错误处理和回退机制"""
+        try:
+            if self.table_config.table_format == "markdown":
+                return self._table_to_markdown_with_merge_enhanced(table)
+            else:
+                return self._table_to_html_with_merge_enhanced(table)
+        except Exception as e:
+            logger.warning(f"增强表格转换失败，回退到基础方法: {str(e)}")
+            # 回退到基础方法
+            try:
+                if self.table_config.table_format == "markdown":
+                    return self._table_to_markdown_with_merge_fallback(table)
+                else:
+                    return self._table_to_html_with_merge_fallback(table)
+            except Exception as fallback_error:
+                logger.error(f"基础表格转换也失败: {str(fallback_error)}")
+                # 最后的回退：返回空表格
+                return "<table></table>", [], []
 
-    def _table_to_html_with_merge(self, table: Table) -> Tuple[str, List[str], List[Dict]]:
+    def _table_to_html_with_merge_enhanced(self, table: Table) -> Tuple[str, List[str], List[Dict]]:
         """
-        生成带合并信息的HTML表格和合并单元格元数据
-        返回: (html字符串, headers, merged_cells)
+        增强的HTML表格转换，正确处理合并单元格
         """
-        rows = []
-        merged_cells = []
-        for r_idx, row in enumerate(table.rows):
-            row_cells = []
-            for c_idx, cell in enumerate(row.cells):
-                text = cell.text.strip()
-                rowspan, colspan = self._get_cell_span(cell)
-                cell_info = {
-                    "text": text,
-                    "rowspan": rowspan,
-                    "colspan": colspan,
-                    "row": r_idx,
-                    "col": c_idx,
-                }
-                if rowspan > 1 or colspan > 1:
-                    merged_cells.append(cell_info)
-                row_cells.append(cell_info)
-            rows.append(row_cells)
-        if not rows:
-            return "<table></table>", [], merged_cells
-        headers = [cell["text"] for cell in rows[0]]
+        if not table.rows:
+            return "<table></table>", [], []
+        
+        # 构建表头映射（使用带回退机制的方法）
+        header_mapping = self._build_header_mapping_with_fallback(table)
+        
+        # 获取合并单元格信息
+        merged_cells = self._get_merged_cells_info_ultra_enhanced(table)
+        
+        # 生成最终表头
+        headers = []
+        for col in range(len(table.rows[0].cells)):
+            header = header_mapping.get(col, "")
+            headers.append(header)
+        
         html = ["<table border='1'>"]
-        # 表头
-        html.append(
-            "<tr>" + "".join([f"<th>{cell['text']}</th>" for cell in rows[0]]) + "</tr>"
-        )
-        # 表体
-        for row in rows[1:]:
-            html.append(
-                "<tr>"
-                + "".join(
-                    [
-                        f"<td{' rowspan=\"'+str(cell['rowspan'])+'\"' if cell['rowspan']>1 else ''}{' colspan=\"'+str(cell['colspan'])+'\"' if cell['colspan']>1 else ''}>{cell['text']}</td>"
-                        for cell in row
-                    ]
-                )
-                + "</tr>"
-            )
+        
+        # 构建合并单元格映射，用于HTML生成
+        merge_map = self._build_merge_map_for_html_enhanced(merged_cells, len(table.rows[0].cells))
+        
+        # 生成表头行
+        self._generate_html_header_rows_enhanced(table, html, merge_map, header_mapping)
+        
+        # 生成表体行
+        self._generate_html_body_rows_enhanced(table, html, merge_map)
+        
         html.append("</table>")
         return "\n".join(html), headers, merged_cells
 
-    def _table_to_markdown_with_merge(self, table: Table) -> Tuple[str, List[str], List[Dict]]:
-        """
-        生成带合并信息的Markdown表格和合并单元格元数据
-        返回: (markdown字符串, headers, merged_cells)
-        """
-        rows = []
+    def _build_merge_map_for_html_enhanced(self, merged_cells: List[Dict], num_cols: int) -> Dict[int, Dict]:
+        """构建增强的合并单元格映射，用于HTML生成"""
+        merge_map = {}
+        for merge_info in merged_cells:
+            if merge_info["is_merged_start"]:
+                start_col = merge_info["col"]
+                colspan = merge_info["colspan"]
+                for col_offset in range(colspan):
+                    col = start_col + col_offset
+                    if col < num_cols:
+                        merge_map[col] = {
+                            "is_merged": col_offset == 0,  # 只有第一个单元格显示内容
+                            "colspan": colspan if col_offset == 0 else 0,  # 只有第一个单元格有colspan
+                            "text": merge_info["text"] if col_offset == 0 else "",
+                            "merge_type": merge_info["merge_type"]
+                        }
+        return merge_map
+
+    def _generate_html_header_rows_enhanced(self, table: Table, html: List[str], merge_map: Dict[int, Dict], header_mapping: Dict[int, str]):
+        """生成增强的HTML表头行，正确处理表头行数"""
+        # 检测表头行数
+        header_rows = self._detect_header_rows_smart(table)
+        
+        # 只生成表头行
+        for row_idx in range(header_rows):
+            if row_idx >= len(table.rows):
+                break
+            row = table.rows[row_idx]
+            html.append("<tr>")
+            for col_idx, cell in enumerate(row.cells):
+                if col_idx in merge_map and merge_map[col_idx]["is_merged"]:
+                    # 合并单元格
+                    colspan = merge_map[col_idx]["colspan"]
+                    text = merge_map[col_idx]["text"]
+                    html.append(f'<th colspan="{colspan}">{text}</th>')
+                elif col_idx in merge_map and not merge_map[col_idx]["is_merged"]:
+                    # 被合并的单元格，跳过
+                    continue
+                else:
+                    # 普通单元格
+                    cell_text = cell.text.strip()
+                    html.append(f"<th>{cell_text}</th>")
+            html.append("</tr>")
+
+    def _generate_html_body_rows_enhanced(self, table: Table, html: List[str], merge_map: Dict[int, Dict]):
+        """生成增强的HTML表体行，正确处理表头行数"""
+        # 检测表头行数
+        header_rows = self._detect_header_rows_smart(table)
+        
+        # 从表头行之后开始生成表体行
+        for row_idx in range(header_rows, len(table.rows)):
+            row = table.rows[row_idx]
+            html.append("<tr>")
+            for col_idx, cell in enumerate(row.cells):
+                cell_text = cell.text.strip()
+                html.append(f"<td>{cell_text}</td>")
+            html.append("</tr>")
+
+    def _table_to_html_with_merge_fallback(self, table: Table) -> Tuple[str, List[str], List[Dict]]:
+        """HTML转换的回退方法"""
+        if not table.rows:
+            return "<table></table>", [], []
+        
+        html = ["<table border='1'>"]
+        headers = []
         merged_cells = []
-        for r_idx, row in enumerate(table.rows):
-            row_cells = []
-            for c_idx, cell in enumerate(row.cells):
-                text = cell.text.strip()
-                rowspan, colspan = self._get_cell_span(cell)
-                cell_info = {
-                    "text": text,
-                    "rowspan": rowspan,
-                    "colspan": colspan,
-                    "row": r_idx,
-                    "col": c_idx,
-                }
-                if rowspan > 1 or colspan > 1:
-                    merged_cells.append(cell_info)
-                row_cells.append(cell_info)
-            rows.append(row_cells)
         
-        if not rows:
-            return "", [], merged_cells
+        # 简单的表头处理
+        if table.rows:
+            headers = [cell.text.strip() for cell in table.rows[0].cells]
+            html.append("<tr>" + "".join([f"<th>{header}</th>" for header in headers]) + "</tr>")
         
-        headers = [cell["text"] for cell in rows[0]]
+        # 简单的表体处理
+        for row in table.rows[1:]:
+            html.append("<tr>" + "".join([f"<td>{cell.text.strip()}</td>" for cell in row.cells]) + "</tr>")
+        
+        html.append("</table>")
+        return "\n".join(html), headers, merged_cells
+
+    def _table_to_markdown_with_merge_enhanced(self, table: Table) -> Tuple[str, List[str], List[Dict]]:
+        """增强的Markdown表格转换，体现合并单元格层次结构"""
+        if not table.rows:
+            return "", [], []
+        
+        # 构建表头映射（使用带回退机制的方法）
+        header_mapping = self._build_header_mapping_with_fallback(table)
+        
+        # 获取合并单元格信息
+        merged_cells = self._get_merged_cells_info_ultra_enhanced(table)
+        
+        # 生成最终表头
+        headers = []
+        for col in range(len(table.rows[0].cells)):
+            header = header_mapping.get(col, "")
+            headers.append(header)
+        
         markdown_lines = []
         
-        # 表头
-        header_row = "| " + " | ".join([cell["text"] for cell in rows[0]]) + " |"
+        # 表头 - 使用层次结构表头
+        header_row = "| " + " | ".join(headers) + " |"
         markdown_lines.append(header_row)
         
-        # 分隔线
-        separator_row = "| " + " | ".join(["---"] * len(rows[0])) + " |"
+        # 分隔线 - 使用标准格式并添加对齐方式
+        separator_cells = []
+        for col in range(len(headers)):
+            # 根据数据类型确定对齐方式
+            alignment = self._get_column_alignment_for_doc_enhanced(table, col)
+            separator_cells.append(alignment)
+        separator_row = "| " + " | ".join(separator_cells) + " |"
         markdown_lines.append(separator_row)
         
-        # 表体
-        for row in rows[1:]:
-            data_row = "| " + " | ".join([cell["text"] for cell in row]) + " |"
+        # 表体 - 过滤空行，确保数据行连续
+        header_rows = self._detect_header_rows_smart(table)
+        for row_idx in range(header_rows, len(table.rows)):
+            row = table.rows[row_idx]
+            # 检查当前行是否为空行
+            row_texts = [cell.text.strip() for cell in row.cells]
+            if any(text for text in row_texts):  # 只有当行中有非空数据时才添加
+                data_row = "| " + " | ".join([cell.text.strip() for cell in row.cells]) + " |"
+                markdown_lines.append(data_row)
+        
+        return "\n".join(markdown_lines), headers, merged_cells
+
+    def _table_to_markdown_with_merge_fallback(self, table: Table) -> Tuple[str, List[str], List[Dict]]:
+        """Markdown转换的回退方法"""
+        if not table.rows:
+            return "", [], []
+        
+        markdown_lines = []
+        headers = []
+        merged_cells = []
+        
+        # 简单的表头处理
+        if table.rows:
+            headers = [cell.text.strip() for cell in table.rows[0].cells]
+            header_row = "| " + " | ".join(headers) + " |"
+            markdown_lines.append(header_row)
+            
+            # 分隔线
+            separator_row = "| " + " | ".join(["---"] * len(headers)) + " |"
+            markdown_lines.append(separator_row)
+        
+        # 简单的表体处理
+        for row in table.rows[1:]:
+            data_row = "| " + " | ".join([cell.text.strip() for cell in row.cells]) + " |"
             markdown_lines.append(data_row)
         
         return "\n".join(markdown_lines), headers, merged_cells
+
+    def _get_column_alignment_for_doc_enhanced(self, table: Table, col: int) -> str:
+        """根据列的数据类型确定对齐方式（增强版）"""
+        if len(table.rows) <= 1:
+            return "---"  # 默认左对齐
+        
+        # 检查数据行中的数据类型
+        data_rows = table.rows[1:]  # 跳过表头行
+        numeric_count = 0
+        total_count = 0
+        
+        for row in data_rows:
+            if col < len(row.cells):
+                value = row.cells[col].text.strip()
+                if value:
+                    total_count += 1
+                    try:
+                        # 尝试转换为数值
+                        float(str(value).replace(',', '').replace('%', ''))
+                        numeric_count += 1
+                    except (ValueError, TypeError):
+                        pass
+        
+        # 如果超过70%的数据是数值，则右对齐
+        if total_count > 0 and numeric_count / total_count > 0.7:
+            return "---:"  # 右对齐
+        else:
+            return "---"   # 左对齐
 
     def _generate_table_row_chunks(
         self, 
@@ -502,11 +634,12 @@ class DocFileParser:
         parent_info: str,
         context: str
     ) -> List[Dict]:
-        """生成表格行分块"""
+        """生成表格行分块，正确处理表头行数"""
         row_chunks = []
-        for r_idx, row in enumerate(table.rows):
-            if r_idx == 0:
-                continue  # 跳过表头
+        header_rows = self._detect_header_rows_smart(table)
+        
+        for r_idx in range(header_rows, len(table.rows)):
+            row = table.rows[r_idx]
             row_content = self._row_to_format(row, table_headers)
             row_chunk = {
                 "type": "table_row",
@@ -547,7 +680,14 @@ class DocFileParser:
 
     def _row_to_markdown(self, row, headers: List[str]) -> str:
         """生成单行Markdown字符串"""
-        cells = [cell.text.strip() for cell in row.cells]
+        # 修复：过滤空值，确保生成的markdown格式正确
+        cells = []
+        for cell in row.cells:
+            text = cell.text.strip()
+            if text:
+                cells.append(text)
+            else:
+                cells.append("")
         markdown = "| " + " | ".join(cells) + " |"
         return markdown
 
@@ -576,6 +716,52 @@ class DocFileParser:
                 # 统计向下合并了多少行（简单实现，复杂表格需更精细处理）
                 rowspan = 2  # 这里只能简单标注2行，复杂情况需更复杂逻辑
         return rowspan, colspan
+
+    def _get_cell_span_enhanced(self, cell) -> Tuple[int, int, bool, str]:
+        """
+        增强的合并单元格检测
+        返回: (rowspan, colspan, is_merged_start, parent_text)
+        """
+        tc = cell._tc
+        rowspan = 1
+        colspan = 1
+        is_merged_start = False
+        parent_text = cell.text.strip()
+        
+        # 检测水平合并（colspan）
+        gridspan = tc.xpath(".//w:gridSpan")
+        if gridspan:
+            try:
+                colspan = int(
+                    gridspan[0].get(
+                        "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}val"
+                    )
+                )
+            except (ValueError, TypeError):
+                colspan = 1
+        
+        # 检测垂直合并（rowspan）
+        vmerge = tc.xpath(".//w:vMerge")
+        if vmerge:
+            val = vmerge[0].get(
+                "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}val"
+            )
+            if val == "restart":
+                # 合并起始单元格
+                is_merged_start = True
+                # 计算实际合并的行数
+                rowspan = self._calculate_rowspan(cell)
+            else:
+                # 被合并的单元格，不显示
+                rowspan = 0
+        
+        return rowspan, colspan, is_merged_start, parent_text
+
+    def _calculate_rowspan(self, cell) -> int:
+        """计算单元格实际合并的行数"""
+        # 简化实现：通过查找后续相同列的单元格来判断合并行数
+        # 实际应用中可能需要更复杂的逻辑
+        return 2  # 默认返回2，复杂情况需要更精细的处理
 
     def _iter_block_items(self, parent):
         # 依次遍历段落和表格
@@ -621,6 +807,593 @@ class DocFileParser:
             f"上一段：{preceding_content or ''}。下一段：{following_content or ''}"
         )
         return context
+
+    def _extract_table_data(self, table: Table) -> List[List[Dict]]:
+        """提取表格数据"""
+        rows = []
+        for r_idx, row in enumerate(table.rows):
+            row_cells = []
+            for c_idx, cell in enumerate(row.cells):
+                text = cell.text.strip()
+                rowspan, colspan = self._get_cell_span(cell)
+                cell_info = {
+                    "text": text,
+                    "rowspan": rowspan,
+                    "colspan": colspan,
+                    "row": r_idx,
+                    "col": c_idx,
+                }
+                row_cells.append(cell_info)
+            rows.append(row_cells)
+        return rows
+
+    def _get_merged_cells_info(self, table: Table) -> List[Dict]:
+        """获取合并单元格信息"""
+        merged_cells = []
+        for r_idx, row in enumerate(table.rows):
+            for c_idx, cell in enumerate(row.cells):
+                rowspan, colspan = self._get_cell_span(cell)
+                if rowspan > 1 or colspan > 1:
+                    merged_cells.append({
+                        "text": cell.text.strip(),
+                        "rowspan": rowspan,
+                        "colspan": colspan,
+                        "row": r_idx,
+                        "col": c_idx,
+                    })
+        return merged_cells
+
+    def _build_header_mapping_for_doc(self, table: Table) -> Dict[int, str]:
+        """
+        为DOC/DOCX表格构建表头映射，处理合并单元格层次结构
+        """
+        header_mapping = {}
+        merged_cells = self._get_merged_cells_info_enhanced(table)
+        
+        # 处理合并单元格
+        for merge_info in merged_cells:
+            if merge_info["is_merged_start"]:
+                parent_text = merge_info["text"]
+                start_col = merge_info["col"]
+                colspan = merge_info["colspan"]
+                
+                # 为合并单元格的子列分配表头
+                for col_offset in range(colspan):
+                    col = start_col + col_offset
+                    if col < len(table.rows[0].cells):
+                        # 获取子列的表头信息
+                        child_header = self._get_child_header_for_doc(table, col, parent_text)
+                        header_mapping[col] = child_header
+        
+        # 处理未合并的列
+        for col in range(len(table.rows[0].cells)):
+            if col not in header_mapping:
+                header = self._get_single_column_header_for_doc(table, col)
+                header_mapping[col] = header
+        
+        return header_mapping
+
+    def _get_merged_cells_info_enhanced(self, table: Table) -> List[Dict]:
+        """获取增强的合并单元格信息"""
+        merged_cells = []
+        for r_idx, row in enumerate(table.rows):
+            for c_idx, cell in enumerate(row.cells):
+                rowspan, colspan, is_merged_start, parent_text = self._get_cell_span_enhanced(cell)
+                if rowspan > 1 or colspan > 1:
+                    merged_cells.append({
+                        "text": parent_text,
+                        "rowspan": rowspan,
+                        "colspan": colspan,
+                        "row": r_idx,
+                        "col": c_idx,
+                        "is_merged_start": is_merged_start
+                    })
+        return merged_cells
+
+    def _get_cell_span_ultra_enhanced(self, cell, table: Table, row_idx: int, col_idx: int) -> Tuple[int, int, bool, str, Dict]:
+        """
+        超增强的合并单元格检测
+        返回: (rowspan, colspan, is_merged_start, parent_text, merge_info)
+        """
+        tc = cell._tc
+        rowspan = 1
+        colspan = 1
+        is_merged_start = False
+        parent_text = cell.text.strip()
+        merge_info = {
+            "row": row_idx,
+            "col": col_idx,
+            "text": parent_text,
+            "rowspan": 1,
+            "colspan": 1,
+            "is_merged_start": False,
+            "merge_type": "none"
+        }
+        
+        # 检测水平合并（colspan）
+        gridspan = tc.xpath(".//w:gridSpan")
+        if gridspan:
+            try:
+                colspan = int(
+                    gridspan[0].get(
+                        "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}val"
+                    )
+                )
+                merge_info["colspan"] = colspan
+                merge_info["merge_type"] = "horizontal"
+            except (ValueError, TypeError):
+                colspan = 1
+        
+        # 检测垂直合并（rowspan）- 通过遍历后续行来判断
+        vmerge = tc.xpath(".//w:vMerge")
+        if vmerge:
+            val = vmerge[0].get(
+                "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}val"
+            )
+            if val == "restart":
+                # 合并起始单元格
+                is_merged_start = True
+                rowspan = self._calculate_actual_rowspan(table, row_idx, col_idx)
+                merge_info["rowspan"] = rowspan
+                merge_info["is_merged_start"] = True
+                merge_info["merge_type"] = "vertical" if colspan == 1 else "both"
+            else:
+                # 被合并的单元格，不显示
+                rowspan = 0
+                merge_info["rowspan"] = 0
+                merge_info["merge_type"] = "merged"
+        
+        # 更新合并信息
+        merge_info["rowspan"] = rowspan
+        merge_info["colspan"] = colspan
+        merge_info["is_merged_start"] = is_merged_start
+        
+        return rowspan, colspan, is_merged_start, parent_text, merge_info
+
+    def _calculate_actual_rowspan(self, table: Table, start_row: int, col: int) -> int:
+        """计算单元格实际合并的行数"""
+        rowspan = 1
+        # 从下一行开始检查，直到找到非空单元格或到达表格末尾
+        for row_idx in range(start_row + 1, len(table.rows)):
+            if col < len(table.rows[row_idx].cells):
+                cell = table.rows[row_idx].cells[col]
+                # 检查该单元格是否被垂直合并
+                tc = cell._tc
+                vmerge = tc.xpath(".//w:vMerge")
+                if vmerge:
+                    val = vmerge[0].get(
+                        "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}val"
+                    )
+                    if val == "continue":
+                        rowspan += 1
+                    else:
+                        break
+                else:
+                    # 如果没有vMerge标记，检查单元格是否有内容
+                    if cell.text.strip():
+                        break
+                    else:
+                        rowspan += 1
+            else:
+                break
+        return rowspan
+
+    def _get_child_header_for_doc(self, table: Table, col: int, parent_text: str) -> str:
+        """获取合并单元格子列的表头"""
+        # 获取该列在表头行的所有非空值
+        header_parts = []
+        for row_idx, row in enumerate(table.rows):
+            if col < len(row.cells):
+                cell_value = row.cells[col].text.strip()
+                if cell_value:
+                    header_parts.append(cell_value)
+        
+        # 构建层次结构表头
+        if header_parts:
+            if parent_text not in header_parts:
+                header_parts.insert(0, parent_text)
+            return "/".join(header_parts)
+        else:
+            return parent_text
+
+    def _get_single_column_header_for_doc(self, table: Table, col: int) -> str:
+        """获取单列的表头"""
+        header_parts = []
+        for row_idx, row in enumerate(table.rows):
+            if col < len(row.cells):
+                cell_value = row.cells[col].text.strip()
+                if cell_value:
+                    header_parts.append(cell_value)
+        
+        return "/".join(header_parts) if header_parts else ""
+
+    def _detect_header_rows_smart(self, table: Table) -> int:
+        """智能表头行检测，基于多种特征"""
+        if not table.rows:
+            return 0
+        
+        # 使用多种方法检测表头行数
+        methods = [
+            self._detect_header_rows_by_merge_enhanced,
+            self._detect_header_rows_by_content_pattern,
+            self._detect_header_rows_by_structure_enhanced
+        ]
+        
+        results = []
+        for method in methods:
+            try:
+                result = method(table)
+                if result > 0:
+                    results.append(result)
+            except Exception:
+                continue
+        
+        # 使用投票机制确定最终结果
+        if results:
+            # 取众数，如果没有众数则取中位数
+            from collections import Counter
+            counter = Counter(results)
+            most_common = counter.most_common(1)
+            if most_common[0][1] > 1:  # 如果有多个相同的结果
+                return most_common[0][0]
+            else:
+                return sorted(results)[len(results) // 2]  # 中位数
+        
+        return 1  # 默认返回1
+
+    def _detect_header_rows_by_merge_enhanced(self, table: Table) -> int:
+        """增强的基于合并单元格分布检测表头行"""
+        if not table.rows:
+            return 0
+        
+        # 统计每行的合并单元格数量和类型
+        merge_stats = []
+        for row_idx, row in enumerate(table.rows):
+            horizontal_merges = 0
+            vertical_merges = 0
+            total_merges = 0
+            
+            for col_idx, cell in enumerate(row.cells):
+                _, _, _, _, merge_info = self._get_cell_span_ultra_enhanced(cell, table, row_idx, col_idx)
+                
+                if merge_info["merge_type"] in ["horizontal", "both"]:
+                    horizontal_merges += 1
+                if merge_info["merge_type"] in ["vertical", "both"]:
+                    vertical_merges += 1
+                if merge_info["merge_type"] != "none":
+                    total_merges += 1
+            
+            merge_stats.append({
+                "horizontal": horizontal_merges,
+                "vertical": vertical_merges,
+                "total": total_merges
+            })
+        
+        # 检测表头行
+        header_rows = 0
+        max_header_rows = min(3, len(table.rows))
+        
+        for row_idx in range(max_header_rows):
+            stats = merge_stats[row_idx]
+            # 如果水平合并较多，可能是表头行
+            if stats["horizontal"] > 0 or stats["total"] > 0:
+                header_rows += 1
+            else:
+                break
+        
+        return header_rows if header_rows > 0 else 1
+
+    def _detect_header_rows_by_content_pattern(self, table: Table) -> int:
+        """基于内容模式检测表头行"""
+        if not table.rows:
+            return 0
+        
+        header_rows = 0
+        max_header_rows = min(3, len(table.rows))
+        
+        for row_idx in range(max_header_rows):
+            row = table.rows[row_idx]
+            if self._is_header_row_by_content_pattern(row, row_idx):
+                header_rows += 1
+            else:
+                break
+        
+        return header_rows if header_rows > 0 else 1
+
+    def _is_header_row_by_content_pattern(self, row, row_idx: int) -> bool:
+        """基于内容模式判断是否为表头行"""
+        # 检查是否包含常见的表头关键词
+        header_keywords = ["年度", "年份", "学校", "名称", "情况", "人数", "合计", "备注"]
+        
+        cell_texts = [cell.text.strip() for cell in row.cells]
+        keyword_count = 0
+        
+        for text in cell_texts:
+            for keyword in header_keywords:
+                if keyword in text:
+                    keyword_count += 1
+                    break
+        
+        # 如果超过30%的单元格包含表头关键词，可能是表头行
+        if len(cell_texts) > 0 and keyword_count / len(cell_texts) > 0.3:
+            return True
+        
+        # 检查是否包含数值（数据行通常包含数值）
+        numeric_count = 0
+        for text in cell_texts:
+            if text and self._is_numeric(text):
+                numeric_count += 1
+        
+        # 如果数值比例较低，可能是表头行
+        if len(cell_texts) > 0 and numeric_count / len(cell_texts) < 0.3:
+            return True
+        
+        return False
+
+    def _is_numeric(self, text: str) -> bool:
+        """判断文本是否为数值"""
+        try:
+            # 移除常见的非数值字符
+            cleaned_text = text.replace(',', '').replace('%', '').replace('+', '').replace('-', '')
+            float(cleaned_text)
+            return True
+        except (ValueError, TypeError):
+            return False
+
+    def _detect_header_rows_by_structure_enhanced(self, table: Table) -> int:
+        """增强的基于行结构特征检测表头行"""
+        if not table.rows:
+            return 0
+        
+        header_rows = 0
+        max_header_rows = min(3, len(table.rows))
+        
+        for row_idx in range(max_header_rows):
+            row = table.rows[row_idx]
+            if self._is_header_row_by_structure_enhanced(row, row_idx):
+                header_rows += 1
+            else:
+                break
+        
+        return header_rows if header_rows > 0 else 1
+
+    def _is_header_row_by_structure_enhanced(self, row, row_idx: int) -> bool:
+        """增强的基于结构特征判断是否为表头行"""
+        # 检查合并单元格分布
+        merge_count = 0
+        for col_idx, cell in enumerate(row.cells):
+            _, _, _, _, merge_info = self._get_cell_span_ultra_enhanced(cell, row, row_idx, col_idx)
+            if merge_info["merge_type"] != "none":
+                merge_count += 1
+        
+        # 如果合并单元格数量较多，可能是表头行
+        if merge_count > 0:
+            return True
+        
+        # 检查单元格内容的特征
+        empty_cells = 0
+        total_cells = len(row.cells)
+        for cell in row.cells:
+            if not cell.text.strip():
+                empty_cells += 1
+        
+        # 如果空单元格比例较低，可能是表头行
+        if total_cells > 0 and empty_cells / total_cells < 0.5:
+            return True
+        
+        return False
+
+    def _detect_header_rows_for_doc(self, table: Table) -> int:
+        """综合检测表头行数"""
+        # 优先使用合并单元格检测
+        header_rows_by_merge = self._detect_header_rows_by_merge(table)
+        if header_rows_by_merge > 1:
+            return header_rows_by_merge
+        
+        # 如果合并单元格不明显，使用结构特征检测
+        header_rows_by_structure = self._detect_header_rows_by_structure(table)
+        return header_rows_by_structure
+
+    def _get_child_header_for_doc_fixed(self, table: Table, col: int, parent_text: str, header_rows: int) -> str:
+        """修复后的子列表头获取方法，只处理表头行"""
+        # 只处理表头行，不包含数据行
+        header_parts = []
+        for row_idx in range(header_rows):
+            if row_idx < len(table.rows) and col < len(table.rows[row_idx].cells):
+                cell_value = table.rows[row_idx].cells[col].text.strip()
+                if cell_value:
+                    header_parts.append(cell_value)
+        
+        # 构建层次结构表头
+        if header_parts:
+            if parent_text not in header_parts:
+                header_parts.insert(0, parent_text)
+            return "/".join(header_parts)
+        else:
+            return parent_text
+
+    def _get_single_column_header_for_doc_fixed(self, table: Table, col: int, header_rows: int) -> str:
+        """修复后的单列表头获取方法，只处理表头行"""
+        header_parts = []
+        for row_idx in range(header_rows):
+            if row_idx < len(table.rows) and col < len(table.rows[row_idx].cells):
+                cell_value = table.rows[row_idx].cells[col].text.strip()
+                if cell_value:
+                    header_parts.append(cell_value)
+        
+        return "/".join(header_parts) if header_parts else ""
+
+    def _build_header_mapping_for_doc_fixed(self, table: Table) -> Dict[int, str]:
+        """修复后的表头映射构建，正确处理表头行"""
+        # 先检测表头行数
+        header_rows = self._detect_header_rows_for_doc(table)
+        
+        header_mapping = {}
+        merged_cells = self._get_merged_cells_info_enhanced(table)
+        
+        # 处理合并单元格
+        for merge_info in merged_cells:
+            if merge_info["is_merged_start"]:
+                parent_text = merge_info["text"]
+                start_col = merge_info["col"]
+                colspan = merge_info["colspan"]
+                
+                # 为合并单元格的子列分配表头
+                for col_offset in range(colspan):
+                    col = start_col + col_offset
+                    if col < len(table.rows[0].cells):
+                        # 获取子列的表头信息
+                        child_header = self._get_child_header_for_doc_fixed(table, col, parent_text, header_rows)
+                        header_mapping[col] = child_header
+        
+        # 处理未合并的列
+        for col in range(len(table.rows[0].cells)):
+            if col not in header_mapping:
+                header = self._get_single_column_header_for_doc_fixed(table, col, header_rows)
+                header_mapping[col] = header
+        
+        return header_mapping
+
+    def _build_header_hierarchy_for_doc(self, table: Table) -> Dict[int, List[str]]:
+        """构建表头层次结构，正确处理多级表头"""
+        header_rows = self._detect_header_rows_smart(table)
+        header_hierarchy = {}
+        
+        # 为每列构建表头层次
+        for col in range(len(table.rows[0].cells)):
+            column_headers = []
+            
+            # 收集该列在表头行中的内容
+            for row_idx in range(header_rows):
+                if row_idx < len(table.rows) and col < len(table.rows[row_idx].cells):
+                    cell_text = table.rows[row_idx].cells[col].text.strip()
+                    if cell_text:
+                        column_headers.append(cell_text)
+            
+            header_hierarchy[col] = column_headers
+        
+        return header_hierarchy
+
+    def _build_header_mapping_ultra_enhanced(self, table: Table) -> Dict[int, str]:
+        """超增强的表头映射构建"""
+        # 获取表头层次结构
+        header_hierarchy = self._build_header_hierarchy_for_doc(table)
+        
+        # 获取合并单元格信息
+        merged_cells = self._get_merged_cells_info_ultra_enhanced(table)
+        
+        header_mapping = {}
+        
+        # 处理合并单元格
+        for merge_info in merged_cells:
+            if merge_info["is_merged_start"]:
+                parent_text = merge_info["text"]
+                start_col = merge_info["col"]
+                colspan = merge_info["colspan"]
+                
+                # 为合并单元格的子列分配表头
+                for col_offset in range(colspan):
+                    col = start_col + col_offset
+                    if col < len(table.rows[0].cells):
+                        # 获取子列的表头信息
+                        child_header = self._get_child_header_ultra_enhanced(table, col, parent_text, header_hierarchy)
+                        header_mapping[col] = child_header
+        
+        # 处理未合并的列
+        for col in range(len(table.rows[0].cells)):
+            if col not in header_mapping:
+                header = self._get_single_column_header_ultra_enhanced(table, col, header_hierarchy)
+                header_mapping[col] = header
+        
+        return header_mapping
+
+    def _get_merged_cells_info_ultra_enhanced(self, table: Table) -> List[Dict]:
+        """获取超增强的合并单元格信息"""
+        merged_cells = []
+        for row_idx, row in enumerate(table.rows):
+            for col_idx, cell in enumerate(row.cells):
+                _, _, _, _, merge_info = self._get_cell_span_ultra_enhanced(cell, table, row_idx, col_idx)
+                if merge_info["merge_type"] != "none":
+                    merged_cells.append(merge_info)
+        return merged_cells
+
+    def _get_child_header_ultra_enhanced(self, table: Table, col: int, parent_text: str, header_hierarchy: Dict[int, List[str]]) -> str:
+        """超增强的子列表头获取方法"""
+        column_headers = header_hierarchy.get(col, [])
+        
+        # 构建层次结构表头
+        if column_headers:
+            if parent_text not in column_headers:
+                column_headers.insert(0, parent_text)
+            return "/".join(column_headers)
+        else:
+            return parent_text
+
+    def _get_single_column_header_ultra_enhanced(self, table: Table, col: int, header_hierarchy: Dict[int, List[str]]) -> str:
+        """超增强的单列表头获取方法"""
+        column_headers = header_hierarchy.get(col, [])
+        return "/".join(column_headers) if column_headers else ""
+
+    def _validate_header_structure(self, headers: List[str], table: Table) -> bool:
+        """验证表头结构的合理性"""
+        # 检查表头数量与列数是否匹配
+        if len(headers) != len(table.rows[0].cells):
+            return False
+        
+        # 检查表头是否为空（允许部分为空）
+        empty_count = sum(1 for header in headers if not header.strip())
+        if empty_count > len(headers) * 0.5:  # 如果超过50%为空，可能有问题
+            return False
+        
+        # 检查表头层次是否合理
+        for header in headers:
+            if header and "/" in header:
+                parts = header.split("/")
+                if len(parts) > 3:  # 层次过多可能有问题
+                    return False
+        
+        return True
+
+    def _fallback_header_processing(self, table: Table) -> Dict[int, str]:
+        """表头处理的回退机制"""
+        logger.warning("使用表头处理回退机制")
+        
+        # 使用简化的表头处理
+        headers = []
+        for col in range(len(table.rows[0].cells)):
+            if table.rows and col < len(table.rows[0].cells):
+                header = table.rows[0].cells[col].text.strip()
+                headers.append(header)
+            else:
+                headers.append("")
+        
+        header_mapping = {}
+        for col, header in enumerate(headers):
+            header_mapping[col] = header
+        
+        return header_mapping
+
+    def _build_header_mapping_with_fallback(self, table: Table) -> Dict[int, str]:
+        """带回退机制的表头映射构建"""
+        try:
+            # 尝试使用超增强的方法
+            header_mapping = self._build_header_mapping_ultra_enhanced(table)
+            
+            # 验证结果
+            headers = []
+            for col in range(len(table.rows[0].cells)):
+                header = header_mapping.get(col, "")
+                headers.append(header)
+            
+            if self._validate_header_structure(headers, table):
+                return header_mapping
+            else:
+                logger.warning("表头结构验证失败，使用回退机制")
+                return self._fallback_header_processing(table)
+                
+        except Exception as e:
+            logger.error(f"表头映射构建失败: {str(e)}，使用回退机制")
+            return self._fallback_header_processing(table)
 
 
 # 加载.env文件，获取API Key
