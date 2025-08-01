@@ -16,12 +16,23 @@ async def test_basic_qa():
     qa_service = QAService()
     try:
         # 测试一般性问题
-        question = "2025年6月26日的融资融券余额是多少？"
-        kb_id = 4
+        question = "Cedar 大学在2005年招收了多少名本科新生？"
+        kb_id = 1
 
-        result = await qa_service.answer_question(question=question, kb_id=kb_id)
+        # 增加limit参数以获取更多结果
+        result = await qa_service.answer_question(question=question, kb_id=kb_id, limit=8)
 
         print(f"基础问答结果: {json.dumps(result, ensure_ascii=False, indent=2)}")
+        
+        # 显示所有查到的块
+        if result.get("success") and result.get("sources"):
+            print(f"\n=== 查到的所有块 (共{len(result['sources'])}个) ===")
+            for i, source in enumerate(result["sources"], 1):
+                print(f"\n块 {i}:")
+                print(f"  内容: {source.get('content', '')[:200]}...")
+                print(f"  类型: {source.get('chunk_type', '')}")
+                print(f"  相似度分数: {source.get('similarity_score', 0):.3f}")
+                print(f"  块ID: {source.get('chunk_id', '')}")
 
     except Exception as e:
         logger.error(f"基础问答测试失败: {str(e)}")

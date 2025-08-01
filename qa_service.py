@@ -19,7 +19,7 @@ class QAService:
         self.max_results = 8  # 最大检索结果数
 
     async def answer_question(
-        self, question: str, kb_id: int
+        self, question: str, kb_id: int, limit: int = None
     ) -> Dict[str, Union[bool, str, List[Dict]]]:
         """
         回答用户问题
@@ -27,6 +27,7 @@ class QAService:
         Args:
             question: 用户问题
             kb_id: 知识库ID
+            limit: 检索结果数量限制，None时使用默认值
 
         Returns:
             Dict: 问答结果
@@ -36,8 +37,11 @@ class QAService:
             if not self._validate_question(question):
                 return {"success": False, "error": "问题格式无效"}
 
+            # 使用传入的limit或默认值
+            retrieval_limit = limit if limit is not None else self.max_results
+
             # 1. 语义检索
-            retrieval_results = await self._semantic_retrieval(question, kb_id)
+            retrieval_results = await self._semantic_retrieval(question, kb_id, retrieval_limit)
             if not retrieval_results:
                 return {"success": False, "error": "未找到相关文档"}
 
@@ -60,7 +64,7 @@ class QAService:
             return {"success": False, "error": f"问答失败: {str(e)}"}
 
     async def _semantic_retrieval(
-        self, question: str, kb_id: int
+        self, question: str, kb_id: int, limit: int = None
     ) -> List[Dict[str, Union[str, float, Dict]]]:
         """
         语义检索
@@ -68,13 +72,15 @@ class QAService:
         Args:
             question: 用户问题
             kb_id: 知识库ID
+            limit: 检索结果数量限制
 
         Returns:
             List[Dict]: 检索结果列表
         """
         try:
+            retrieval_limit = limit if limit is not None else self.max_results
             result = await self.query_service.query_by_semantic(
-                question=question, kb_id=kb_id, limit=self.max_results
+                question=question, kb_id=kb_id, limit=retrieval_limit
             )
 
             if not result.get("success"):
@@ -102,15 +108,17 @@ class QAService:
             # 去重
             unique_results = self._deduplicate_results(results)
 
-            # 按相似度排序（距离越小越好）
+            # 按相似度排序（相似度分数越大越好，降序排列）
             sorted_results = sorted(
-                unique_results, key=lambda x: x.get("similarity_score", float("inf"))
+                unique_results, 
+                key=lambda x: x.get("similarity_score", 0), 
+                reverse=True  # 降序排列，相似度高的在前
             )
 
-            return sorted_results[: self.max_results]
+            return sorted_results
 
         except Exception as e:
-            logger.error(f"结果融合失败: {str(e)}")
+            logger.error(f"融合检索结果失败: {str(e)}")
             return results
 
     def _build_context(self, results: List[Dict[str, Union[str, float, Dict]]]) -> str:

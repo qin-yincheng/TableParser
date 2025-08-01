@@ -1,6 +1,9 @@
 from typing import Any, Dict, List, Optional, Tuple, Union
 
-from weaviate.classes.config import Configure, DataType, Property
+from weaviate.classes.config import Configure, DataType, Property, Tokenization
+import weaviate
+from weaviate.collections.classes.filters import _Filters
+from weaviate.classes.query import MetadataQuery
 
 from connector import WeaviateConnector
 from utils.logger import logger
@@ -73,14 +76,79 @@ class WeaviateOperations:
             weaviate_properties = []
             if properties:
                 for prop in properties:
-                    data_type = self._map_data_type(prop.get("dataType", "text"))
-                    weaviate_properties.append(
-                        Property(
-                            name=prop["name"],
+                    prop_name = prop["name"]
+                    description = prop.get("description", "")
+                    raw_type = prop.get("dataType", "text")
+
+                    # 数据类型映射
+                    if raw_type == "text":
+                        data_type = DataType.TEXT
+                        tokenization = Tokenization.GSE
+                        module_config = {
+                            "invertedIndexConfig": {
+                                "stopwords": {
+                                    "preset": "none"
+                                }
+                            }
+                        }
+                        weaviate_property = Property(
+                            name=prop_name,
                             data_type=data_type,
-                            description=prop.get("description", ""),
+                            description=description,
+                            tokenization=tokenization,
+                            module_config=module_config
                         )
-                    )
+
+                    elif raw_type == "int":
+                        data_type = DataType.INT
+                        weaviate_property = Property(
+                            name=prop_name,
+                            data_type=data_type,
+                            description=description
+                        )
+
+                    elif raw_type == "number" or raw_type == "float":
+                        data_type = DataType.NUMBER
+                        weaviate_property = Property(
+                            name=prop_name,
+                            data_type=data_type,
+                            description=description
+                        )
+
+                    elif raw_type == "bool":
+                        data_type = DataType.BOOL
+                        weaviate_property = Property(
+                            name=prop_name,
+                            data_type=data_type,
+                            description=description
+                        )
+
+                    elif raw_type == "date":
+                        data_type = DataType.DATE
+                        weaviate_property = Property(
+                            name=prop_name,
+                            data_type=data_type,
+                            description=description
+                        )
+
+                    elif raw_type == "uuid":
+                        data_type = DataType.UUID
+                        weaviate_property = Property(
+                            name=prop_name,
+                            data_type=data_type,
+                            description=description
+                        )
+
+                    else:
+                        # 默认使用TEXT类型
+                        data_type = DataType.TEXT
+                        weaviate_property = Property(
+                            name=prop_name,
+                            data_type=data_type,
+                            description=description
+                        )
+
+                    weaviate_properties.append(weaviate_property)
 
             # 创建集合
             client.collections.create(
@@ -190,7 +258,7 @@ class WeaviateOperations:
                     properties=properties,
                 )
 
-            logger.debug(f"向集合 '{collection_name}' 插入数据成功, ID: {result}")
+            logger.debug(f"向集合 '{collection_name}' 插入数据成功, ID: {result} - {properties}")
             return result
 
         except Exception as e:
@@ -253,6 +321,78 @@ class WeaviateOperations:
         except Exception as e:
             logger.error(f"批量插入到集合 '{collection_name}' 失败: {e}")
             return (0, len(items))
+
+    def paginate_query(
+        self,
+        collection_name: str,
+        limit: int = 100,
+        after: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """
+        分页遍历查询集合中的对象，返回向量和所有属性
+
+        Args:
+            collection_name: 集合名称
+            limit: 每页返回的对象数量，默认100
+            after: 上一页最后一个对象的ID，用于获取下一页数据
+
+        Returns:
+            Dict[str, Any]: 包含查询结果和分页信息的字典
+                - objects: 对象列表，每个对象包含id、vector和properties
+                - next_cursor: 下一页的游标ID，如果没有更多数据则为None
+        """
+        try:
+            # 确保连接
+            if not self.connector.is_connected():
+                self.connector.connect()
+
+            client = self.connector._client
+
+            # 获取集合
+            collection = client.collections.get(collection_name)
+
+            # 先获取集合的属性信息，避免使用"*"通配符导致gRPC协议错误
+            collection_config = collection.config.get()
+            property_names = [prop.name for prop in collection_config.properties]
+
+            # 执行分页查询
+            query_result = collection.query.fetch_objects(
+                limit=limit,
+                after=after,
+                include_vector=True,
+                return_properties=property_names  # 使用具体的属性名列表替代"*"
+            )
+
+            if not query_result or not query_result.objects:
+                return {
+                    "objects": [],
+                    "next_cursor": None
+                }
+
+            # 整理结果
+            objects = []
+            for obj in query_result.objects:
+                result = {
+                    "id": obj.uuid,
+                    "vector": obj.vector,
+                    "properties": obj.properties
+                }
+                objects.append(result)
+
+            # 获取下一页游标
+            next_cursor = query_result.objects[-1].uuid if len(query_result.objects) == limit else None
+
+            return {
+                "objects": objects,
+                "next_cursor": next_cursor
+            }
+
+        except Exception as e:
+            logger.error(f"分页查询集合 '{collection_name}' 失败: {e}")
+            return {
+                "objects": [],
+                "next_cursor": None
+            }
 
     def query_by_vector(
         self,
@@ -319,10 +459,81 @@ class WeaviateOperations:
             logger.error(f"向量查询集合 '{collection_name}' 失败: {e}")
             return []
 
+    def query_by_hybrid(
+        self,
+        collection_name: str,
+        query: str,
+        query_vector: List[float],
+        limit: int = 10,
+        properties: List[str] = None,
+        similarity_threshold: Optional[float] = None
+    ) -> List[Dict[str, Any]]:
+        """
+        通过混合查询（文本和向量）获取最相关的对象
+
+        Args:
+            collection_name: 集合名称
+            query: 查询文本
+            query_vector: 查询向量
+            limit: 返回结果数量限制
+            properties: 要返回的属性列表，为None时返回所有属性
+            similarity_threshold: 可选的相似度阈值，低于此阈值的结果将被过滤
+
+        Returns:
+            List[Dict[str, Any]]: 查询结果列表
+        """
+        try:
+            # 确保连接
+            if not self.connector.is_connected():
+                self.connector.connect()
+
+            client = self.connector._client
+
+            # 获取集合
+            collection = client.collections.get(collection_name)
+
+            # 执行混合查询
+            query_result = collection.query.hybrid(
+                query=query,
+                vector=query_vector,
+                limit=limit,
+                alpha=0.7,  # 混合比例，0.7表示文本和向量各占一定比例
+                return_properties=properties,
+                return_metadata=MetadataQuery(score=True),
+            )
+
+            if not query_result or not query_result.objects:
+                return []
+
+            # 整理结果
+            results = []
+            for obj in query_result.objects:
+                similarity_score = obj.metadata.score
+                if not similarity_score:
+                    similarity_score = 0.0  # 如果没有相似度信息，默认设置为0.0
+
+                # 应用相似度阈值过滤
+                if similarity_threshold is not None and similarity_score < similarity_threshold:
+                    continue
+
+                # 构建结果对象
+                result = {
+                    "id": obj.uuid,
+                    "score": similarity_score,
+                    "properties": obj.properties
+                }
+                results.append(result)
+
+            return results
+
+        except Exception as e:
+            logger.error(f"混合查询集合 '{collection_name}' 失败: {e}")
+            return []
+
     def query_by_filter(
         self,
         collection_name: str,
-        filter_query: Dict[str, Any],
+        filter_query: Union[Dict[str, Any], Optional[_Filters]],
         limit: int = 100,
         properties: List[str] = None,
     ) -> List[Dict[str, Any]]:
@@ -369,7 +580,7 @@ class WeaviateOperations:
             return []
 
     def delete_by_filter(
-        self, collection_name: str, filter_query: Dict[str, Any]
+        self, collection_name: str, filter_query: Union[Dict[str, Any], Optional[_Filters]]
     ) -> int:
         """
         通过过滤条件删除对象
@@ -391,26 +602,14 @@ class WeaviateOperations:
             # 获取集合
             collection = client.collections.get(collection_name)
 
-            # 首先查询匹配的对象
-            query_result = collection.query.fetch_objects(
-                filters=filter_query, limit=10000  # 设置一个较大的限制
+            # 使用批量删除API
+            result = collection.data.delete_many(
+                # same where operator as in the GraphQL API
+                where=filter_query,
+                verbose=True
             )
-
-            if not query_result or not query_result.objects:
-                return 0
-
-            # 删除匹配的对象
-            deleted_count = 0
-            for obj in query_result.objects:
-                try:
-                    collection.data.delete_by_id(obj.uuid)
-                    deleted_count += 1
-                except Exception as e:
-                    logger.error(f"删除对象 {obj.uuid} 失败: {e}")
-                    continue
-
-            logger.info(f"从集合 '{collection_name}' 删除了 {deleted_count} 个对象")
-            return deleted_count
+            logger.info(f"从集合 '{collection_name}' 删除对象成功, 删除: {result}")
+            return result
 
         except Exception as e:
             logger.error(f"从集合 '{collection_name}' 删除对象失败: {e}")
@@ -436,22 +635,27 @@ class WeaviateOperations:
             # 获取集合
             collection = client.collections.get(collection_name)
 
-            # 构建基本集合信息
-            info = {
-                "name": collection_name,
-                "description": "知识库集合",
-                "vectorizer": "none",
-                "exists": True,
-            }
+            # 获取集合配置（包含属性信息）
+            config = collection.config.get()
 
-            # 尝试获取更多详细信息（如果API支持）
-            try:
-                # 获取对象数量
-                count_result = collection.aggregate.over_all()
-                info["count"] = count_result.total
-            except Exception as e:
-                logger.warning(f"无法获取集合对象数量: {e}")
-                info["count"] = 0
+            # 提取属性信息
+            properties = []
+            for prop in config.properties:
+                properties.append({
+                    "name": prop.name,
+                    "dataType": prop.data_type,
+                    "description": prop.description
+                })
+
+            # 构建集合信息
+            info = {
+                "name": collection.name,
+                "description": config.description,
+                "vectorizer": config.vectorizer,
+                "vector_index_type": config.vector_index_config,
+                "properties": properties,
+                "count": collection.aggregate.over_all()
+            }
 
             return info
 
@@ -500,12 +704,46 @@ class WeaviateOperations:
 
             # 尝试获取集合
             try:
-                collection = client.collections.get(collection_name)
-                if collection is not None:
-                    return True
+                return collection_name in client.collections.list_all()
             except Exception as e:
                 logger.exception(f"无法获取集合: {e}")
 
         except Exception as e:
             logger.error(f"检查集合 '{collection_name}' 是否存在失败: {e}")
         return False
+
+    def count_collection_objects(self, collection_name: str) -> int:
+        """
+        统计集合中对象的总数量
+
+        Args:
+            collection_name: 集合名称
+
+        Returns:
+            int: 集合中对象的总数量，失败时返回-1
+        """
+        try:
+            # 确保连接
+            if not self.connector.is_connected():
+                self.connector.connect()
+
+            client = self.connector._client
+
+            # 获取集合
+            collection = client.collections.get(collection_name)
+
+            # 使用聚合功能获取总数
+            aggregate_result = collection.aggregate.over_all()
+
+            # 提取计数结果
+            if aggregate_result and hasattr(aggregate_result, 'total_count') and aggregate_result.total_count is not None:
+                count = aggregate_result.total_count
+                logger.debug(f"集合 '{collection_name}' 包含 {count} 个对象")
+                return count
+            else:
+                logger.debug(f"集合 '{collection_name}' 包含 0 个对象")
+                return 0
+
+        except Exception as e:
+            logger.error(f"统计集合 '{collection_name}' 对象数量失败: {e}")
+            return -1

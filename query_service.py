@@ -21,16 +21,16 @@ class QueryService:
         question: str,
         kb_id: int,
         limit: int = 10,
-        distance_threshold: Optional[float] = None,
+        similarity_threshold: Optional[float] = None,
     ) -> Dict[str, Union[bool, str, int, List[Dict]]]:
         """
-        基于语义相似度的查询
+        基于混合查询（文本和向量）的语义相似度查询
 
         Args:
             question: 用户问题
             kb_id: 知识库ID
             limit: 返回结果数量限制
-            distance_threshold: 相似度阈值
+            similarity_threshold: 相似度阈值
 
         Returns:
             Dict: 查询结果
@@ -43,17 +43,12 @@ class QueryService:
             if not question.strip():
                 return {"success": False, "error": "问题不能为空"}
 
-            # 问题向量化
-            question_vector = await self._vectorize_question(question)
-            if question_vector is None:
-                return {"success": False, "error": "问题向量化失败"}
-
-            # 执行向量相似度查询
-            results = self.vector_service.query_by_vector(
+            # 执行混合查询（内部自动处理向量化）
+            results = await self.vector_service.query_by_hybrid(
                 kb_id=kb_id,
-                vector=question_vector,
+                question=question,
                 limit=limit,
-                distance_threshold=distance_threshold,
+                similarity_threshold=similarity_threshold,
             )
 
             # 格式化结果
@@ -68,7 +63,7 @@ class QueryService:
             }
 
         except Exception as e:
-            logger.error(f"语义查询失败: {str(e)}")
+            logger.error(f"混合查询失败: {str(e)}")
             return {"success": False, "error": f"查询失败: {str(e)}"}
 
     def query_by_type(
