@@ -1,0 +1,47 @@
+# TableParser 项目依赖包
+
+# 核心依赖
+asyncio>=3.4.3
+typing-extensions>=4.0.0
+
+# 文档解析相关
+python-docx>=0.8.11          # Word文档解析
+pandas>=1.5.0                 # Excel数据处理
+openpyxl>=3.0.10              # Excel文件读写
+
+# 向量数据库
+weaviate-client>=3.25.0       # Weaviate向量数据库客户端
+
+# AI/LLM相关
+zhipuai>=1.0.7                # 智普AI SDK
+openai>=1.0.0                 # OpenAI兼容接口
+
+# 重试机制
+tenacity>=8.2.0               # 异步重试库
+
+# 配置管理
+python-dotenv>=1.0.0          # 环境变量管理
+PyYAML>=6.0                   # YAML配置文件解析
+
+# 数据处理
+numpy>=1.21.0                 # 数值计算
+requests>=2.28.0              # HTTP请求
+
+# 测试相关
+pytest>=7.0.0                 # 测试框架
+pytest-asyncio>=0.21.0        # 异步测试支持
+
+# 日志和工具
+logging>=0.5.1.2              # 日志管理
+
+# 系统相关
+platform                       # 系统平台检测（Python内置）
+subprocess                     # 子进程管理（Python内置）
+tempfile                       # 临时文件管理（Python内置）
+os                             # 操作系统接口（Python内置）
+json                           # JSON处理（Python内置）
+re                             # 正则表达式（Python内置）
+
+# 可选依赖（根据部署环境可能需要）
+# libreoffice                   # 用于DOC文件转换（系统安装）
+# curl                          # 用于健康检查（系统安装） 
