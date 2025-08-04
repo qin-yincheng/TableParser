@@ -485,7 +485,7 @@ class DocFileParser:
                 else:
                     # 普通单元格
                     cell_text = cell.text.strip()
-                    html.append(f"<th>{cell_text}</th>")
+                    html.append(f"<th>{cell_text if cell_text else '-'}</th>")
             html.append("</tr>")
 
     def _generate_html_body_rows_enhanced(self, table: Table, html: List[str], merge_map: Dict[int, Dict]):
@@ -499,7 +499,7 @@ class DocFileParser:
             html.append("<tr>")
             for col_idx, cell in enumerate(row.cells):
                 cell_text = cell.text.strip()
-                html.append(f"<td>{cell_text}</td>")
+                html.append(f"<td>{cell_text if cell_text else '-'}</td>")
             html.append("</tr>")
 
     def _table_to_html_with_merge_fallback(self, table: Table) -> Tuple[str, List[str], List[Dict]]:
@@ -514,11 +514,11 @@ class DocFileParser:
         # 简单的表头处理
         if table.rows:
             headers = [cell.text.strip() for cell in table.rows[0].cells]
-            html.append("<tr>" + "".join([f"<th>{header}</th>" for header in headers]) + "</tr>")
+            html.append("<tr>" + "".join([f"<th>{header if header else '-'}</th>" for header in headers]) + "</tr>")
         
         # 简单的表体处理
         for row in table.rows[1:]:
-            html.append("<tr>" + "".join([f"<td>{cell.text.strip()}</td>" for cell in row.cells]) + "</tr>")
+            html.append("<tr>" + "".join([f"<td>{cell.text.strip() if cell.text.strip() else '-'}</td>" for cell in row.cells]) + "</tr>")
         
         html.append("</table>")
         return "\n".join(html), headers, merged_cells
@@ -562,7 +562,7 @@ class DocFileParser:
             # 检查当前行是否为空行
             row_texts = [cell.text.strip() for cell in row.cells]
             if any(text for text in row_texts):  # 只有当行中有非空数据时才添加
-                data_row = "| " + " | ".join([cell.text.strip() for cell in row.cells]) + " |"
+                data_row = "| " + " | ".join([cell.text.strip() if cell.text.strip() else "-" for cell in row.cells]) + " |"
                 markdown_lines.append(data_row)
         
         return "\n".join(markdown_lines), headers, merged_cells
@@ -578,7 +578,7 @@ class DocFileParser:
         
         # 简单的表头处理
         if table.rows:
-            headers = [cell.text.strip() for cell in table.rows[0].cells]
+            headers = [cell.text.strip() if cell.text.strip() else "-" for cell in table.rows[0].cells]
             header_row = "| " + " | ".join(headers) + " |"
             markdown_lines.append(header_row)
             
@@ -588,7 +588,7 @@ class DocFileParser:
         
         # 简单的表体处理
         for row in table.rows[1:]:
-            data_row = "| " + " | ".join([cell.text.strip() for cell in row.cells]) + " |"
+            data_row = "| " + " | ".join([cell.text.strip() if cell.text.strip() else "-" for cell in row.cells]) + " |"
             markdown_lines.append(data_row)
         
         return "\n".join(markdown_lines), headers, merged_cells
@@ -674,7 +674,7 @@ class DocFileParser:
         cells = [cell.text.strip() for cell in row.cells]
         html = "<table border='1'><tr>"
         for cell in cells:
-            html += f"<td>{cell}</td>"
+            html += f"<td>{cell if cell else '-'}</td>"
         html += "</tr></table>"
         return html
 
@@ -687,7 +687,7 @@ class DocFileParser:
             if text:
                 cells.append(text)
             else:
-                cells.append("")
+                cells.append("-")
         markdown = "| " + " | ".join(cells) + " |"
         return markdown
 

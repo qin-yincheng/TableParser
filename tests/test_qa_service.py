@@ -15,24 +15,35 @@ async def test_basic_qa():
 
     qa_service = QAService()
     try:
-        # 测试一般性问题
-        question = "Cedar 大学在2005年招收了多少名本科新生？"
+        # 测试多个问题
+        questions = [
+            "人均发电量是4730.25（千瓦小时）的是哪一年？",
+            "黑色金属矿采选业固定资产投资(不含农户)其他资金比上年增长百分之-69.3的是哪一年？",
+            "2023年人口抽样调查的人口数是多少？",
+        ]
         kb_id = 1
 
-        # 增加limit参数以获取更多结果
-        result = await qa_service.answer_question(question=question, kb_id=kb_id, limit=8)
+        for i, question in enumerate(questions, 1):
+            logger.info(f"测试问题 {i}: {question}")
+            
+            # 增加limit参数以获取更多结果
+            result = await qa_service.answer_question(question=question, kb_id=kb_id, limit=8)
 
-        print(f"基础问答结果: {json.dumps(result, ensure_ascii=False, indent=2)}")
-        
-        # 显示所有查到的块
-        if result.get("success") and result.get("sources"):
-            print(f"\n=== 查到的所有块 (共{len(result['sources'])}个) ===")
-            for i, source in enumerate(result["sources"], 1):
-                print(f"\n块 {i}:")
-                print(f"  内容: {source.get('content', '')[:200]}...")
-                print(f"  类型: {source.get('chunk_type', '')}")
-                print(f"  相似度分数: {source.get('similarity_score', 0):.3f}")
-                print(f"  块ID: {source.get('chunk_id', '')}")
+            print(f"\n=== 问题 {i} 结果 ===")
+            print(f"问题: {question}")
+            print(f"结果: {json.dumps(result, ensure_ascii=False, indent=2)}")
+            
+            # 显示所有查到的块
+            if result.get("success") and result.get("sources"):
+                print(f"\n=== 查到的所有块 (共{len(result['sources'])}个) ===")
+                for j, source in enumerate(result["sources"], 1):
+                    print(f"\n块 {j}:")
+                    print(f"  内容: {source.get('content', '')[:200]}...")
+                    print(f"  类型: {source.get('chunk_type', '')}")
+                    print(f"  相似度分数: {source.get('similarity_score', 0):.3f}")
+                    print(f"  块ID: {source.get('chunk_id', '')}")
+            else:
+                print(f"问题 {i} 没有找到相关结果")
 
     except Exception as e:
         logger.error(f"基础问答测试失败: {str(e)}")

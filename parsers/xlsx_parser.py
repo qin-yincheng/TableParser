@@ -412,7 +412,7 @@ class XlsxFileParser:
                     continue
                 else:
                     # 普通单元格
-                    cell_value = str(df.iloc[h, col]) if pd.notna(df.iloc[h, col]) else ""
+                    cell_value = str(df.iloc[h, col]) if pd.notna(df.iloc[h, col]) else "-"
                     html.append(f"<th>{cell_value}</th>")
             html.append("</tr>")
         
@@ -420,7 +420,7 @@ class XlsxFileParser:
         for i in range(header_rows, df.shape[0]):
             html.append("<tr>")
             for col in range(df.shape[1]):
-                cell_value = str(df.iloc[i, col]) if pd.notna(df.iloc[i, col]) else ""
+                cell_value = str(df.iloc[i, col]) if pd.notna(df.iloc[i, col]) else "-"
                 html.append(f"<td>{cell_value}</td>")
             html.append("</tr>")
         
@@ -473,7 +473,7 @@ class XlsxFileParser:
             # 检查当前行是否为空行
             row_data = df.iloc[i]
             if row_data.notna().any():  # 只有当行中有非空数据时才添加
-                data_row = "| " + " | ".join([str(x) if pd.notna(x) else "" for x in row_data]) + " |"
+                data_row = "| " + " | ".join([str(x) if pd.notna(x) else "-" for x in row_data]) + " |"
                 markdown_lines.append(data_row)
         
         return "\n".join(markdown_lines), headers, merged_cells
@@ -512,7 +512,7 @@ class XlsxFileParser:
         """将单行转为HTML表格。"""
         html = "<table border='1'><tr>"
         for cell in row:
-            html += f"<td>{str(cell) if pd.notna(cell) else ''}</td>"
+            html += f"<td>{str(cell) if pd.notna(cell) else '-'}</td>"
         html += "</tr></table>"
         return html
 
@@ -524,7 +524,7 @@ class XlsxFileParser:
             if pd.notna(cell) and str(cell).strip():
                 cells.append(str(cell))
             else:
-                cells.append("")
+                cells.append("-")
         markdown = "| " + " | ".join(cells) + " |"
         return markdown
 

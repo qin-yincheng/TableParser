@@ -238,12 +238,14 @@ if __name__ == "__main__":
 
     # 示例：批量处理文档
     async def example_batch():
-        file_paths = ["test_data/testData.docx", "test_data/testData.xlsx"]
+        file_paths = ["test_data/test1.docx", "test_data/test2.docx", "test_data/test3.docx","test_data/test4.docx", "test_data/test5.docx", "test_data/test6.docx",
+                      "test_data/test7.docx", "test_data/test8.docx", "test_data/test9.docx", "test_data/test10.docx", "test_data/test1.xlsx", "test_data/test2.xlsx", "test_data/test3.xlsx", "test_data/test4.xlsx", "test_data/test5.xlsx", "test_data/test6.xlsx",
+                      "test_data/test7.xlsx", "test_data/test8.xlsx", "test_data/test9.xlsx", "test_data/test10.xlsx", "test_data/test11.xlsx"]
         kb_id = 1
         results = await process_multiple_documents(file_paths, kb_id)
         for result in results:
             print(f"处理结果: {result}")
 
     # 运行示例
-    asyncio.run(example_single())
-    # asyncio.run(example_batch())
+    # asyncio.run(example_single())
+    asyncio.run(example_batch())

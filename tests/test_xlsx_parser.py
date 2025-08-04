@@ -4,12 +4,12 @@ from parsers.xlsx_parser import XlsxFileParser, enhance_all_chunks
 from parsers.fragment_config import FragmentConfig, TableProcessingConfig
 import asyncio
 
-TEST_FILE = os.path.join(os.path.dirname(__file__), "../test_data/testData.xlsx")
+TEST_FILE = os.path.join(os.path.dirname(__file__), "../test_data/test2.xlsx")
 OUTPUT_FILE = os.path.join(
     os.path.dirname(__file__), "../test_data/test_xlsx_result.json"
 )
 LLM_OUTPUT_FILE = os.path.join(
-    os.path.dirname(__file__), "../test_data/test_xlsx_md_llm_result.json"
+    os.path.dirname(__file__), "../test_data/test2_xlsx_md_llm_result.json"
 )
 
 
