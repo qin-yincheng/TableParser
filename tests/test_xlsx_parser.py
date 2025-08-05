@@ -1,15 +1,22 @@
 import os
+import sys
 import json
+
+# 添加项目根目录到Python路径
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+
 from parsers.xlsx_parser import XlsxFileParser, enhance_all_chunks
 from parsers.fragment_config import FragmentConfig, TableProcessingConfig
 import asyncio
 
-TEST_FILE = os.path.join(os.path.dirname(__file__), "../test_data/test2.xlsx")
+TEST_FILE = os.path.join(os.path.dirname(__file__), "../test_data/test11.xlsx")
 OUTPUT_FILE = os.path.join(
     os.path.dirname(__file__), "../test_data/test_xlsx_result.json"
 )
 LLM_OUTPUT_FILE = os.path.join(
-    os.path.dirname(__file__), "../test_data/test2_xlsx_md_llm_result.json"
+    os.path.dirname(__file__), "../test_data/test11_xlsx_md_llm_result.json"
 )
 
 
