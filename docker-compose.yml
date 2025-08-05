@@ -1,6 +1,6 @@
 services:
   weaviate:
-    image: semitechnologies/weaviate:latest     
+    image: semitechnologies/weaviate:latest
     container_name: weaviate
     ports:
       - "8089:8080"
@@ -10,9 +10,13 @@ services:
     environment:
       PERSISTENCE_DATA_PATH: "/var/lib/weaviate"
       AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: "true"
-      DEFAULT_VECTORIZER_MODULE: "none"   
+      # 你打算用外部模型向量化，所以这个仍然保持 none
+      DEFAULT_VECTORIZER_MODULE: "none"
+      # 同时启用 text2vec-transformers 和 tokenizer-gse
       ENABLE_MODULES: "text2vec-transformers,tokenizer-gse"
       ENABLE_TOKENIZER_GSE: "true"
+      # 指向推理服务容器的地址
+      TRANSFORMERS_INFERENCE_API: "http://t2v-inference:8080"
       QUERY_DEFAULTS_LIMIT: "25"
       ENABLE_CRON: "false"
       ENABLE_CLUSTER: "false"
@@ -24,6 +28,15 @@ services:
       retries: 3
       start_period: 40s
     restart: unless-stopped
+    depends_on:
+      - t2v-inference
+
+  t2v-inference:
+    image: semitechnologies/transformers-inference:sentence-transformers-multi-qa-distilbert-cos-v1
+    container_name: t2v-inference
+    environment:
+      ENABLE_CUDA: "false"
+    restart: on-failure
 
   console:
     image: semitechnologies/weaviate-console
@@ -37,4 +50,4 @@ services:
     restart: unless-stopped
 
 volumes:
-  weaviate_data: 
+  weaviate_data:
