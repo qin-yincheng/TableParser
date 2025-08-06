@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-问答服务测试脚本
+问答服务测试脚本（支持 Markdown 输出）
 """
 
 import asyncio
@@ -9,42 +9,52 @@ from qa_service import QAService
 from utils.logger import logger
 
 
+def print_markdown_result(result: dict):
+    """格式化输出结果，支持 Markdown"""
+    print(f"\n=== 问题 ===\n{result.get('question')}")
+    print(f"\n=== 答案 (Markdown) ===\n{result.get('answer')}\n")  # 直接输出 Markdown，不转义
+    print(f"\n=== 来源信息 (前3个) ===")
+    for i, src in enumerate(result.get("sources", []), 1):
+        print(f"\n来源 {i}:")
+        print(f"  内容: {src.get('content', '')[:200]}...")
+        print(f"  类型: {src.get('chunk_type', '')}")
+        print(f"  相似度分数: {src.get('similarity_score', 0):.3f}")
+        print(f"  来源信息: {src.get('source_info', {})}")
+
+
 async def test_basic_qa():
     """测试基础问答功能"""
     logger.info("=== 测试基础问答功能 ===")
 
-    # 使用上下文管理器确保资源正确关闭
     with QAService() as qa_service:
         try:
-            # 测试多个问题
             questions = [
+                "2024年居民人均粮食消耗量是多少？",
                 "2024年全国的地级市数有多少个？",
                 "2021年全国的乡镇级区划数有多少个？",
-                "2018年全国的街道办事处的数量是多少？",
             ]
             kb_id = 1
 
             for i, question in enumerate(questions, 1):
                 logger.info(f"测试问题 {i}: {question}")
-                
-                # 增加limit参数以获取更多结果
-                result = await qa_service.answer_question(question=question, kb_id=kb_id, limit=8)
+
+                result = await qa_service.answer_question(
+                    question=question, kb_id=kb_id, limit=8
+                )
 
                 print(f"\n=== 问题 {i} 结果 ===")
+                # 打印完整的 JSON 结果
                 print(f"问题: {question}")
-                print(f"结果: {json.dumps(result, ensure_ascii=False, indent=2)}")
-                
-                # 显示所有查到的块
-                if result.get("success") and result.get("sources"):
-                    print(f"\n=== 查到的所有块 (共{len(result['sources'])}个) ===")
-                    for j, source in enumerate(result["sources"], 1):
-                        print(f"\n块 {j}:")
-                        print(f"  内容: {source.get('content', '')[:200]}...")
-                        print(f"  类型: {source.get('chunk_type', '')}")
-                        print(f"  相似度分数: {source.get('similarity_score', 0):.3f}")
-                        print(f"  块ID: {source.get('chunk_id', '')}")
+                print(
+                    f"原始结果 (JSON): {json.dumps(result, ensure_ascii=False, indent=2)}"
+                )
+
+                # 如果成功，再用更友好的格式打印
+                if result.get("success"):
+                    print(f"\n--- 格式化输出 ---")
+                    print_markdown_result(result)
                 else:
-                    print(f"问题 {i} 没有找到相关结果")
+                    print(f"问题 {i} 没有找到相关结果或出现错误: {result.get('error')}")
 
         except Exception as e:
             logger.error(f"基础问答测试失败: {str(e)}")
@@ -61,8 +71,10 @@ async def test_table_qa():
             kb_id = 1
 
             result = await qa_service.answer_question(question=question, kb_id=kb_id)
-
-            print(f"表格问答结果: {json.dumps(result, ensure_ascii=False, indent=2)}")
+            if result.get("success"):
+                print_markdown_result(result)
+            else:
+                print(f"错误: {result.get('error')}")
 
         except Exception as e:
             logger.error(f"表格问答测试失败: {str(e)}")
