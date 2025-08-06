@@ -110,18 +110,17 @@ class WeaviateConnector(DBConnector):
         """断开Weaviate连接"""
         if self._client:
             try:
-                # Weaviate v4 客户端需要更彻底的关闭
-                # 1. 尝试使用上下文管理器的退出方法
+                # 使用 Weaviate v4 客户端推荐的关闭方式
+                # 优先使用上下文管理器的退出方法，这是最安全的方式
                 if hasattr(self._client, '__exit__'):
                     self._client.__exit__(None, None, None)
-                # 2. 尝试调用 close() 方法
+                # 如果不支持上下文管理器，则使用 close() 方法
                 elif hasattr(self._client, 'close'):
                     self._client.close()
-                # 3. 对于有些客户端，可能还需要关闭连接池
-                if hasattr(self._client, '_connection') and hasattr(self._client._connection, 'close'):
-                    self._client._connection.close()
+                    
             except Exception as e:
-                logger.error(f"Weaviate连接关闭失败: {e}")
+                # 记录警告但不中断程序，因为连接可能已经关闭
+                logger.warning(f"Weaviate连接关闭时出现警告: {e}")
             finally:
                 self._client = None
             logger.info("Weaviate连接已关闭")
