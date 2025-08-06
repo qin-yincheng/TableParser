@@ -26,130 +26,133 @@ async def test_basic_qa():
     """测试基础问答功能"""
     logger.info("=== 测试基础问答功能 ===")
 
-    qa_service = QAService()
-    try:
-        questions = [
-            "2024年居民人均粮食消耗量是多少？",
-            # "2021年全国的乡镇级区划数有多少个？",
-            # "2018年全国的街道办事处的数量是多少？",
-        ]
-        kb_id = 1
+    with QAService() as qa_service:
+        try:
+            questions = [
+                "2024年居民人均粮食消耗量是多少？",
+                "2024年全国的地级市数有多少个？",
+                "2021年全国的乡镇级区划数有多少个？",
+            ]
+            kb_id = 1
 
-        for i, question in enumerate(questions, 1):
-            logger.info(f"测试问题 {i}: {question}")
-            
-            result = await qa_service.answer_question(question=question, kb_id=kb_id, limit=8)
+            for i, question in enumerate(questions, 1):
+                logger.info(f"测试问题 {i}: {question}")
 
-            print(f"\n=== 问题 {i} 结果 ===")
-            if result.get("success"):
-                print_markdown_result(result)
-            else:
-                print(f"错误: {result.get('error')}")
+                result = await qa_service.answer_question(
+                    question=question, kb_id=kb_id, limit=8
+                )
 
-    except Exception as e:
-        logger.error(f"基础问答测试失败: {str(e)}")
-    finally:
-        qa_service.close()
+                print(f"\n=== 问题 {i} 结果 ===")
+                # 打印完整的 JSON 结果
+                print(f"问题: {question}")
+                print(
+                    f"原始结果 (JSON): {json.dumps(result, ensure_ascii=False, indent=2)}"
+                )
+
+                # 如果成功，再用更友好的格式打印
+                if result.get("success"):
+                    print(f"\n--- 格式化输出 ---")
+                    print_markdown_result(result)
+                else:
+                    print(f"问题 {i} 没有找到相关结果或出现错误: {result.get('error')}")
+
+        except Exception as e:
+            logger.error(f"基础问答测试失败: {str(e)}")
 
 
 async def test_table_qa():
     """测试表格相关问答"""
     logger.info("=== 测试表格相关问答 ===")
 
-    qa_service = QAService()
-    try:
-        question = "表格中显示了哪些大学的招生数据？"
-        kb_id = 1
+    with QAService() as qa_service:
+        try:
+            # 测试表格数据问题
+            question = "表格中显示了哪些大学的招生数据？"
+            kb_id = 1
 
-        result = await qa_service.answer_question(question=question, kb_id=kb_id)
-        if result.get("success"):
-            print_markdown_result(result)
-        else:
-            print(f"错误: {result.get('error')}")
+            result = await qa_service.answer_question(question=question, kb_id=kb_id)
+            if result.get("success"):
+                print_markdown_result(result)
+            else:
+                print(f"错误: {result.get('error')}")
 
-    except Exception as e:
-        logger.error(f"表格问答测试失败: {str(e)}")
-    finally:
-        qa_service.close()
+        except Exception as e:
+            logger.error(f"表格问答测试失败: {str(e)}")
 
 
 async def test_error_cases():
     """测试错误情况"""
     logger.info("=== 测试错误情况 ===")
 
-    qa_service = QAService()
-    try:
-        # 测试空问题
-        logger.info("测试空问题")
-        result1 = await qa_service.answer_question(question="", kb_id=1)
-        print(f"空问题结果: {json.dumps(result1, ensure_ascii=False, indent=2)}")
+    with QAService() as qa_service:
+        try:
+            # 测试空问题
+            logger.info("测试空问题")
+            result1 = await qa_service.answer_question(question="", kb_id=1)
+            print(f"空问题结果: {json.dumps(result1, ensure_ascii=False, indent=2)}")
 
-        # 测试不存在的知识库
-        logger.info("测试不存在的知识库")
-        result2 = await qa_service.answer_question(question="测试问题", kb_id=999)
-        print(f"不存在知识库结果: {json.dumps(result2, ensure_ascii=False, indent=2)}")
+            # 测试不存在的知识库
+            logger.info("测试不存在的知识库")
+            result2 = await qa_service.answer_question(question="测试问题", kb_id=999)
+            print(f"不存在知识库结果: {json.dumps(result2, ensure_ascii=False, indent=2)}")
 
-        # 测试无相关信息的问题
-        logger.info("测试无相关信息的问题")
-        result3 = await qa_service.answer_question(
-            question="火星上有多少人口？", kb_id=1
-        )
-        print(f"无相关信息结果: {json.dumps(result3, ensure_ascii=False, indent=2)}")
+            # 测试无相关信息的问题
+            logger.info("测试无相关信息的问题")
+            result3 = await qa_service.answer_question(
+                question="火星上有多少人口？", kb_id=1
+            )
+            print(f"无相关信息结果: {json.dumps(result3, ensure_ascii=False, indent=2)}")
 
-    except Exception as e:
-        logger.error(f"错误情况测试失败: {str(e)}")
-    finally:
-        qa_service.close()
+        except Exception as e:
+            logger.error(f"错误情况测试失败: {str(e)}")
 
 
 async def test_qa_performance():
     """测试问答性能"""
     logger.info("=== 测试问答性能 ===")
 
-    qa_service = QAService()
-    try:
-        import time
+    with QAService() as qa_service:
+        try:
+            import time
 
-        questions = [
-            "Cedar 大学在2005年招收了多少名本科新生？",
-            "表格中显示了哪些大学的招生数据？",
-            "为什么选择Cedar大学？",
-            "招生数据统计表包含哪些信息？",
-        ]
+            questions = [
+                "Cedar 大学在2005年招收了多少名本科新生？",
+                "表格中显示了哪些大学的招生数据？",
+                "为什么选择Cedar大学？",
+                "招生数据统计表包含哪些信息？",
+            ]
 
-        total_time = 0
-        success_count = 0
+            total_time = 0
+            success_count = 0
 
-        for i, question in enumerate(questions, 1):
-            logger.info(f"测试问题 {i}: {question}")
+            for i, question in enumerate(questions, 1):
+                logger.info(f"测试问题 {i}: {question}")
 
-            start_time = time.time()
-            result = await qa_service.answer_question(question=question, kb_id=1)
-            end_time = time.time()
+                start_time = time.time()
+                result = await qa_service.answer_question(question=question, kb_id=1)
+                end_time = time.time()
 
-            question_time = end_time - start_time
-            total_time += question_time
+                question_time = end_time - start_time
+                total_time += question_time
 
-            if result.get("success"):
-                success_count += 1
-                logger.info(f"问题 {i} 成功，耗时: {question_time:.2f}秒")
-            else:
-                logger.warning(f"问题 {i} 失败: {result.get('error')}")
+                if result.get("success"):
+                    success_count += 1
+                    logger.info(f"问题 {i} 成功，耗时: {question_time:.2f}秒")
+                else:
+                    logger.warning(f"问题 {i} 失败: {result.get('error')}")
 
-        avg_time = total_time / len(questions)
-        success_rate = success_count / len(questions) * 100
+            avg_time = total_time / len(questions)
+            success_rate = success_count / len(questions) * 100
 
-        print(f"性能测试结果:")
-        print(f"  总问题数: {len(questions)}")
-        print(f"  成功数: {success_count}")
-        print(f"  成功率: {success_rate:.1f}%")
-        print(f"  平均耗时: {avg_time:.2f}秒")
-        print(f"  总耗时: {total_time:.2f}秒")
+            print(f"性能测试结果:")
+            print(f"  总问题数: {len(questions)}")
+            print(f"  成功数: {success_count}")
+            print(f"  成功率: {success_rate:.1f}%")
+            print(f"  平均耗时: {avg_time:.2f}秒")
+            print(f"  总耗时: {total_time:.2f}秒")
 
-    except Exception as e:
-        logger.error(f"性能测试失败: {str(e)}")
-    finally:
-        qa_service.close()
+        except Exception as e:
+            logger.error(f"性能测试失败: {str(e)}")
 
 
 async def main():
