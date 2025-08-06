@@ -582,8 +582,14 @@ class DocFileParser:
             header_row = "| " + " | ".join(headers) + " |"
             markdown_lines.append(header_row)
             
-            # 分隔线
-            separator_row = "| " + " | ".join(["---"] * len(headers)) + " |"
+            # 分隔线 - 第一列左对齐，其他列右对齐
+            separator_cells = []
+            for i in range(len(headers)):
+                if i == 0:
+                    separator_cells.append("---")   # 第一列左对齐
+                else:
+                    separator_cells.append("---:")  # 其他列右对齐
+            separator_row = "| " + " | ".join(separator_cells) + " |"
             markdown_lines.append(separator_row)
         
         # 简单的表体处理
@@ -594,32 +600,11 @@ class DocFileParser:
         return "\n".join(markdown_lines), headers, merged_cells
 
     def _get_column_alignment_for_doc_enhanced(self, table: Table, col: int) -> str:
-        """根据列的数据类型确定对齐方式（增强版）"""
-        if len(table.rows) <= 1:
-            return "---"  # 默认左对齐
-        
-        # 检查数据行中的数据类型
-        data_rows = table.rows[1:]  # 跳过表头行
-        numeric_count = 0
-        total_count = 0
-        
-        for row in data_rows:
-            if col < len(row.cells):
-                value = row.cells[col].text.strip()
-                if value:
-                    total_count += 1
-                    try:
-                        # 尝试转换为数值
-                        float(str(value).replace(',', '').replace('%', ''))
-                        numeric_count += 1
-                    except (ValueError, TypeError):
-                        pass
-        
-        # 如果超过70%的数据是数值，则右对齐
-        if total_count > 0 and numeric_count / total_count > 0.7:
-            return "---:"  # 右对齐
+        """根据列位置确定对齐方式：第一列左对齐，其他列右对齐"""
+        if col == 0:
+            return "---"   # 第一列左对齐
         else:
-            return "---"   # 左对齐
+            return "---:"  # 其他列右对齐
 
     def _generate_table_row_chunks(
         self, 
