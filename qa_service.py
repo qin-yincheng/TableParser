@@ -18,6 +18,14 @@ class QAService:
         self.max_context_length = 32768  # 上下文最大长度
         self.max_results = 8  # 最大检索结果数
 
+    def __enter__(self):
+        """上下文管理器入口"""
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """上下文管理器退出，确保资源清理"""
+        self.close()
+
     async def answer_question(
         self, question: str, kb_id: int, limit: int = None
     ) -> Dict[str, Union[bool, str, List[Dict]]]:

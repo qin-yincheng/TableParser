@@ -13,8 +13,17 @@ class WeaviateConnector(DBConnector):
 
     def __init__(self):
         self._client = None
-
         self._config_manager = ConfigManager()
+
+    def __enter__(self):
+        """上下文管理器入口"""
+        if not self.is_connected():
+            self.connect()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """上下文管理器退出，确保资源清理"""
+        self.disconnect()
 
     def connect(self, **kwargs):
         """
@@ -101,7 +110,16 @@ class WeaviateConnector(DBConnector):
         """断开Weaviate连接"""
         if self._client:
             try:
-                self._client.close()
+                # Weaviate v4 客户端需要更彻底的关闭
+                # 1. 尝试使用上下文管理器的退出方法
+                if hasattr(self._client, '__exit__'):
+                    self._client.__exit__(None, None, None)
+                # 2. 尝试调用 close() 方法
+                elif hasattr(self._client, 'close'):
+                    self._client.close()
+                # 3. 对于有些客户端，可能还需要关闭连接池
+                if hasattr(self._client, '_connection') and hasattr(self._client._connection, 'close'):
+                    self._client._connection.close()
             except Exception as e:
                 logger.error(f"Weaviate连接关闭失败: {e}")
             finally:
