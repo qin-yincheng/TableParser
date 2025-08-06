@@ -1,0 +1,17 @@
+{
+  "sample_analysis": {
+    "description": "销售数据图表，显示2023年各季度销售额",
+    "keywords": [
+      "销售数据",
+      "季度报表",
+      "2023年"
+    ],
+    "image_type": "chart",
+    "context_relation": "展示文档中的销售业绩数据",
+    "key_information": [
+      "Q1最高",
+      "Q3下滑",
+      "整体上升"
+    ]
+  }
+}

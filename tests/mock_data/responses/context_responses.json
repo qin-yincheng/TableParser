@@ -1,0 +1,8 @@
+{
+  "sample_context": {
+    "preceding": "本报告详细分析了2023年各季度的销售情况",
+    "following": "从图表可以看出，第一季度表现最佳",
+    "document_title": "2023年销售业绩报告",
+    "image_position": "第3个内容块"
+  }
+}
