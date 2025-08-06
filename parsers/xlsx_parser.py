@@ -479,34 +479,11 @@ class XlsxFileParser:
         return "\n".join(markdown_lines), headers, merged_cells
 
     def _get_column_alignment(self, df: pd.DataFrame, col: int, header_rows: int) -> str:
-        """根据列的数据类型确定对齐方式"""
-        # 检查数据行中的数据类型
-        data_rows = df.iloc[header_rows:]
-        if data_rows.empty:
-            return "---"  # 默认左对齐
-        
-        # 获取该列的数据
-        column_data = data_rows.iloc[:, col]
-        
-        # 检查是否为数值类型
-        numeric_count = 0
-        total_count = 0
-        
-        for value in column_data:
-            if pd.notna(value):
-                total_count += 1
-                try:
-                    # 尝试转换为数值
-                    float(str(value).replace(',', '').replace('%', ''))
-                    numeric_count += 1
-                except (ValueError, TypeError):
-                    pass
-        
-        # 如果超过70%的数据是数值，则右对齐
-        if total_count > 0 and numeric_count / total_count > 0.7:
-            return "---:"  # 右对齐
+        """根据列位置确定对齐方式：第一列左对齐，其他列右对齐"""
+        if col == 0:
+            return "---"   # 第一列左对齐
         else:
-            return "---"   # 左对齐
+            return "---:"  # 其他列右对齐
 
     def _row_to_html(self, row: pd.Series, headers: List[str]) -> str:
         """将单行转为HTML表格。"""
