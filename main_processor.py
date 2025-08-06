@@ -96,7 +96,7 @@ class MainProcessor:
                 "successful_vectors": len(successful_vectors),
                 "failed_vectors": failed_count,
                 "stored_count": stored_count,
-                "chunks": chunks,
+                # "chunks": chunks,
             }
 
             logger.info(
@@ -231,7 +231,7 @@ async def process_multiple_documents(
 if __name__ == "__main__":
     # 示例：处理单个文档
     async def example_single():
-        file_path = "test_data/testData1.docx"
+        file_path = "test_data/test8.xlsx"
         kb_id = 1
         result = await process_single_document(file_path, kb_id)
         print(f"处理结果: {result}")
@@ -247,5 +247,5 @@ if __name__ == "__main__":
             print(f"处理结果: {result}")
 
     # 运行示例
-    # asyncio.run(example_single())
-    asyncio.run(example_batch())
+    asyncio.run(example_single())
+    # asyncio.run(example_batch())

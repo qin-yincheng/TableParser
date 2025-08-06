@@ -16,7 +16,7 @@ async def test_semantic_query():
     query_service = QueryService()
     try:
         # 测试问题
-        question = "Cedar 大学在2005年招收了多少名本科新生？"
+        question = "2024年全国的地级市数有多少个？"
         kb_id = 1
 
         result = await query_service.query_by_semantic(
