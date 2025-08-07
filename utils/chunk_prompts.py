@@ -12,6 +12,7 @@ SYSTEM_PROMPTS: Dict[str, str] = {
     "text_fragment": "你是一名专业的内容分析师，请对下方文本分片内容进行简明、准确的分析和总结，注意这是完整段落的一部分。",
     "table_full": "你是一名专业的数据分析师，请对下方表格内容进行详细、专业的分析和主题总结。",
     "table_row": "你是一名专业的数据分析师，请结合表头和父表格信息，对下方表格行数据进行简明、准确的分析和总结。",
+    "image": "你是一名专业的图像分析师，擅长结合图像与文档上下文提取信息、总结图像含义。",
     # "future_type": "..."
 }
 
@@ -68,6 +69,19 @@ STRUCTURED_PROMPTS: Dict[str, str] = {
         "行内容：{content}\n"
         "只输出JSON，不要其他内容。"
     ),
+    "image": (
+        "根据图像内容，生成结构化信息。\n\n"
+        "图像路径：{image_path}\n\n"
+        "要求返回以下JSON字段：\n"
+        "{{\n"
+        '  "description": "图像描述",\n'
+        '  "keywords": ["关键词1", "关键词2", "关键词3"],\n'
+        '  "image_type": "图片类型（如：图表、截图、插图等）",\n'
+        '  "context_relation": "图像与文档的关系",\n'
+        '  "key_information": ["关键信息1", "关键信息2"]\n'
+        "}}\n"
+        "只输出JSON，不要其他内容。"
+    ),
     # "future_type": "..."
 }
 
@@ -105,7 +119,7 @@ STRUCTURED_PROMPTS_WITH_CONTEXT: Dict[str, str] = {
         "优化要求：\n"
         "1. **多维度描述**：从数据内容、业务场景、时间维度、地域维度、行业领域等多角度描述\n"
         "2. **关键数据突出**：明确提及重要数值、时间范围、地区名称、指标名称\n"
-        "3. **查询意图预测**：预测用户可能的提问方式，如\"哪个地区最高\"、\"什么时候开始\"、\"如何变化\"等\n"
+        '3. **查询意图预测**：预测用户可能的提问方式，如"哪个地区最高"、"什么时候开始"、"如何变化"等\n'
         "4. **同义词覆盖**：包含专业术语的通俗表达、简称、全称、相关概念\n"
         "5. **场景化表述**：描述表格适用的分析场景、决策支持、研究用途\n"
         "6. **数据特征强化**：描述数据的分布特点、异常值、趋势模式\n\n"
@@ -143,6 +157,28 @@ STRUCTURED_PROMPTS_WITH_CONTEXT: Dict[str, str] = {
         "}}\n"
         "只输出JSON，不要其他内容。"
     ),
+    "image": (
+        "结合上下文内容（标题、前文、后文）分析图片内容，生成结构化输出。\n\n"
+        "图像信息：\n"
+        "- 图像路径：{image_path}\n"
+        "- 文档上下文：{context}\n\n"
+        "分析要求：\n"
+        "1. 准确描述图片的主要内容\n"
+        "2. 分析图片与文档内容的关系\n"
+        "3. 提取图片中的关键信息\n"
+        "4. 识别图片类型（图表/照片/截图/手绘等）\n"
+        "5. 生成相关的关键词\n"
+        "6. 包含用户可能搜索的各种表述\n\n"
+        "输出JSON格式：\n"
+        "{{\n"
+        '  "description": "包含图片内容、与文档关系、关键信息的详细描述，注意包含用户可能搜索的各种表述",\n'
+        '  "keywords": ["图片内容关键词", "文档关联词", "业务场景词", "同义词/相关词", "查询触发词"],\n'
+        '  "image_type": "图片类型（chart/photo/screenshot/handwriting）",\n'
+        '  "context_relation": "图片与文档内容的关系描述",\n'
+        '  "key_information": ["关键信息1", "关键信息2"]\n'
+        "}}\n"
+        "只输出JSON，不要其他内容。"
+    ),
     # "future_type": "..."
 }
 
@@ -166,6 +202,9 @@ ANALYSIS_PROMPTS: Dict[str, str] = {
         "父表格摘要: {parent_table_info}\n"
         "行数据: {content}\n\n"
         "分析结果: {enhanced_caption}"
+    ),
+    "image": (
+        "图片内容分析:\n" "图片路径: {image_path}\n\n" "分析结果: {enhanced_caption}"
     ),
     # "future_type": "..."
 }
@@ -192,6 +231,12 @@ ANALYSIS_PROMPTS_WITH_CONTEXT: Dict[str, str] = {
         "父表格摘要: {parent_table_info}\n"
         "上下文: {context}\n"
         "行数据: {content}\n\n"
+        "分析结果: {enhanced_caption}"
+    ),
+    "image": (
+        "图片内容分析（含上下文）:\n"
+        "图片路径: {image_path}\n"
+        "文档上下文: {context}\n\n"
         "分析结果: {enhanced_caption}"
     ),
     # "future_type": "..."
