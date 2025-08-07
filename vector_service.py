@@ -84,6 +84,12 @@ class VectorService:
             {"name": "row", "dataType": "int", "description": "行号"},
             {"name": "header", "dataType": "text", "description": "表头（逗号分隔）"},
             {"name": "paragraph_index", "dataType": "int", "description": "段落索引"},
+            # 图片特有字段
+            {"name": "image_path", "dataType": "text", "description": "图片存储路径"},
+            {"name": "original_filename", "dataType": "text", "description": "原始图片文件名"},
+            {"name": "image_type", "dataType": "text", "description": "图片类型"},
+            {"name": "context_relation", "dataType": "text", "description": "上下文关系"},
+            {"name": "key_information", "dataType": "text", "description": "关键信息（逗号分隔）"},
         ]
 
         return self.weaviate_ops.create_collection(
@@ -144,6 +150,12 @@ class VectorService:
             "row": metadata.get("row", 0),
             "header": self._convert_array_to_string(metadata.get("header", [])),
             "paragraph_index": metadata.get("paragraph_index", 0),
+            # 图片特有字段  
+            "image_path": chunk.get("content", "") if chunk.get("type") == "image" else "",
+            "original_filename": metadata.get("original_filename", ""),
+            "image_type": metadata.get("image_type", ""),
+            "context_relation": metadata.get("context_relation", ""),
+            "key_information": self._convert_array_to_string(metadata.get("key_information", [])),
         }
 
         return self.weaviate_ops.insert_data(collection_name, data_obj, vector)
@@ -227,6 +239,11 @@ class VectorService:
                 "row",
                 "header",
                 "paragraph_index",
+                "image_path",
+                "original_filename",
+                "image_type",
+                "context_relation",
+                "key_information",
             ],
         )
 
@@ -238,6 +255,8 @@ class VectorService:
                     properties["keywords"] = self._convert_string_to_array(properties["keywords"])
                 if "header" in properties:
                     properties["header"] = self._convert_string_to_array(properties["header"])
+                if "key_information" in properties:
+                    properties["key_information"] = self._convert_string_to_array(properties["key_information"])
 
         return results
 
@@ -278,6 +297,11 @@ class VectorService:
                 "row",
                 "header",
                 "paragraph_index",
+                "image_path",
+                "original_filename",
+                "image_type",
+                "context_relation",
+                "key_information",
             ],
         )
 
@@ -289,6 +313,8 @@ class VectorService:
                     properties["keywords"] = self._convert_string_to_array(properties["keywords"])
                 if "header" in properties:
                     properties["header"] = self._convert_string_to_array(properties["header"])
+                if "key_information" in properties:
+                    properties["key_information"] = self._convert_string_to_array(properties["key_information"])
 
         return results
 
@@ -395,6 +421,11 @@ class VectorService:
                 "row",
                 "header",
                 "paragraph_index",
+                "image_path",
+                "original_filename",
+                "image_type",
+                "context_relation",
+                "key_information",
             ],
         )
 
@@ -406,6 +437,8 @@ class VectorService:
                     properties["keywords"] = self._convert_string_to_array(properties["keywords"])
                 if "header" in properties:
                     properties["header"] = self._convert_string_to_array(properties["header"])
+                if "key_information" in properties:
+                    properties["key_information"] = self._convert_string_to_array(properties["key_information"])
 
         return results
 

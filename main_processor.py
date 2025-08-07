@@ -122,7 +122,7 @@ class MainProcessor:
         ext = ext.lower().lstrip(".")
 
         if ext in ["doc", "docx"]:
-            return self.doc_parser.process(file_path)
+            return await self.doc_parser.process(file_path)
         elif ext == "xlsx":
             return self.xlsx_parser.parse(file_path)
         else:
@@ -227,25 +227,179 @@ async def process_multiple_documents(
         processor.close()
 
 
-# 示例使用
+async def check_and_handle_existing_data(processor: MainProcessor, kb_id: int, file_path: str) -> bool:
+    """
+    检查并处理已存在的数据
+    
+    Args:
+        processor: 主处理器实例
+        kb_id: 知识库ID
+        file_path: 文档路径
+        
+    Returns:
+        bool: True表示需要继续处理，False表示跳过处理
+    """
+    if not processor.vector_service.collection_exists(kb_id):
+        logger.info(f"知识库 {kb_id} 不存在，将创建新的知识库")
+        return True
+    
+    # 检查该文档是否已经处理过
+    doc_id = os.path.basename(file_path)
+    try:
+        from weaviate.classes.query import Filter
+        existing_data = processor.vector_service.query_by_filter(
+            kb_id=kb_id,
+            filter_query=Filter.by_property("doc_id").equal(doc_id),
+            limit=1
+        )
+        
+        if existing_data:
+            logger.info(f"文档 {doc_id} 在知识库 {kb_id} 中已存在数据，将进行增量更新")
+            # 删除旧数据
+            delete_count = processor.vector_service.delete_by_filter(
+                kb_id=kb_id,
+                filter_query={"path": ["doc_id"], "operator": "Equal", "valueString": doc_id}
+            )
+            logger.info(f"删除了 {delete_count} 条旧记录")
+        else:
+            logger.info(f"文档 {doc_id} 在知识库 {kb_id} 中未找到，将新增数据")
+            
+        return True
+        
+    except Exception as e:
+        logger.warning(f"检查已存在数据时出错: {str(e)}，继续处理")
+        return True
+
+
+async def process_documents_with_kb_id(file_paths: List[str], kb_id: int, force_recreate: bool = False):
+    """
+    处理文档到指定知识库
+    
+    Args:
+        file_paths: 文档路径列表
+        kb_id: 知识库ID
+        force_recreate: 是否强制重建知识库
+    """
+    processor = MainProcessor()
+    
+    try:
+        # 检查是否需要重建知识库
+        if force_recreate and processor.vector_service.collection_exists(kb_id):
+            logger.info(f"强制重建知识库 {kb_id}")
+            processor.vector_service.delete_collection(kb_id)
+            processor.vector_service.create_collection(kb_id)
+        
+        logger.info(f"开始处理 {len(file_paths)} 个文档到知识库 {kb_id}")
+        
+        results = []
+        for file_path in file_paths:
+            if not os.path.exists(file_path):
+                logger.error(f"文件不存在: {file_path}")
+                results.append({"success": False, "error": "文件不存在", "file_path": file_path})
+                continue
+            
+            # 检查和处理已存在数据
+            should_process = await check_and_handle_existing_data(processor, kb_id, file_path)
+            
+            if should_process:
+                result = await processor.process_document(file_path, kb_id)
+                results.append(result)
+                logger.info(f"✅ 处理完成: {file_path} - 分块:{result.get('total_chunks', 0)} 存储:{result.get('stored_count', 0)}")
+            else:
+                logger.info(f"⏭️  跳过处理: {file_path}")
+                results.append({"success": True, "skipped": True, "file_path": file_path})
+        
+        # 统计结果
+        success_count = sum(1 for r in results if r.get("success", False))
+        logger.info(f"📊 批量处理完成: {success_count}/{len(results)} 个文档成功")
+        
+        return results
+        
+    finally:
+        processor.close()
+
+
+def print_usage():
+    """打印使用说明"""
+    print("""
+使用方法:
+  python main_processor.py --kb-id <知识库ID> [选项] <文档路径...>
+
+参数:
+  --kb-id <ID>        指定知识库ID（必需）
+  --force-recreate    强制重建知识库（删除现有数据）
+  --help              显示此帮助信息
+
+示例:
+  # 处理单个文档到知识库100
+  python main_processor.py --kb-id 100 test_data/test.docx
+  
+  # 处理多个文档到知识库200
+  python main_processor.py --kb-id 200 test_data/test.docx test_data/test8.xlsx
+  
+  # 强制重建知识库并处理文档
+  python main_processor.py --kb-id 300 --force-recreate test_data/test.docx
+    """)
+
+
+# 命令行入口
 if __name__ == "__main__":
-    # 示例：处理单个文档
-    async def example_single():
-        file_path = "test_data/test8.xlsx"
-        kb_id = 1
-        result = await process_single_document(file_path, kb_id)
-        print(f"处理结果: {result}")
-
-    # 示例：批量处理文档
-    async def example_batch():
-        file_paths = ["test_data/test1.docx", "test_data/test2.docx", "test_data/test3.docx","test_data/test4.docx", "test_data/test5.docx", "test_data/test6.docx",
-                      "test_data/test7.docx", "test_data/test8.docx", "test_data/test9.docx", "test_data/test10.docx", "test_data/test1.xlsx", "test_data/test2.xlsx", "test_data/test3.xlsx", "test_data/test4.xlsx", "test_data/test5.xlsx", "test_data/test6.xlsx",
-                      "test_data/test7.xlsx", "test_data/test8.xlsx", "test_data/test9.xlsx", "test_data/test10.xlsx", "test_data/test11.xlsx"]
-        kb_id = 1
-        results = await process_multiple_documents(file_paths, kb_id)
+    import sys
+    import argparse
+    
+    # 如果没有参数，显示使用说明
+    if len(sys.argv) == 1:
+        print("🚀 TableParser 主处理器")
+        print_usage()
+        
+        # 运行默认示例
+        async def run_default_example():
+            print("\n🔸 运行默认示例（知识库ID: 100）...")
+            file_paths = ["test_data/test.docx", "test_data/test8.xlsx"]
+            results = await process_documents_with_kb_id(file_paths, 100)
+            
+            print("\n📋 处理结果:")
+            for result in results:
+                if result.get("success"):
+                    print(f"  ✅ {result.get('file_path')}: {result.get('total_chunks', 0)}个分块")
+                else:
+                    print(f"  ❌ {result.get('file_path')}: {result.get('error', '未知错误')}")
+        
+        asyncio.run(run_default_example())
+        sys.exit(0)
+    
+    # 解析命令行参数
+    parser = argparse.ArgumentParser(description='TableParser 文档处理器')
+    parser.add_argument('--kb-id', type=int, required=True, help='知识库ID')
+    parser.add_argument('--force-recreate', action='store_true', help='强制重建知识库')
+    parser.add_argument('files', nargs='+', help='要处理的文档文件路径')
+    
+    try:
+        args = parser.parse_args()
+    except SystemExit:
+        print_usage()
+        sys.exit(1)
+    
+    # 执行处理
+    async def main():
+        print(f"🚀 开始处理文档到知识库 {args.kb_id}")
+        if args.force_recreate:
+            print("⚠️  将强制重建知识库")
+        
+        results = await process_documents_with_kb_id(
+            file_paths=args.files,
+            kb_id=args.kb_id,
+            force_recreate=args.force_recreate
+        )
+        
+        print(f"\n📊 最终结果:")
         for result in results:
-            print(f"处理结果: {result}")
-
-    # 运行示例
-    asyncio.run(example_single())
-    # asyncio.run(example_batch())
+            if result.get("success"):
+                if result.get("skipped"):
+                    print(f"  ⏭️  {result.get('file_path')}: 跳过处理")
+                else:
+                    print(f"  ✅ {result.get('file_path')}: {result.get('total_chunks', 0)}个分块，{result.get('stored_count', 0)}条存储")
+            else:
+                print(f"  ❌ {result.get('file_path')}: {result.get('error', '未知错误')}")
+    
+    asyncio.run(main())

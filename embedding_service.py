@@ -74,7 +74,44 @@ class EmbeddingService:
         description = metadata.get("description", "")
         keywords = metadata.get("keywords", [])
 
-        if chunk_type in ["table_full", "table_row"]:
+        if chunk_type == "image":
+            # 图片类型：使用AI分析结果构建向量化文本
+            embedding_parts = []
+            
+            # 添加描述
+            if description:
+                embedding_parts.append(f"图片描述：{description}")
+            
+            # 添加关键词
+            if keywords:
+                embedding_parts.append(f"关键词：{', '.join(keywords)}")
+            
+            # 添加图片类型
+            image_type = metadata.get("image_type", "")
+            if image_type:
+                embedding_parts.append(f"图片类型：{image_type}")
+            
+            # 添加上下文关系
+            context_relation = metadata.get("context_relation", "")
+            if context_relation:
+                embedding_parts.append(f"上下文关系：{context_relation}")
+            
+            # 添加关键信息
+            key_information = metadata.get("key_information", [])
+            if key_information:
+                embedding_parts.append(f"关键信息：{'; '.join(key_information)}")
+            
+            # 如果没有任何AI分析结果，使用基本信息
+            if not embedding_parts:
+                original_filename = metadata.get("original_filename", "")
+                if original_filename:
+                    embedding_parts.append(f"图片文件：{original_filename}")
+                else:
+                    embedding_parts.append("图片内容")
+            
+            embedding_text = "\n".join(embedding_parts)
+            
+        elif chunk_type in ["table_full", "table_row"]:
             # 表格类型：只使用描述+关键词
             embedding_parts = []
             if description:
