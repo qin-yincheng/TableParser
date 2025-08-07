@@ -142,7 +142,12 @@ class VisionModelClient:
     """智普视觉模型客户端"""
     
     def __init__(self, api_key: Optional[str] = None):
-        self.api_key = api_key or os.getenv("ZHIPUAI_API_KEY")
+        from utils.config import VISION_CONFIG
+        self.api_key = api_key or VISION_CONFIG["api_key"]
+        self.model = VISION_CONFIG["model"]
+        self.timeout = VISION_CONFIG["timeout"]
+        self.max_tokens = VISION_CONFIG.get("max_tokens", 1000)
+        
         if not self.api_key:
             raise ValueError("ZHIPUAI_API_KEY 未设置")
     
@@ -176,11 +181,11 @@ class VisionModelClient:
             response = await zhipu_complete_async(
                 prompt="",  # 空prompt，使用messages
                 api_key=self.api_key,
-                model="glm-4v-plus",
+                model=self.model,
                 messages=messages,
                 temperature=0.1,
-                timeout=60,
-                max_tokens=1000
+                timeout=self.timeout,
+                max_tokens=self.max_tokens
             )
             
             # 解析响应
