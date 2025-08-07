@@ -22,28 +22,31 @@ from .fragment_config import FragmentConfig, TableProcessingConfig
 
 class LibreOfficeNotFoundError(Exception):
     """LibreOffice未安装或无法找到"""
+
     pass
 
 
 class ConversionError(Exception):
     """DOC转DOCX转换失败"""
+
     pass
 
 
 class ConversionTimeoutError(Exception):
     """转换超时"""
+
     pass
 
 
 def check_libreoffice_installation() -> bool:
     """检测LibreOffice是否已安装"""
     system = platform.system().lower()
-    
+
     if system == "windows":
         # Windows路径检查
         possible_paths = [
             r"C:\Program Files\LibreOffice\program\soffice.exe",
-            r"C:\Program Files (x86)\LibreOffice\program\soffice.exe"
+            r"C:\Program Files (x86)\LibreOffice\program\soffice.exe",
         ]
         for path in possible_paths:
             if os.path.exists(path):
@@ -53,10 +56,10 @@ def check_libreoffice_installation() -> bool:
         # Linux/macOS使用which命令检查
         try:
             result = subprocess.run(
-                ["which", "libreoffice"], 
-                stdout=subprocess.PIPE, 
+                ["which", "libreoffice"],
+                stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
-                timeout=10
+                timeout=10,
             )
             return result.returncode == 0
         except (subprocess.TimeoutExpired, FileNotFoundError):
@@ -66,11 +69,11 @@ def check_libreoffice_installation() -> bool:
 def get_libreoffice_command() -> str:
     """获取LibreOffice命令路径"""
     system = platform.system().lower()
-    
+
     if system == "windows":
         possible_paths = [
             r"C:\Program Files\LibreOffice\program\soffice.exe",
-            r"C:\Program Files (x86)\LibreOffice\program\soffice.exe"
+            r"C:\Program Files (x86)\LibreOffice\program\soffice.exe",
         ]
         for path in possible_paths:
             if os.path.exists(path):
@@ -80,10 +83,10 @@ def get_libreoffice_command() -> str:
         # Linux/macOS
         try:
             result = subprocess.run(
-                ["which", "libreoffice"], 
-                stdout=subprocess.PIPE, 
+                ["which", "libreoffice"],
+                stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
-                timeout=10
+                timeout=10,
             )
             if result.returncode == 0:
                 return "libreoffice"
@@ -96,53 +99,52 @@ def convert_doc_to_docx(doc_path: str, output_dir: Optional[str] = None) -> str:
     """使用LibreOffice将DOC文件转换为DOCX格式"""
     if not os.path.exists(doc_path):
         raise FileNotFoundError(f"DOC文件不存在: {doc_path}")
-    
+
     # 检查LibreOffice安装
     if not check_libreoffice_installation():
         raise LibreOfficeNotFoundError("系统未安装LibreOffice，无法转换DOC文件")
-    
+
     # 获取输出目录
     if output_dir is None:
         output_dir = tempfile.mkdtemp(prefix="doc_conversion_")
     else:
         os.makedirs(output_dir, exist_ok=True)
-    
+
     # 获取LibreOffice命令
     libreoffice_cmd = get_libreoffice_command()
-    
+
     # 构建转换命令
     cmd = [
         libreoffice_cmd,
         "--headless",
-        "--convert-to", "docx",
-        "--outdir", output_dir,
-        doc_path
+        "--convert-to",
+        "docx",
+        "--outdir",
+        output_dir,
+        doc_path,
     ]
-    
+
     try:
         # 执行转换命令
         result = subprocess.run(
-            cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            timeout=60  # 60秒超时
+            cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=60  # 60秒超时
         )
-        
+
         if result.returncode != 0:
-            error_msg = result.stderr.decode('utf-8', errors='ignore')
+            error_msg = result.stderr.decode("utf-8", errors="ignore")
             raise ConversionError(f"LibreOffice转换失败: {error_msg}")
-        
+
         # 检查转换结果
         doc_filename = os.path.basename(doc_path)
         docx_filename = os.path.splitext(doc_filename)[0] + ".docx"
         docx_path = os.path.join(output_dir, docx_filename)
-        
+
         if not os.path.exists(docx_path):
             raise ConversionError(f"转换后的DOCX文件不存在: {docx_path}")
-        
+
         logger.info(f"成功将DOC文件转换为DOCX: {docx_path}")
         return docx_path
-        
+
     except subprocess.TimeoutExpired:
         raise ConversionTimeoutError("DOC转DOCX转换超时（60秒）")
     except Exception as e:
@@ -156,25 +158,38 @@ class DocFileParser:
 
     def __init__(self, fragment_config: Optional[FragmentConfig] = None):
         """初始化解析器"""
-        self.fragment_manager = FragmentManager(fragment_config) if fragment_config else None
-        self.table_config = fragment_config.table_processing if fragment_config else TableProcessingConfig()
-        
+        self.fragment_manager = (
+            FragmentManager(fragment_config) if fragment_config else None
+        )
+        self.table_config = (
+            fragment_config.table_processing
+            if fragment_config
+            else TableProcessingConfig()
+        )
+
         # 新增图片处理组件
         try:
             from utils.config_manager import ConfigManager
+
             config_manager = ConfigManager()
             image_config = config_manager.get_image_processing_config()
-            
+
             if image_config.get("enabled", False):
                 from .image_processing.image_extractor import ImageExtractor
                 from .image_processing.context_collector import ContextCollector
                 from .image_processing.image_analyzer import ImageAnalyzer
                 from utils.zhipu_client import VisionModelClient
-                
-                self.image_extractor = ImageExtractor(image_config.get("storage_path", "storage/images"))
-                self.context_collector = ContextCollector(image_config.get("context_window", 3))
+
+                self.image_extractor = ImageExtractor(
+                    image_config.get("storage_path", "storage/images")
+                )
+                self.context_collector = ContextCollector(
+                    image_config.get("context_window", 3)
+                )
                 self.vision_model = VisionModelClient(image_config.get("api_key"))
-                self.image_analyzer = ImageAnalyzer(self.vision_model, self.context_collector)
+                self.image_analyzer = ImageAnalyzer(
+                    self.vision_model, self.context_collector
+                )
                 self.image_processing_enabled = True
                 logger.info("图片处理功能已启用")
             else:
@@ -201,7 +216,11 @@ class DocFileParser:
         elif ext == "doc":
             try:
                 chunks = await self._process_doc(file_path, doc_id)
-            except (LibreOfficeNotFoundError, ConversionError, ConversionTimeoutError) as e:
+            except (
+                LibreOfficeNotFoundError,
+                ConversionError,
+                ConversionTimeoutError,
+            ) as e:
                 logger.error(f"DOC文件处理失败: {str(e)}")
                 return []  # 转换失败时返回空列表
         else:
@@ -249,13 +268,13 @@ class DocFileParser:
             from docx import Document
 
             document = Document(file_path)
-            
+
             # 提取图片（如果启用）
             if self.image_processing_enabled:
                 images = self.image_extractor.extract_images_from_docx(document, doc_id)
             else:
                 images = []
-            
+
             # 混合遍历段落和表格，记录表格前后段落索引
             block_items = list(self._iter_block_items(document))
             # 先收集所有段落内容
@@ -301,12 +320,12 @@ class DocFileParser:
                         block, doc_id, preceding, following, paragraphs=all_paragraphs
                     )
                     all_chunks.extend(table_chunks)
-            
+
             # 处理图片块
             if self.image_processing_enabled and images:
                 image_chunks = self._create_image_chunks(images, doc_id, all_chunks)
                 all_chunks.extend(image_chunks)
-                
+
                 # 等待图片分析完成，确保向量化时有完整的分析结果
                 try:
                     await self._process_images_async(image_chunks, all_chunks)
@@ -314,7 +333,7 @@ class DocFileParser:
                 except Exception as e:
                     logger.warning(f"图片分析失败: {str(e)}")
                     # 即使图片分析失败，也继续处理其他内容
-            
+
             return all_chunks
         except ImportError:
             logger.error("未安装python-docx库，无法解析DOCX文件")
@@ -381,10 +400,12 @@ class DocFileParser:
         """
         all_chunks = []
         table_id = f"table_{id(table)}"
-        
+
         # 根据配置获取表格格式
-        table_content, table_headers, merged_cells = self._convert_table_to_format(table)
-        
+        table_content, table_headers, merged_cells = self._convert_table_to_format(
+            table
+        )
+
         # 获取上下文段落内容
         preceding_content = (
             self.get_paragraph_content_by_index(paragraphs, preceding)
@@ -397,14 +418,14 @@ class DocFileParser:
             else None
         )
         context = self._get_context_for_table(preceding_content, following_content)
-        
+
         # 构造 parent_table_info
         parent_info = (
             parent_table_info
             if parent_table_info is not None
             else f"表头: {table_headers} 合并单元格: {merged_cells}"
         )
-        
+
         # 根据配置决定是否生成完整表格块
         if self.table_config.table_chunking_strategy in ["full_only", "full_and_rows"]:
             table_chunk = {
@@ -425,18 +446,28 @@ class DocFileParser:
                 "context": context,
             }
             all_chunks.append(table_chunk)
-        
+
         # 根据配置决定是否生成表格行数据
         if self.table_config.table_chunking_strategy == "full_and_rows":
             row_chunks = self._generate_table_row_chunks(
-                table, doc_id, table_id, preceding, following, 
-                preceding_content, following_content, table_headers, parent_info, context
+                table,
+                doc_id,
+                table_id,
+                preceding,
+                following,
+                preceding_content,
+                following_content,
+                table_headers,
+                parent_info,
+                context,
             )
             all_chunks.extend(row_chunks)
-        
+
         return all_chunks
 
-    def _convert_table_to_format(self, table: Table) -> Tuple[str, List[str], List[Dict]]:
+    def _convert_table_to_format(
+        self, table: Table
+    ) -> Tuple[str, List[str], List[Dict]]:
         """根据配置将表格转换为指定格式，包含错误处理和回退机制"""
         try:
             if self.table_config.table_format == "markdown":
@@ -456,40 +487,46 @@ class DocFileParser:
                 # 最后的回退：返回空表格
                 return "<table></table>", [], []
 
-    def _table_to_html_with_merge_enhanced(self, table: Table) -> Tuple[str, List[str], List[Dict]]:
+    def _table_to_html_with_merge_enhanced(
+        self, table: Table
+    ) -> Tuple[str, List[str], List[Dict]]:
         """
         增强的HTML表格转换，正确处理合并单元格
         """
         if not table.rows:
             return "<table></table>", [], []
-        
+
         # 构建表头映射（使用带回退机制的方法）
         header_mapping = self._build_header_mapping_with_fallback(table)
-        
+
         # 获取合并单元格信息
         merged_cells = self._get_merged_cells_info_ultra_enhanced(table)
-        
+
         # 生成最终表头
         headers = []
         for col in range(len(table.rows[0].cells)):
             header = header_mapping.get(col, "")
             headers.append(header)
-        
+
         html = ["<table border='1'>"]
-        
+
         # 构建合并单元格映射，用于HTML生成
-        merge_map = self._build_merge_map_for_html_enhanced(merged_cells, len(table.rows[0].cells))
-        
+        merge_map = self._build_merge_map_for_html_enhanced(
+            merged_cells, len(table.rows[0].cells)
+        )
+
         # 生成表头行
         self._generate_html_header_rows_enhanced(table, html, merge_map, header_mapping)
-        
+
         # 生成表体行
         self._generate_html_body_rows_enhanced(table, html, merge_map)
-        
+
         html.append("</table>")
         return "\n".join(html), headers, merged_cells
 
-    def _build_merge_map_for_html_enhanced(self, merged_cells: List[Dict], num_cols: int) -> Dict[int, Dict]:
+    def _build_merge_map_for_html_enhanced(
+        self, merged_cells: List[Dict], num_cols: int
+    ) -> Dict[int, Dict]:
         """构建增强的合并单元格映射，用于HTML生成"""
         merge_map = {}
         for merge_info in merged_cells:
@@ -501,17 +538,25 @@ class DocFileParser:
                     if col < num_cols:
                         merge_map[col] = {
                             "is_merged": col_offset == 0,  # 只有第一个单元格显示内容
-                            "colspan": colspan if col_offset == 0 else 0,  # 只有第一个单元格有colspan
+                            "colspan": (
+                                colspan if col_offset == 0 else 0
+                            ),  # 只有第一个单元格有colspan
                             "text": merge_info["text"] if col_offset == 0 else "",
-                            "merge_type": merge_info["merge_type"]
+                            "merge_type": merge_info["merge_type"],
                         }
         return merge_map
 
-    def _generate_html_header_rows_enhanced(self, table: Table, html: List[str], merge_map: Dict[int, Dict], header_mapping: Dict[int, str]):
+    def _generate_html_header_rows_enhanced(
+        self,
+        table: Table,
+        html: List[str],
+        merge_map: Dict[int, Dict],
+        header_mapping: Dict[int, str],
+    ):
         """生成增强的HTML表头行，正确处理表头行数"""
         # 检测表头行数
         header_rows = self._detect_header_rows_smart(table)
-        
+
         # 只生成表头行
         for row_idx in range(header_rows):
             if row_idx >= len(table.rows):
@@ -533,11 +578,13 @@ class DocFileParser:
                     html.append(f"<th>{cell_text if cell_text else '-'}</th>")
             html.append("</tr>")
 
-    def _generate_html_body_rows_enhanced(self, table: Table, html: List[str], merge_map: Dict[int, Dict]):
+    def _generate_html_body_rows_enhanced(
+        self, table: Table, html: List[str], merge_map: Dict[int, Dict]
+    ):
         """生成增强的HTML表体行，正确处理表头行数"""
         # 检测表头行数
         header_rows = self._detect_header_rows_smart(table)
-        
+
         # 从表头行之后开始生成表体行
         for row_idx in range(header_rows, len(table.rows)):
             row = table.rows[row_idx]
@@ -547,50 +594,69 @@ class DocFileParser:
                 html.append(f"<td>{cell_text if cell_text else '-'}</td>")
             html.append("</tr>")
 
-    def _table_to_html_with_merge_fallback(self, table: Table) -> Tuple[str, List[str], List[Dict]]:
+    def _table_to_html_with_merge_fallback(
+        self, table: Table
+    ) -> Tuple[str, List[str], List[Dict]]:
         """HTML转换的回退方法"""
         if not table.rows:
             return "<table></table>", [], []
-        
+
         html = ["<table border='1'>"]
         headers = []
         merged_cells = []
-        
+
         # 简单的表头处理
         if table.rows:
             headers = [cell.text.strip() for cell in table.rows[0].cells]
-            html.append("<tr>" + "".join([f"<th>{header if header else '-'}</th>" for header in headers]) + "</tr>")
-        
+            html.append(
+                "<tr>"
+                + "".join(
+                    [f"<th>{header if header else '-'}</th>" for header in headers]
+                )
+                + "</tr>"
+            )
+
         # 简单的表体处理
         for row in table.rows[1:]:
-            html.append("<tr>" + "".join([f"<td>{cell.text.strip() if cell.text.strip() else '-'}</td>" for cell in row.cells]) + "</tr>")
-        
+            html.append(
+                "<tr>"
+                + "".join(
+                    [
+                        f"<td>{cell.text.strip() if cell.text.strip() else '-'}</td>"
+                        for cell in row.cells
+                    ]
+                )
+                + "</tr>"
+            )
+
         html.append("</table>")
         return "\n".join(html), headers, merged_cells
 
-    def _table_to_markdown_with_merge_enhanced(self, table: Table) -> Tuple[str, List[str], List[Dict]]:
+    def _table_to_markdown_with_merge_enhanced(
+        self, table: Table
+    ) -> Tuple[str, List[str], List[Dict]]:
         """增强的Markdown表格转换，体现合并单元格层次结构"""
         if not table.rows:
             return "", [], []
-        
+
         # 构建表头映射（使用带回退机制的方法）
         header_mapping = self._build_header_mapping_with_fallback(table)
-        
+
         # 获取合并单元格信息
         merged_cells = self._get_merged_cells_info_ultra_enhanced(table)
-        
+
         # 生成最终表头
         headers = []
         for col in range(len(table.rows[0].cells)):
             header = header_mapping.get(col, "")
             headers.append(header)
-        
+
         markdown_lines = []
-        
+
         # 表头 - 使用层次结构表头
         header_row = "| " + " | ".join(headers) + " |"
         markdown_lines.append(header_row)
-        
+
         # 分隔线 - 使用标准格式并添加对齐方式
         separator_cells = []
         for col in range(len(headers)):
@@ -599,7 +665,7 @@ class DocFileParser:
             separator_cells.append(alignment)
         separator_row = "| " + " | ".join(separator_cells) + " |"
         markdown_lines.append(separator_row)
-        
+
         # 表体 - 过滤空行，确保数据行连续
         header_rows = self._detect_header_rows_smart(table)
         for row_idx in range(header_rows, len(table.rows)):
@@ -607,67 +673,90 @@ class DocFileParser:
             # 检查当前行是否为空行
             row_texts = [cell.text.strip() for cell in row.cells]
             if any(text for text in row_texts):  # 只有当行中有非空数据时才添加
-                data_row = "| " + " | ".join([cell.text.strip() if cell.text.strip() else "-" for cell in row.cells]) + " |"
+                data_row = (
+                    "| "
+                    + " | ".join(
+                        [
+                            cell.text.strip() if cell.text.strip() else "-"
+                            for cell in row.cells
+                        ]
+                    )
+                    + " |"
+                )
                 markdown_lines.append(data_row)
-        
+
         return "\n".join(markdown_lines), headers, merged_cells
 
-    def _table_to_markdown_with_merge_fallback(self, table: Table) -> Tuple[str, List[str], List[Dict]]:
+    def _table_to_markdown_with_merge_fallback(
+        self, table: Table
+    ) -> Tuple[str, List[str], List[Dict]]:
         """Markdown转换的回退方法"""
         if not table.rows:
             return "", [], []
-        
+
         markdown_lines = []
         headers = []
         merged_cells = []
-        
+
         # 简单的表头处理
         if table.rows:
-            headers = [cell.text.strip() if cell.text.strip() else "-" for cell in table.rows[0].cells]
+            headers = [
+                cell.text.strip() if cell.text.strip() else "-"
+                for cell in table.rows[0].cells
+            ]
             header_row = "| " + " | ".join(headers) + " |"
             markdown_lines.append(header_row)
-            
+
             # 分隔线 - 第一列左对齐，其他列右对齐
             separator_cells = []
             for i in range(len(headers)):
                 if i == 0:
-                    separator_cells.append("---")   # 第一列左对齐
+                    separator_cells.append("---")  # 第一列左对齐
                 else:
                     separator_cells.append("---:")  # 其他列右对齐
             separator_row = "| " + " | ".join(separator_cells) + " |"
             markdown_lines.append(separator_row)
-        
+
         # 简单的表体处理
         for row in table.rows[1:]:
-            data_row = "| " + " | ".join([cell.text.strip() if cell.text.strip() else "-" for cell in row.cells]) + " |"
+            data_row = (
+                "| "
+                + " | ".join(
+                    [
+                        cell.text.strip() if cell.text.strip() else "-"
+                        for cell in row.cells
+                    ]
+                )
+                + " |"
+            )
             markdown_lines.append(data_row)
-        
+
         return "\n".join(markdown_lines), headers, merged_cells
 
     def _get_column_alignment_for_doc_enhanced(self, table: Table, col: int) -> str:
         """根据列位置确定对齐方式：第一列左对齐，其他列右对齐"""
         if col == 0:
-            return "---"   # 第一列左对齐
+            return "---"  # 第一列左对齐
         else:
             return "---:"  # 其他列右对齐
 
     def _generate_table_row_chunks(
-        self, 
-        table: Table, 
-        doc_id: str, 
-        table_id: str, 
-        preceding: Optional[int], 
+        self,
+        table: Table,
+        doc_id: str,
+        table_id: str,
+        preceding: Optional[int],
         following: Optional[int],
         preceding_content: Optional[str],
         following_content: Optional[str],
         table_headers: List[str],
         parent_info: str,
-        context: str
+        context: str,
     ) -> List[Dict]:
         """生成表格行分块，正确处理表头行数"""
         row_chunks = []
         header_rows = self._detect_header_rows_smart(table)
-        
+
         for r_idx in range(header_rows, len(table.rows)):
             row = table.rows[r_idx]
             row_content = self._row_to_format(row, table_headers)
@@ -757,7 +846,7 @@ class DocFileParser:
         colspan = 1
         is_merged_start = False
         parent_text = cell.text.strip()
-        
+
         # 检测水平合并（colspan）
         gridspan = tc.xpath(".//w:gridSpan")
         if gridspan:
@@ -769,7 +858,7 @@ class DocFileParser:
                 )
             except (ValueError, TypeError):
                 colspan = 1
-        
+
         # 检测垂直合并（rowspan）
         vmerge = tc.xpath(".//w:vMerge")
         if vmerge:
@@ -784,7 +873,7 @@ class DocFileParser:
             else:
                 # 被合并的单元格，不显示
                 rowspan = 0
-        
+
         return rowspan, colspan, is_merged_start, parent_text
 
     def _calculate_rowspan(self, cell) -> int:
@@ -838,10 +927,12 @@ class DocFileParser:
         )
         return context
 
-    def _create_image_chunks(self, images: List[Dict], doc_id: str, all_chunks: List[Dict]) -> List[Dict]:
+    def _create_image_chunks(
+        self, images: List[Dict], doc_id: str, all_chunks: List[Dict]
+    ) -> List[Dict]:
         """创建图片块"""
         image_chunks = []
-        
+
         for image_data in images:
             image_chunk = {
                 "type": "image",
@@ -856,34 +947,40 @@ class DocFileParser:
                     "keywords": [],
                     "image_type": "",
                     "context_relation": "",
-                    "key_information": []
+                    "key_information": [],
                 },
-                "context": ""
+                "context": "",
             }
             image_chunks.append(image_chunk)
-        
+
         logger.info(f"创建了 {len(image_chunks)} 个图片块")
         return image_chunks
 
-    async def _process_images_async(self, image_chunks: List[Dict], all_chunks: List[Dict]):
+    async def _process_images_async(
+        self, image_chunks: List[Dict], all_chunks: List[Dict]
+    ):
         """异步处理图片分析"""
         try:
             # 为每个图片收集上下文
             for image_chunk in image_chunks:
-                context = self.context_collector.collect_context_for_image(image_chunk, all_chunks)
-                image_chunk["context"] = f"前文：{context.get('preceding', '')} 后文：{context.get('following', '')}"
-            
+                context = self.context_collector.collect_context_for_image(
+                    image_chunk, all_chunks
+                )
+                image_chunk["context"] = (
+                    f"前文：{context.get('preceding', '')} 后文：{context.get('following', '')}"
+                )
+
             # 并发分析所有图片
             tasks = []
             for image_chunk in image_chunks:
                 task = self._analyze_single_image_async(image_chunk)
                 tasks.append(task)
-            
+
             # 等待所有分析完成
             await asyncio.gather(*tasks, return_exceptions=True)
-            
+
             logger.info(f"图片分析完成，共处理 {len(image_chunks)} 张图片")
-            
+
         except Exception as e:
             logger.error(f"图片异步处理失败: {str(e)}")
 
@@ -892,22 +989,30 @@ class DocFileParser:
         try:
             image_path = image_chunk["content"]
             context = image_chunk["context"]
-            
+
             # 使用ImageAnalyzer进行分析，它会自动处理上下文和调用VisionModelClient
             analysis_result = await self.image_analyzer.analyze_image_with_context(
                 image_path, {"context": context}
             )
-            
+
             # 更新图片块
             image_chunk["metadata"]["processing_status"] = "completed"
-            image_chunk["metadata"]["description"] = analysis_result.get("description", "")
+            image_chunk["metadata"]["description"] = analysis_result.get(
+                "description", ""
+            )
             image_chunk["metadata"]["keywords"] = analysis_result.get("keywords", [])
-            image_chunk["metadata"]["image_type"] = analysis_result.get("image_type", "")
-            image_chunk["metadata"]["context_relation"] = analysis_result.get("context_relation", "")
-            image_chunk["metadata"]["key_information"] = analysis_result.get("key_information", [])
-            
+            image_chunk["metadata"]["image_type"] = analysis_result.get(
+                "image_type", ""
+            )
+            image_chunk["metadata"]["context_relation"] = analysis_result.get(
+                "context_relation", ""
+            )
+            image_chunk["metadata"]["key_information"] = analysis_result.get(
+                "key_information", []
+            )
+
             logger.info(f"图片分析完成: {image_path}")
-            
+
         except Exception as e:
             logger.error(f"图片分析失败: {image_chunk['content']}, 错误: {str(e)}")
             image_chunk["metadata"]["processing_status"] = "failed"
@@ -938,13 +1043,15 @@ class DocFileParser:
             for c_idx, cell in enumerate(row.cells):
                 rowspan, colspan = self._get_cell_span(cell)
                 if rowspan > 1 or colspan > 1:
-                    merged_cells.append({
-                        "text": cell.text.strip(),
-                        "rowspan": rowspan,
-                        "colspan": colspan,
-                        "row": r_idx,
-                        "col": c_idx,
-                    })
+                    merged_cells.append(
+                        {
+                            "text": cell.text.strip(),
+                            "rowspan": rowspan,
+                            "colspan": colspan,
+                            "row": r_idx,
+                            "col": c_idx,
+                        }
+                    )
         return merged_cells
 
     def _build_header_mapping_for_doc(self, table: Table) -> Dict[int, str]:
@@ -953,28 +1060,30 @@ class DocFileParser:
         """
         header_mapping = {}
         merged_cells = self._get_merged_cells_info_enhanced(table)
-        
+
         # 处理合并单元格
         for merge_info in merged_cells:
             if merge_info["is_merged_start"]:
                 parent_text = merge_info["text"]
                 start_col = merge_info["col"]
                 colspan = merge_info["colspan"]
-                
+
                 # 为合并单元格的子列分配表头
                 for col_offset in range(colspan):
                     col = start_col + col_offset
                     if col < len(table.rows[0].cells):
                         # 获取子列的表头信息
-                        child_header = self._get_child_header_for_doc(table, col, parent_text)
+                        child_header = self._get_child_header_for_doc(
+                            table, col, parent_text
+                        )
                         header_mapping[col] = child_header
-        
+
         # 处理未合并的列
         for col in range(len(table.rows[0].cells)):
             if col not in header_mapping:
                 header = self._get_single_column_header_for_doc(table, col)
                 header_mapping[col] = header
-        
+
         return header_mapping
 
     def _get_merged_cells_info_enhanced(self, table: Table) -> List[Dict]:
@@ -982,19 +1091,25 @@ class DocFileParser:
         merged_cells = []
         for r_idx, row in enumerate(table.rows):
             for c_idx, cell in enumerate(row.cells):
-                rowspan, colspan, is_merged_start, parent_text = self._get_cell_span_enhanced(cell)
+                rowspan, colspan, is_merged_start, parent_text = (
+                    self._get_cell_span_enhanced(cell)
+                )
                 if rowspan > 1 or colspan > 1:
-                    merged_cells.append({
-                        "text": parent_text,
-                        "rowspan": rowspan,
-                        "colspan": colspan,
-                        "row": r_idx,
-                        "col": c_idx,
-                        "is_merged_start": is_merged_start
-                    })
+                    merged_cells.append(
+                        {
+                            "text": parent_text,
+                            "rowspan": rowspan,
+                            "colspan": colspan,
+                            "row": r_idx,
+                            "col": c_idx,
+                            "is_merged_start": is_merged_start,
+                        }
+                    )
         return merged_cells
 
-    def _get_cell_span_ultra_enhanced(self, cell, table: Table, row_idx: int, col_idx: int) -> Tuple[int, int, bool, str, Dict]:
+    def _get_cell_span_ultra_enhanced(
+        self, cell, table: Table, row_idx: int, col_idx: int
+    ) -> Tuple[int, int, bool, str, Dict]:
         """
         超增强的合并单元格检测
         返回: (rowspan, colspan, is_merged_start, parent_text, merge_info)
@@ -1011,9 +1126,9 @@ class DocFileParser:
             "rowspan": 1,
             "colspan": 1,
             "is_merged_start": False,
-            "merge_type": "none"
+            "merge_type": "none",
         }
-        
+
         # 检测水平合并（colspan）
         gridspan = tc.xpath(".//w:gridSpan")
         if gridspan:
@@ -1027,7 +1142,7 @@ class DocFileParser:
                 merge_info["merge_type"] = "horizontal"
             except (ValueError, TypeError):
                 colspan = 1
-        
+
         # 检测垂直合并（rowspan）- 通过遍历后续行来判断
         vmerge = tc.xpath(".//w:vMerge")
         if vmerge:
@@ -1046,12 +1161,12 @@ class DocFileParser:
                 rowspan = 0
                 merge_info["rowspan"] = 0
                 merge_info["merge_type"] = "merged"
-        
+
         # 更新合并信息
         merge_info["rowspan"] = rowspan
         merge_info["colspan"] = colspan
         merge_info["is_merged_start"] = is_merged_start
-        
+
         return rowspan, colspan, is_merged_start, parent_text, merge_info
 
     def _calculate_actual_rowspan(self, table: Table, start_row: int, col: int) -> int:
@@ -1082,7 +1197,9 @@ class DocFileParser:
                 break
         return rowspan
 
-    def _get_child_header_for_doc(self, table: Table, col: int, parent_text: str) -> str:
+    def _get_child_header_for_doc(
+        self, table: Table, col: int, parent_text: str
+    ) -> str:
         """获取合并单元格子列的表头"""
         # 获取该列在表头行的所有非空值
         header_parts = []
@@ -1091,7 +1208,7 @@ class DocFileParser:
                 cell_value = row.cells[col].text.strip()
                 if cell_value:
                     header_parts.append(cell_value)
-        
+
         # 构建层次结构表头
         if header_parts:
             if parent_text not in header_parts:
@@ -1108,21 +1225,21 @@ class DocFileParser:
                 cell_value = row.cells[col].text.strip()
                 if cell_value:
                     header_parts.append(cell_value)
-        
+
         return "/".join(header_parts) if header_parts else ""
 
     def _detect_header_rows_smart(self, table: Table) -> int:
         """智能表头行检测，基于多种特征"""
         if not table.rows:
             return 0
-        
+
         # 使用多种方法检测表头行数
         methods = [
             self._detect_header_rows_by_merge_enhanced,
             self._detect_header_rows_by_content_pattern,
-            self._detect_header_rows_by_structure_enhanced
+            self._detect_header_rows_by_structure_enhanced,
         ]
-        
+
         results = []
         for method in methods:
             try:
@@ -1131,52 +1248,57 @@ class DocFileParser:
                     results.append(result)
             except Exception:
                 continue
-        
+
         # 使用投票机制确定最终结果
         if results:
             # 取众数，如果没有众数则取中位数
             from collections import Counter
+
             counter = Counter(results)
             most_common = counter.most_common(1)
             if most_common[0][1] > 1:  # 如果有多个相同的结果
                 return most_common[0][0]
             else:
                 return sorted(results)[len(results) // 2]  # 中位数
-        
+
         return 1  # 默认返回1
 
     def _detect_header_rows_by_merge_enhanced(self, table: Table) -> int:
         """增强的基于合并单元格分布检测表头行"""
         if not table.rows:
             return 0
-        
+
         # 统计每行的合并单元格数量和类型
         merge_stats = []
         for row_idx, row in enumerate(table.rows):
             horizontal_merges = 0
             vertical_merges = 0
             total_merges = 0
-            
+
             for col_idx, cell in enumerate(row.cells):
-                _, _, _, _, merge_info = self._get_cell_span_ultra_enhanced(cell, table, row_idx, col_idx)
-                
+                _, _, _, _, merge_info = self._get_cell_span_ultra_enhanced(
+                    cell, table, row_idx, col_idx
+                )
+
                 if merge_info["merge_type"] in ["horizontal", "both"]:
                     horizontal_merges += 1
                 if merge_info["merge_type"] in ["vertical", "both"]:
                     vertical_merges += 1
                 if merge_info["merge_type"] != "none":
                     total_merges += 1
-            
-            merge_stats.append({
-                "horizontal": horizontal_merges,
-                "vertical": vertical_merges,
-                "total": total_merges
-            })
-        
+
+            merge_stats.append(
+                {
+                    "horizontal": horizontal_merges,
+                    "vertical": vertical_merges,
+                    "total": total_merges,
+                }
+            )
+
         # 检测表头行
         header_rows = 0
         max_header_rows = min(3, len(table.rows))
-        
+
         for row_idx in range(max_header_rows):
             stats = merge_stats[row_idx]
             # 如果水平合并较多，可能是表头行
@@ -1184,61 +1306,72 @@ class DocFileParser:
                 header_rows += 1
             else:
                 break
-        
+
         return header_rows if header_rows > 0 else 1
 
     def _detect_header_rows_by_content_pattern(self, table: Table) -> int:
         """基于内容模式检测表头行"""
         if not table.rows:
             return 0
-        
+
         header_rows = 0
         max_header_rows = min(3, len(table.rows))
-        
+
         for row_idx in range(max_header_rows):
             row = table.rows[row_idx]
             if self._is_header_row_by_content_pattern(row, row_idx):
                 header_rows += 1
             else:
                 break
-        
+
         return header_rows if header_rows > 0 else 1
 
     def _is_header_row_by_content_pattern(self, row, row_idx: int) -> bool:
         """基于内容模式判断是否为表头行"""
         # 检查是否包含常见的表头关键词
-        header_keywords = ["年度", "年份", "学校", "名称", "情况", "人数", "合计", "备注"]
-        
+        header_keywords = [
+            "年度",
+            "年份",
+            "学校",
+            "名称",
+            "情况",
+            "人数",
+            "合计",
+            "备注",
+        ]
+
         cell_texts = [cell.text.strip() for cell in row.cells]
         keyword_count = 0
-        
+
         for text in cell_texts:
             for keyword in header_keywords:
                 if keyword in text:
                     keyword_count += 1
                     break
-        
+
         # 如果超过30%的单元格包含表头关键词，可能是表头行
         if len(cell_texts) > 0 and keyword_count / len(cell_texts) > 0.3:
             return True
-        
+
         # 检查是否包含数值（数据行通常包含数值）
         numeric_count = 0
         for text in cell_texts:
             if text and self._is_numeric(text):
                 numeric_count += 1
-        
+
         # 如果数值比例较低，可能是表头行
         if len(cell_texts) > 0 and numeric_count / len(cell_texts) < 0.3:
             return True
-        
+
         return False
 
     def _is_numeric(self, text: str) -> bool:
         """判断文本是否为数值"""
         try:
             # 移除常见的非数值字符
-            cleaned_text = text.replace(',', '').replace('%', '').replace('+', '').replace('-', '')
+            cleaned_text = (
+                text.replace(",", "").replace("%", "").replace("+", "").replace("-", "")
+            )
             float(cleaned_text)
             return True
         except (ValueError, TypeError):
@@ -1248,17 +1381,17 @@ class DocFileParser:
         """增强的基于行结构特征检测表头行"""
         if not table.rows:
             return 0
-        
+
         header_rows = 0
         max_header_rows = min(3, len(table.rows))
-        
+
         for row_idx in range(max_header_rows):
             row = table.rows[row_idx]
             if self._is_header_row_by_structure_enhanced(row, row_idx):
                 header_rows += 1
             else:
                 break
-        
+
         return header_rows if header_rows > 0 else 1
 
     def _is_header_row_by_structure_enhanced(self, row, row_idx: int) -> bool:
@@ -1266,25 +1399,27 @@ class DocFileParser:
         # 检查合并单元格分布
         merge_count = 0
         for col_idx, cell in enumerate(row.cells):
-            _, _, _, _, merge_info = self._get_cell_span_ultra_enhanced(cell, row, row_idx, col_idx)
+            _, _, _, _, merge_info = self._get_cell_span_ultra_enhanced(
+                cell, row, row_idx, col_idx
+            )
             if merge_info["merge_type"] != "none":
                 merge_count += 1
-        
+
         # 如果合并单元格数量较多，可能是表头行
         if merge_count > 0:
             return True
-        
+
         # 检查单元格内容的特征
         empty_cells = 0
         total_cells = len(row.cells)
         for cell in row.cells:
             if not cell.text.strip():
                 empty_cells += 1
-        
+
         # 如果空单元格比例较低，可能是表头行
         if total_cells > 0 and empty_cells / total_cells < 0.5:
             return True
-        
+
         return False
 
     def _detect_header_rows_for_doc(self, table: Table) -> int:
@@ -1293,12 +1428,14 @@ class DocFileParser:
         header_rows_by_merge = self._detect_header_rows_by_merge(table)
         if header_rows_by_merge > 1:
             return header_rows_by_merge
-        
+
         # 如果合并单元格不明显，使用结构特征检测
         header_rows_by_structure = self._detect_header_rows_by_structure(table)
         return header_rows_by_structure
 
-    def _get_child_header_for_doc_fixed(self, table: Table, col: int, parent_text: str, header_rows: int) -> str:
+    def _get_child_header_for_doc_fixed(
+        self, table: Table, col: int, parent_text: str, header_rows: int
+    ) -> str:
         """修复后的子列表头获取方法，只处理表头行"""
         # 只处理表头行，不包含数据行
         header_parts = []
@@ -1307,7 +1444,7 @@ class DocFileParser:
                 cell_value = table.rows[row_idx].cells[col].text.strip()
                 if cell_value:
                     header_parts.append(cell_value)
-        
+
         # 构建层次结构表头
         if header_parts:
             if parent_text not in header_parts:
@@ -1316,7 +1453,9 @@ class DocFileParser:
         else:
             return parent_text
 
-    def _get_single_column_header_for_doc_fixed(self, table: Table, col: int, header_rows: int) -> str:
+    def _get_single_column_header_for_doc_fixed(
+        self, table: Table, col: int, header_rows: int
+    ) -> str:
         """修复后的单列表头获取方法，只处理表头行"""
         header_parts = []
         for row_idx in range(header_rows):
@@ -1324,91 +1463,99 @@ class DocFileParser:
                 cell_value = table.rows[row_idx].cells[col].text.strip()
                 if cell_value:
                     header_parts.append(cell_value)
-        
+
         return "/".join(header_parts) if header_parts else ""
 
     def _build_header_mapping_for_doc_fixed(self, table: Table) -> Dict[int, str]:
         """修复后的表头映射构建，正确处理表头行"""
         # 先检测表头行数
         header_rows = self._detect_header_rows_for_doc(table)
-        
+
         header_mapping = {}
         merged_cells = self._get_merged_cells_info_enhanced(table)
-        
+
         # 处理合并单元格
         for merge_info in merged_cells:
             if merge_info["is_merged_start"]:
                 parent_text = merge_info["text"]
                 start_col = merge_info["col"]
                 colspan = merge_info["colspan"]
-                
+
                 # 为合并单元格的子列分配表头
                 for col_offset in range(colspan):
                     col = start_col + col_offset
                     if col < len(table.rows[0].cells):
                         # 获取子列的表头信息
-                        child_header = self._get_child_header_for_doc_fixed(table, col, parent_text, header_rows)
+                        child_header = self._get_child_header_for_doc_fixed(
+                            table, col, parent_text, header_rows
+                        )
                         header_mapping[col] = child_header
-        
+
         # 处理未合并的列
         for col in range(len(table.rows[0].cells)):
             if col not in header_mapping:
-                header = self._get_single_column_header_for_doc_fixed(table, col, header_rows)
+                header = self._get_single_column_header_for_doc_fixed(
+                    table, col, header_rows
+                )
                 header_mapping[col] = header
-        
+
         return header_mapping
 
     def _build_header_hierarchy_for_doc(self, table: Table) -> Dict[int, List[str]]:
         """构建表头层次结构，正确处理多级表头"""
         header_rows = self._detect_header_rows_smart(table)
         header_hierarchy = {}
-        
+
         # 为每列构建表头层次
         for col in range(len(table.rows[0].cells)):
             column_headers = []
-            
+
             # 收集该列在表头行中的内容
             for row_idx in range(header_rows):
                 if row_idx < len(table.rows) and col < len(table.rows[row_idx].cells):
                     cell_text = table.rows[row_idx].cells[col].text.strip()
                     if cell_text:
                         column_headers.append(cell_text)
-            
+
             header_hierarchy[col] = column_headers
-        
+
         return header_hierarchy
 
     def _build_header_mapping_ultra_enhanced(self, table: Table) -> Dict[int, str]:
         """超增强的表头映射构建"""
         # 获取表头层次结构
         header_hierarchy = self._build_header_hierarchy_for_doc(table)
-        
+
         # 获取合并单元格信息
         merged_cells = self._get_merged_cells_info_ultra_enhanced(table)
-        
+
         header_mapping = {}
-        
+
         # 处理合并单元格
         for merge_info in merged_cells:
             if merge_info["is_merged_start"]:
                 parent_text = merge_info["text"]
                 start_col = merge_info["col"]
                 colspan = merge_info["colspan"]
-                
+
                 # 为合并单元格的子列分配表头
                 for col_offset in range(colspan):
                     col = start_col + col_offset
                     if col < len(table.rows[0].cells):
                         # 获取子列的表头信息
-                        child_header = self._get_child_header_ultra_enhanced(table, col, parent_text, header_hierarchy)
+                        child_header = self._get_child_header_ultra_enhanced(
+                            table, col, parent_text, header_hierarchy
+                        )
                         header_mapping[col] = child_header
-        
+
         # 处理未合并的列
         for col in range(len(table.rows[0].cells)):
             if col not in header_mapping:
-                header = self._get_single_column_header_ultra_enhanced(table, col, header_hierarchy)
+                header = self._get_single_column_header_ultra_enhanced(
+                    table, col, header_hierarchy
+                )
                 header_mapping[col] = header
-        
+
         return header_mapping
 
     def _get_merged_cells_info_ultra_enhanced(self, table: Table) -> List[Dict]:
@@ -1416,15 +1563,23 @@ class DocFileParser:
         merged_cells = []
         for row_idx, row in enumerate(table.rows):
             for col_idx, cell in enumerate(row.cells):
-                _, _, _, _, merge_info = self._get_cell_span_ultra_enhanced(cell, table, row_idx, col_idx)
+                _, _, _, _, merge_info = self._get_cell_span_ultra_enhanced(
+                    cell, table, row_idx, col_idx
+                )
                 if merge_info["merge_type"] != "none":
                     merged_cells.append(merge_info)
         return merged_cells
 
-    def _get_child_header_ultra_enhanced(self, table: Table, col: int, parent_text: str, header_hierarchy: Dict[int, List[str]]) -> str:
+    def _get_child_header_ultra_enhanced(
+        self,
+        table: Table,
+        col: int,
+        parent_text: str,
+        header_hierarchy: Dict[int, List[str]],
+    ) -> str:
         """超增强的子列表头获取方法"""
         column_headers = header_hierarchy.get(col, [])
-        
+
         # 构建层次结构表头
         if column_headers:
             if parent_text not in column_headers:
@@ -1433,7 +1588,9 @@ class DocFileParser:
         else:
             return parent_text
 
-    def _get_single_column_header_ultra_enhanced(self, table: Table, col: int, header_hierarchy: Dict[int, List[str]]) -> str:
+    def _get_single_column_header_ultra_enhanced(
+        self, table: Table, col: int, header_hierarchy: Dict[int, List[str]]
+    ) -> str:
         """超增强的单列表头获取方法"""
         column_headers = header_hierarchy.get(col, [])
         return "/".join(column_headers) if column_headers else ""
@@ -1443,25 +1600,25 @@ class DocFileParser:
         # 检查表头数量与列数是否匹配
         if len(headers) != len(table.rows[0].cells):
             return False
-        
+
         # 检查表头是否为空（允许部分为空）
         empty_count = sum(1 for header in headers if not header.strip())
         if empty_count > len(headers) * 0.5:  # 如果超过50%为空，可能有问题
             return False
-        
+
         # 检查表头层次是否合理
         for header in headers:
             if header and "/" in header:
                 parts = header.split("/")
                 if len(parts) > 3:  # 层次过多可能有问题
                     return False
-        
+
         return True
 
     def _fallback_header_processing(self, table: Table) -> Dict[int, str]:
         """表头处理的回退机制"""
         logger.warning("使用表头处理回退机制")
-        
+
         # 使用简化的表头处理
         headers = []
         for col in range(len(table.rows[0].cells)):
@@ -1470,11 +1627,11 @@ class DocFileParser:
                 headers.append(header)
             else:
                 headers.append("")
-        
+
         header_mapping = {}
         for col, header in enumerate(headers):
             header_mapping[col] = header
-        
+
         return header_mapping
 
     def _build_header_mapping_with_fallback(self, table: Table) -> Dict[int, str]:
@@ -1482,19 +1639,19 @@ class DocFileParser:
         try:
             # 尝试使用超增强的方法
             header_mapping = self._build_header_mapping_ultra_enhanced(table)
-            
+
             # 验证结果
             headers = []
             for col in range(len(table.rows[0].cells)):
                 header = header_mapping.get(col, "")
                 headers.append(header)
-            
+
             if self._validate_header_structure(headers, table):
                 return header_mapping
             else:
                 logger.warning("表头结构验证失败，使用回退机制")
                 return self._fallback_header_processing(table)
-                
+
         except Exception as e:
             logger.error(f"表头映射构建失败: {str(e)}，使用回退机制")
             return self._fallback_header_processing(table)
@@ -1508,18 +1665,18 @@ ZHIPU_API_KEY = os.getenv("ZHIPUAI_API_KEY")
 def build_prompt_for_chunk(chunk: dict, with_context: bool = True) -> str:
     """根据分块类型和元数据动态生成Prompt，支持有无上下文。"""
     chunk_type = chunk.get("type", "text")
-    
+
     # 检查是否为分片chunk
     if chunk.get("metadata", {}).get("is_fragment"):
         chunk_type = "text_fragment"
-    
+
     if with_context:
         from utils.chunk_prompts import STRUCTURED_PROMPTS_WITH_CONTEXT as PROMPTS
     else:
         from utils.chunk_prompts import STRUCTURED_PROMPTS as PROMPTS
-    
+
     metadata = chunk.get("metadata", {})
-    
+
     # 根据chunk类型构建不同的prompt参数
     if chunk_type == "text_fragment":
         prompt = PROMPTS.get(chunk_type, PROMPTS["text"]).format(
@@ -1540,18 +1697,18 @@ def build_prompt_for_chunk(chunk: dict, with_context: bool = True) -> str:
             parent_table_info=metadata.get("parent_table_info", ""),
             context=chunk.get("context", ""),
         )
-    
+
     return prompt
 
 
 def get_system_prompt_for_chunk(chunk: dict) -> str:
     """根据分块类型获取系统提示词。"""
     chunk_type = chunk.get("type", "text")
-    
+
     # 检查是否为分片chunk
     if chunk.get("metadata", {}).get("is_fragment"):
         chunk_type = "text_fragment"
-    
+
     return SYSTEM_PROMPTS.get(chunk_type, SYSTEM_PROMPTS["text"])
 
 
@@ -1575,11 +1732,17 @@ async def enhance_chunk(chunk: dict) -> dict:
 
 
 async def enhance_all_chunks(chunks: list[dict]) -> list[dict]:
-    """批量异步增强所有分块。"""
-    tasks = [enhance_chunk(chunk) for chunk in chunks]
-    return await asyncio.gather(*tasks)
+    """批量异步增强所有分块，跳过已处理的图片块"""
+    # 过滤出需要增强的分块（排除image类型）
+    chunks_to_enhance = [chunk for chunk in chunks if chunk.get("type") != "image"]
 
+    # 只对非图片分块进行增强
+    tasks = [enhance_chunk(chunk) for chunk in chunks_to_enhance]
+    enhanced_chunks = await asyncio.gather(*tasks)
 
+    # 将图片块和增强后的分块合并
+    image_chunks = [chunk for chunk in chunks if chunk.get("type") == "image"]
+    return enhanced_chunks + image_chunks
 
 
 # 示例主流程（可根据实际集成位置调整）
@@ -1587,7 +1750,7 @@ if __name__ == "__main__":
     # 示例：解析一个文档文件
     parser = DocFileParser()
     test_file = "test_data/sample.docx"  # 替换为实际文件路径
-    
+
     if os.path.exists(test_file):
         chunks = parser.process(test_file)
         enhanced_chunks = asyncio.run(enhance_all_chunks(chunks))
