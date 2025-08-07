@@ -129,19 +129,24 @@ class ConfigManager:
         Returns:
             Dict[str, Any]: 图片处理配置字典
         """
+        from utils.config import VISION_CONFIG
+        
         config = self.get_config()
-        return config.get("image_processing", {
-            "enabled": False,
-            "storage_path": "storage/images",
-            "vision_model": "glm-4v-plus",
-            "api_key": os.getenv("ZHIPUAI_API_KEY"),
-            "context_window": 3,
-            "max_concurrent": 5,
-            "timeout": 30,
-            "retry_count": 3,
-            "cache_enabled": True,
-            "cache_ttl": 3600
-        })
+        image_config = config.get("image_processing", {})
+        
+        # 从VISION_CONFIG中获取配置，与语言模型和向量模型采用相同的方式
+        return {
+            "enabled": image_config.get("enabled", True),
+            "storage_path": image_config.get("storage_path", "storage/images"),
+            "vision_model": VISION_CONFIG["model"],
+            "api_key": VISION_CONFIG["api_key"],
+            "context_window": VISION_CONFIG["context_window"],
+            "max_concurrent": VISION_CONFIG["max_concurrent"],
+            "timeout": VISION_CONFIG["timeout"],
+            "retry_count": VISION_CONFIG["retry_count"],
+            "cache_enabled": VISION_CONFIG["cache_enabled"],
+            "cache_ttl": VISION_CONFIG["cache_ttl"]
+        }
 
     def reload_config(self) -> None:
         """重新加载配置文件"""

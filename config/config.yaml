@@ -31,11 +31,4 @@ fragmentation:
 image_processing:
   enabled: true
   storage_path: "storage/images"
-  vision_model: "glm-4v-plus"
-  api_key: "${ZHIPUAI_API_KEY}"
-  context_window: 3
-  max_concurrent: 5
-  timeout: 30
-  retry_count: 3
-  cache_enabled: true
-  cache_ttl: 3600
+  # 其他配置从.env文件中的VISION_CONFIG读取
