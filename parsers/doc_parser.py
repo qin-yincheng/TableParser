@@ -158,9 +158,33 @@ class DocFileParser:
         """初始化解析器"""
         self.fragment_manager = FragmentManager(fragment_config) if fragment_config else None
         self.table_config = fragment_config.table_processing if fragment_config else TableProcessingConfig()
-        self.table_config = fragment_config.table_processing if fragment_config else TableProcessingConfig()
+        
+        # 新增图片处理组件
+        try:
+            from utils.config_manager import ConfigManager
+            config_manager = ConfigManager()
+            image_config = config_manager.get_image_processing_config()
+            
+            if image_config.get("enabled", False):
+                from .image_processing.image_extractor import ImageExtractor
+                from .image_processing.context_collector import ContextCollector
+                from .image_processing.image_analyzer import ImageAnalyzer
+                from utils.zhipu_client import VisionModelClient
+                
+                self.image_extractor = ImageExtractor(image_config.get("storage_path", "storage/images"))
+                self.context_collector = ContextCollector(image_config.get("context_window", 3))
+                self.vision_model = VisionModelClient(image_config.get("api_key"))
+                self.image_analyzer = ImageAnalyzer(self.vision_model, self.context_collector)
+                self.image_processing_enabled = True
+                logger.info("图片处理功能已启用")
+            else:
+                self.image_processing_enabled = False
+                logger.debug("图片处理功能未启用")
+        except Exception as e:
+            logger.warning(f"图片处理组件初始化失败，将禁用图片处理功能: {str(e)}")
+            self.image_processing_enabled = False
 
-    def process(self, file_path: str) -> List[Dict]:
+    async def process(self, file_path: str) -> List[Dict]:
         logger.info(f"开始解析Word文档: {file_path}")
         if not os.path.exists(file_path):
             logger.error(f"文件不存在: {file_path}")
@@ -170,13 +194,13 @@ class DocFileParser:
         doc_id = os.path.basename(file_path)
         if ext == "docx":
             try:
-                chunks = self._process_docx(file_path, doc_id)
+                chunks = await self._process_docx(file_path, doc_id)
             except Exception as e:
                 logger.error(f"DOCX文件处理失败: {str(e)}")
                 return []
         elif ext == "doc":
             try:
-                chunks = self._process_doc(file_path, doc_id)
+                chunks = await self._process_doc(file_path, doc_id)
             except (LibreOfficeNotFoundError, ConversionError, ConversionTimeoutError) as e:
                 logger.error(f"DOC文件处理失败: {str(e)}")
                 return []  # 转换失败时返回空列表
@@ -219,12 +243,19 @@ class DocFileParser:
             logger.error(f"LLM增强分块失败: {str(e)}")
             return chunks  # 如果增强失败，返回原始分块
 
-    def _process_docx(self, file_path: str, doc_id: str) -> List[Dict]:
-        """解析DOCX文件，提取段落和表格内容"""
+    async def _process_docx(self, file_path: str, doc_id: str) -> List[Dict]:
+        """解析DOCX文件，提取段落、表格和图片内容"""
         try:
             from docx import Document
 
             document = Document(file_path)
+            
+            # 提取图片（如果启用）
+            if self.image_processing_enabled:
+                images = self.image_extractor.extract_images_from_docx(document, doc_id)
+            else:
+                images = []
+            
             # 混合遍历段落和表格，记录表格前后段落索引
             block_items = list(self._iter_block_items(document))
             # 先收集所有段落内容
@@ -270,6 +301,20 @@ class DocFileParser:
                         block, doc_id, preceding, following, paragraphs=all_paragraphs
                     )
                     all_chunks.extend(table_chunks)
+            
+            # 处理图片块
+            if self.image_processing_enabled and images:
+                image_chunks = self._create_image_chunks(images, doc_id, all_chunks)
+                all_chunks.extend(image_chunks)
+                
+                # 等待图片分析完成，确保向量化时有完整的分析结果
+                try:
+                    await self._process_images_async(image_chunks, all_chunks)
+                    logger.info(f"图片分析完成，共处理 {len(image_chunks)} 张图片")
+                except Exception as e:
+                    logger.warning(f"图片分析失败: {str(e)}")
+                    # 即使图片分析失败，也继续处理其他内容
+            
             return all_chunks
         except ImportError:
             logger.error("未安装python-docx库，无法解析DOCX文件")
@@ -278,14 +323,14 @@ class DocFileParser:
             logger.error(f"解析DOCX文件出错: {file_path}, 错误: {str(e)}")
             raise
 
-    def _process_doc(self, file_path: str, doc_id: str) -> List[Dict]:
+    async def _process_doc(self, file_path: str, doc_id: str) -> List[Dict]:
         """使用LibreOffice转换DOC文件为DOCX，然后解析"""
         docx_path = None
         try:
             # 使用LibreOffice将DOC文件转换为DOCX
             docx_path = convert_doc_to_docx(file_path)
             # 使用现有的DOCX解析逻辑
-            chunks = self._process_docx(docx_path, doc_id)
+            chunks = await self._process_docx(docx_path, doc_id)
             return chunks
         except (LibreOfficeNotFoundError, ConversionError, ConversionTimeoutError) as e:
             logger.error(f"DOC文件转换失败: {file_path}, 错误: {str(e)}")
@@ -792,6 +837,80 @@ class DocFileParser:
             f"上一段：{preceding_content or ''}。下一段：{following_content or ''}"
         )
         return context
+
+    def _create_image_chunks(self, images: List[Dict], doc_id: str, all_chunks: List[Dict]) -> List[Dict]:
+        """创建图片块"""
+        image_chunks = []
+        
+        for image_data in images:
+            image_chunk = {
+                "type": "image",
+                "content": image_data["image_path"],
+                "metadata": {
+                    "doc_id": doc_id,
+                    "image_filename": image_data["unique_filename"],
+                    "original_filename": image_data["original_filename"],
+                    "image_index": image_data["image_index"],
+                    "processing_status": "pending",
+                    "description": "",
+                    "keywords": [],
+                    "image_type": "",
+                    "context_relation": "",
+                    "key_information": []
+                },
+                "context": ""
+            }
+            image_chunks.append(image_chunk)
+        
+        logger.info(f"创建了 {len(image_chunks)} 个图片块")
+        return image_chunks
+
+    async def _process_images_async(self, image_chunks: List[Dict], all_chunks: List[Dict]):
+        """异步处理图片分析"""
+        try:
+            # 为每个图片收集上下文
+            for image_chunk in image_chunks:
+                context = self.context_collector.collect_context_for_image(image_chunk, all_chunks)
+                image_chunk["context"] = f"前文：{context.get('preceding', '')} 后文：{context.get('following', '')}"
+            
+            # 并发分析所有图片
+            tasks = []
+            for image_chunk in image_chunks:
+                task = self._analyze_single_image_async(image_chunk)
+                tasks.append(task)
+            
+            # 等待所有分析完成
+            await asyncio.gather(*tasks, return_exceptions=True)
+            
+            logger.info(f"图片分析完成，共处理 {len(image_chunks)} 张图片")
+            
+        except Exception as e:
+            logger.error(f"图片异步处理失败: {str(e)}")
+
+    async def _analyze_single_image_async(self, image_chunk: Dict):
+        """异步分析单个图片"""
+        try:
+            image_path = image_chunk["content"]
+            context = image_chunk["context"]
+            
+            # 使用ImageAnalyzer进行分析，它会自动处理上下文和调用VisionModelClient
+            analysis_result = await self.image_analyzer.analyze_image_with_context(
+                image_path, {"context": context}
+            )
+            
+            # 更新图片块
+            image_chunk["metadata"]["processing_status"] = "completed"
+            image_chunk["metadata"]["description"] = analysis_result.get("description", "")
+            image_chunk["metadata"]["keywords"] = analysis_result.get("keywords", [])
+            image_chunk["metadata"]["image_type"] = analysis_result.get("image_type", "")
+            image_chunk["metadata"]["context_relation"] = analysis_result.get("context_relation", "")
+            image_chunk["metadata"]["key_information"] = analysis_result.get("key_information", [])
+            
+            logger.info(f"图片分析完成: {image_path}")
+            
+        except Exception as e:
+            logger.error(f"图片分析失败: {image_chunk['content']}, 错误: {str(e)}")
+            image_chunk["metadata"]["processing_status"] = "failed"
 
     def _extract_table_data(self, table: Table) -> List[List[Dict]]:
         """提取表格数据"""
@@ -1461,9 +1580,17 @@ async def enhance_all_chunks(chunks: list[dict]) -> list[dict]:
     return await asyncio.gather(*tasks)
 
 
+
+
 # 示例主流程（可根据实际集成位置调整）
 if __name__ == "__main__":
-    # 假设chunks为已解析的分块列表
-    if "chunks" in globals():
+    # 示例：解析一个文档文件
+    parser = DocFileParser()
+    test_file = "test_data/sample.docx"  # 替换为实际文件路径
+    
+    if os.path.exists(test_file):
+        chunks = parser.process(test_file)
         enhanced_chunks = asyncio.run(enhance_all_chunks(chunks))
-        # enhanced_chunks 现在每个分块都带有 description 和 keywords，可保存或后续处理
+        logger.info(f"处理完成，共生成 {len(enhanced_chunks)} 个增强分块")
+    else:
+        logger.info("测试文件不存在，跳过示例执行")
