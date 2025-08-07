@@ -26,3 +26,16 @@ fragmentation:
 #   provider: "openai"
 #   model: "gpt-3.5-turbo"
 #   api_key: "your-api-key" 
+
+# 图片处理配置
+image_processing:
+  enabled: true
+  storage_path: "storage/images"
+  vision_model: "glm-4v-plus"
+  api_key: "${ZHIPUAI_API_KEY}"
+  context_window: 3
+  max_concurrent: 5
+  timeout: 30
+  retry_count: 3
+  cache_enabled: true
+  cache_ttl: 3600

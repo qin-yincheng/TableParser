@@ -2,6 +2,8 @@ import os
 import re
 import json
 import logging
+import asyncio
+import base64
 from typing import List, Dict, Optional, Union
 from tenacity import (
     retry,
@@ -37,6 +39,7 @@ async def zhipu_complete_async(
     temperature: Optional[float] = None,
     timeout: Optional[int] = None,
     max_tokens: Optional[int] = None,
+    messages: Optional[List[Dict]] = None,
     **kwargs,
 ) -> str:
     """异步调用智普API，返回模型输出字符串。"""
@@ -51,17 +54,23 @@ async def zhipu_complete_async(
     if max_tokens is None:
         max_tokens = LLM_CONFIG["max_tokens"]
     client = ZhipuAI(api_key=api_key)
-    messages = []
-    if not system_prompt:
-        system_prompt = "You are a helpful assistant."
-    messages.append({"role": "system", "content": system_prompt})
-    if history_messages:
-        messages.extend(history_messages)
-    messages.append({"role": "user", "content": prompt})
-    logger.debug(f"ZhipuAI prompt: {prompt}")
+    
+    # 如果提供了messages，直接使用；否则构建messages
+    if messages:
+        final_messages = messages
+    else:
+        final_messages = []
+        if not system_prompt:
+            system_prompt = "You are a helpful assistant."
+        final_messages.append({"role": "system", "content": system_prompt})
+        if history_messages:
+            final_messages.extend(history_messages)
+        final_messages.append({"role": "user", "content": prompt})
+    
+    logger.debug(f"ZhipuAI request with {len(final_messages)} messages")
     response = client.chat.completions.create(
         model=model,
-        messages=messages,
+        messages=final_messages,
         temperature=temperature,
         timeout=timeout,
         max_tokens=max_tokens,
@@ -127,3 +136,68 @@ async def zhipu_embedding_async(
 
     # 返回嵌入向量
     return response.data[0].embedding
+
+
+class VisionModelClient:
+    """智普视觉模型客户端"""
+    
+    def __init__(self, api_key: Optional[str] = None):
+        self.api_key = api_key or os.getenv("ZHIPUAI_API_KEY")
+        if not self.api_key:
+            raise ValueError("ZHIPUAI_API_KEY 未设置")
+    
+    async def analyze_image(self, image_path: str, prompt: str) -> Dict:
+        """分析图片内容"""
+        try:
+            # 读取图片文件
+            with open(image_path, 'rb') as f:
+                image_data = f.read()
+            
+            # 构建消息 - 使用智普AI GLM-4V-Plus的正确格式
+            messages = [
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": prompt
+                        },
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": f"data:image/png;base64,{base64.b64encode(image_data).decode('utf-8')}"
+                            }
+                        }
+                    ]
+                }
+            ]
+            
+            # 调用智普API
+            response = await zhipu_complete_async(
+                prompt="",  # 空prompt，使用messages
+                api_key=self.api_key,
+                model="glm-4v-plus",
+                messages=messages,
+                temperature=0.1,
+                timeout=60,
+                max_tokens=1000
+            )
+            
+            # 解析响应
+            result = parse_json_response(response)
+            logger.info(f"图片分析完成: {image_path}")
+            return result
+            
+        except Exception as e:
+            logger.error(f"图片分析失败: {image_path}, 错误: {str(e)}")
+            return self.get_fallback_result()
+    
+    def get_fallback_result(self) -> Dict:
+        """获取回退结果"""
+        return {
+            "description": "图片分析失败，无法获取详细信息",
+            "keywords": ["图片", "分析失败"],
+            "image_type": "unknown",
+            "context_relation": "无法确定与文档的关系",
+            "key_information": []
+        }
