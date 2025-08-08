@@ -229,6 +229,7 @@ test_results
 # Log files
 logs/
 *.log
+storage/
 
 # Config files with secrets
 config.ini
