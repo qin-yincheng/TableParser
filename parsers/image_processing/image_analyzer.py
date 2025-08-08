@@ -68,7 +68,7 @@ class ImageAnalyzer:
             # 验证和清理结果
             validated_result = self.validate_analysis_result(analysis_result)
 
-            logger.info(f"图片分析完成: {image_path}")
+            logger.debug(f"图片分析完成: {image_path}")
             return validated_result
 
         except Exception as e:
