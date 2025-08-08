@@ -511,7 +511,6 @@ class DocFileParser:
                 if image_chunks:
                     try:
                         await self._process_images_async(image_chunks, all_chunks)
-                        logger.info(f"图片分析完成，共处理 {len(image_chunks)} 张图片")
                     except Exception as e:
                         logger.warning(f"图片分析失败: {str(e)}")
 
@@ -1192,7 +1191,7 @@ class DocFileParser:
                 "key_information", []
             )
 
-            logger.info(f"图片分析完成: {image_path}")
+            logger.debug(f"图片分析完成: {image_path}")
 
         except Exception as e:
             logger.error(f"图片分析失败: {image_chunk['content']}, 错误: {str(e)}")
