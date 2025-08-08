@@ -31,4 +31,7 @@ fragmentation:
 image_processing:
   enabled: true
   storage_path: "storage/images"
+  # 图片定位与附着策略
+  image_position_strategy: "inline"           # inline | placeholder_replace | append_end
+  table_image_attach_mode: "separate_block"  # separate_block | merge_into_row | merge_into_table
   # 其他配置从.env文件中的VISION_CONFIG读取

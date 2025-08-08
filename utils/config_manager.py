@@ -53,24 +53,24 @@ class ConfigManager:
     def _resolve_env_variables(self, config: Dict[str, Any]) -> Dict[str, Any]:
         """
         递归解析配置中的环境变量
-        
+
         Args:
             config: 配置字典
-            
+
         Returns:
             Dict[str, Any]: 解析后的配置字典
         """
         import re
-        
+
         def resolve_value(value):
             if isinstance(value, str):
                 # 匹配 ${VAR_NAME} 格式的环境变量
-                pattern = r'\$\{([^}]+)\}'
+                pattern = r"\$\{([^}]+)\}"
                 matches = re.findall(pattern, value)
                 for var_name in matches:
                     env_value = os.getenv(var_name)
                     if env_value is not None:
-                        value = value.replace(f'${{{var_name}}}', env_value)
+                        value = value.replace(f"${{{var_name}}}", env_value)
                 return value
             elif isinstance(value, dict):
                 return {k: resolve_value(v) for k, v in value.items()}
@@ -78,7 +78,7 @@ class ConfigManager:
                 return [resolve_value(item) for item in value]
             else:
                 return value
-        
+
         return resolve_value(config)
 
     def _get_default_config(self) -> Dict[str, Any]:
@@ -125,19 +125,27 @@ class ConfigManager:
     def get_image_processing_config(self) -> Dict[str, Any]:
         """
         获取图片处理配置
-        
+
         Returns:
             Dict[str, Any]: 图片处理配置字典
         """
         from utils.config import VISION_CONFIG
-        
+
         config = self.get_config()
         image_config = config.get("image_processing", {})
-        
+
         # 从VISION_CONFIG中获取配置，与语言模型和向量模型采用相同的方式
         return {
             "enabled": image_config.get("enabled", True),
             "storage_path": image_config.get("storage_path", "storage/images"),
+            # 新增策略项（配置文件可覆盖，默认 inline / separate_block）
+            "image_position_strategy": image_config.get(
+                "image_position_strategy", "inline"
+            ),
+            "table_image_attach_mode": image_config.get(
+                "table_image_attach_mode", "separate_block"
+            ),
+            # 视觉模型相关（来自 VISION_CONFIG）
             "vision_model": VISION_CONFIG["model"],
             "api_key": VISION_CONFIG["api_key"],
             "context_window": VISION_CONFIG["context_window"],
@@ -145,7 +153,7 @@ class ConfigManager:
             "timeout": VISION_CONFIG["timeout"],
             "retry_count": VISION_CONFIG["retry_count"],
             "cache_enabled": VISION_CONFIG["cache_enabled"],
-            "cache_ttl": VISION_CONFIG["cache_ttl"]
+            "cache_ttl": VISION_CONFIG["cache_ttl"],
         }
 
     def reload_config(self) -> None:
@@ -161,7 +169,7 @@ _config_manager = ConfigManager()
 def get_config() -> Dict[str, Any]:
     """
     获取配置信息的便捷函数
-    
+
     Returns:
         Dict[str, Any]: 配置字典
     """
@@ -171,7 +179,7 @@ def get_config() -> Dict[str, Any]:
 def get_image_processing_config() -> Dict[str, Any]:
     """
     获取图片处理配置的便捷函数
-    
+
     Returns:
         Dict[str, Any]: 图片处理配置字典
     """
