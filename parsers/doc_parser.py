@@ -190,6 +190,13 @@ class DocFileParser:
                 self.image_analyzer = ImageAnalyzer(
                     self.vision_model, self.context_collector
                 )
+                # 新增：图片策略配置
+                self.image_position_strategy = image_config.get(
+                    "image_position_strategy", "inline"
+                )
+                self.table_image_attach_mode = image_config.get(
+                    "table_image_attach_mode", "separate_block"
+                )
                 self.image_processing_enabled = True
                 logger.info("图片处理功能已启用")
             else:
@@ -269,12 +276,6 @@ class DocFileParser:
 
             document = Document(file_path)
 
-            # 提取图片（如果启用）
-            if self.image_processing_enabled:
-                images = self.image_extractor.extract_images_from_docx(document, doc_id)
-            else:
-                images = []
-
             # 混合遍历段落和表格，记录表格前后段落索引
             block_items = list(self._iter_block_items(document))
             # 先收集所有段落内容
@@ -286,9 +287,12 @@ class DocFileParser:
             paragraphs = []
             all_chunks = []
             para_idx = 0
+            # 全局图片索引，保证文档范围内唯一且递增
+            global_image_index = 0
             for idx, block in enumerate(block_items):
                 if isinstance(block, Paragraph):
-                    if block.text.strip():
+                    has_text = bool(block.text.strip())
+                    if has_text:
                         paragraphs.append(block.text)
                         context = self._get_context_for_paragraph(
                             all_paragraphs, para_idx
@@ -303,6 +307,67 @@ class DocFileParser:
                             "context": context,
                         }
                         all_chunks.append(chunk)
+
+                    # 段落后内联图片（无论该段是否有文本）
+                    if (
+                        self.image_processing_enabled
+                        and self.image_position_strategy == "inline"
+                    ):
+                        try:
+                            discovered = (
+                                self.image_extractor.discover_images_in_paragraph(block)
+                            )
+                            for order_in_para, item in enumerate(discovered):
+                                rel_id = item.get("rel_id")
+                                if not rel_id:
+                                    continue
+                                image_meta = self.image_extractor.get_or_save_by_rel(
+                                    document,
+                                    rel_id,
+                                    doc_id,
+                                    image_index=global_image_index,
+                                )
+                                if not image_meta:
+                                    continue
+                                paragraph_index_for_anchor = (
+                                    (para_idx + 1)
+                                    if has_text
+                                    else (para_idx if para_idx > 0 else 1)
+                                )
+                                anchor_meta = {
+                                    "container_type": "paragraph",
+                                    "paragraph_index": paragraph_index_for_anchor,
+                                    "anchor_index": len(all_chunks),
+                                }
+                                image_chunk = self.image_extractor.build_image_chunk(
+                                    doc_id, image_meta, anchor_meta
+                                )
+                                all_chunks.append(image_chunk)
+                                global_image_index += 1
+
+                            if discovered:
+                                if has_text:
+                                    try:
+                                        ctx = self._get_context_for_paragraph(
+                                            all_paragraphs, para_idx
+                                        )
+                                        prev20 = ctx.split("。下一段：")[0].replace(
+                                            "上一段：", ""
+                                        )[:20]
+                                        next20 = ctx.split("。下一段：")[-1][:20]
+                                    except Exception:
+                                        prev20, next20 = "", ""
+                                    logger.debug(
+                                        f"段落{para_idx + 1}后插入图片{len(discovered)}张，前后摘要：{prev20} | {next20}"
+                                    )
+                                else:
+                                    logger.debug(
+                                        f"空段落后插入图片{len(discovered)}张（锚定到段落{paragraph_index_for_anchor}）"
+                                    )
+                        except Exception as e:
+                            logger.warning(f"段落内联图片处理失败，已跳过：{e}")
+
+                    if has_text:
                         para_idx += 1
                 elif isinstance(block, Table):
                     # 找到表格前后最近的段落索引
@@ -321,18 +386,134 @@ class DocFileParser:
                     )
                     all_chunks.extend(table_chunks)
 
-            # 处理图片块
-            if self.image_processing_enabled and images:
-                image_chunks = self._create_image_chunks(images, doc_id, all_chunks)
-                all_chunks.extend(image_chunks)
+                    # 表格内图片处理
+                    if (
+                        self.image_processing_enabled
+                        and self.image_position_strategy == "inline"
+                    ):
+                        try:
+                            # 构造 table_id，与 _split_table_with_merge 保持一致
+                            table_id = f"table_{id(block)}"
+                            header_rows = self._detect_header_rows_smart(block)
+                            # 收集每个单元格的图片
+                            table_images: List[Dict] = []
+                            for r_idx, row in enumerate(block.rows):
+                                for c_idx, cell in enumerate(row.cells):
+                                    discovered = self.image_extractor.discover_images_in_table_cell(
+                                        cell
+                                    )
+                                    if not discovered:
+                                        continue
+                                    for item in discovered:
+                                        rel_id = item.get("rel_id")
+                                        if not rel_id:
+                                            continue
+                                        image_meta = (
+                                            self.image_extractor.get_or_save_by_rel(
+                                                document,
+                                                rel_id,
+                                                doc_id,
+                                                image_index=global_image_index,
+                                            )
+                                        )
+                                        if not image_meta:
+                                            continue
+                                        anchor_meta = {
+                                            "container_type": "table_cell",
+                                            "table_id": table_id,
+                                            "row": r_idx + 1,
+                                            "col": c_idx + 1,
+                                            "parent_table_info": f"header_rows={header_rows}",
+                                            "anchor_index": len(all_chunks),
+                                        }
+                                        image_chunk = (
+                                            self.image_extractor.build_image_chunk(
+                                                doc_id, image_meta, anchor_meta
+                                            )
+                                        )
+                                        table_images.append(
+                                            {
+                                                "row": r_idx + 1,
+                                                "col": c_idx + 1,
+                                                "chunk": image_chunk,
+                                            }
+                                        )
+                                        global_image_index += 1
 
-                # 等待图片分析完成，确保向量化时有完整的分析结果
-                try:
-                    await self._process_images_async(image_chunks, all_chunks)
-                    logger.info(f"图片分析完成，共处理 {len(image_chunks)} 张图片")
-                except Exception as e:
-                    logger.warning(f"图片分析失败: {str(e)}")
-                    # 即使图片分析失败，也继续处理其他内容
+                            # 按策略附着
+                            if table_images:
+                                if self.table_image_attach_mode == "separate_block":
+                                    # 插在表格相关块之后（当前已把表格块加入 all_chunks，直接 append）
+                                    for ti in table_images:
+                                        all_chunks.append(ti["chunk"])
+                                    # 计算邻接段落摘要用于调试
+                                    try:
+                                        prev_text = (
+                                            self.get_paragraph_content_by_index(
+                                                all_paragraphs, preceding
+                                            )
+                                            if all_paragraphs
+                                            else ""
+                                        ) or ""
+                                        next_text = (
+                                            self.get_paragraph_content_by_index(
+                                                all_paragraphs, following
+                                            )
+                                            if all_paragraphs
+                                            else ""
+                                        ) or ""
+                                    except Exception:
+                                        prev_text, next_text = "", ""
+                                    logger.debug(
+                                        f"表格{table_id}后追加图片{len(table_images)}张，邻接段落摘要：{prev_text[:20]} | {next_text[:20]}"
+                                    )
+                                elif self.table_image_attach_mode == "merge_into_row":
+                                    # 合并进对应行块的 metadata.embedded_images
+                                    for ti in table_images:
+                                        row_no = ti["row"]
+                                        # 逆向查找刚加入的 table_row 对应的块（简易策略：查找最近的、table_id+row匹配）
+                                        for chk in reversed(all_chunks):
+                                            md = chk.get("metadata", {})
+                                            if (
+                                                chk.get("type") == "table_row"
+                                                and md.get("table_id") == table_id
+                                                and md.get("row") == row_no
+                                            ):
+                                                md.setdefault(
+                                                    "embedded_images", []
+                                                ).append(ti["chunk"])
+                                                break
+                                    logger.debug(
+                                        f"表格{table_id}按行合并图片{len(table_images)}张"
+                                    )
+                                elif self.table_image_attach_mode == "merge_into_table":
+                                    # 合并进 table_full 的 metadata.embedded_images
+                                    for chk in reversed(all_chunks):
+                                        md = chk.get("metadata", {})
+                                        if (
+                                            chk.get("type") == "table_full"
+                                            and md.get("table_id") == table_id
+                                        ):
+                                            md.setdefault("embedded_images", []).extend(
+                                                [ti["chunk"] for ti in table_images]
+                                            )
+                                            break
+                                    logger.debug(
+                                        f"表格{table_id}整体合并图片{len(table_images)}张"
+                                    )
+                        except Exception as e:
+                            logger.warning(f"表格内联图片处理失败，已跳过：{e}")
+
+            # 内联模式下，图片块已经插入 all_chunks；选择分析时机
+            if self.image_processing_enabled:
+                # 收集本轮生成的图片块
+                image_chunks = [c for c in all_chunks if c.get("type") == "image"]
+                if image_chunks:
+                    try:
+                        await self._process_images_async(image_chunks, all_chunks)
+                        logger.info(f"图片分析完成，共处理 {len(image_chunks)} 张图片")
+                    except Exception as e:
+                        logger.warning(f"图片分析失败: {str(e)}")
 
             return all_chunks
         except ImportError:
