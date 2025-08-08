@@ -49,7 +49,9 @@ class QAService:
             retrieval_limit = limit if limit is not None else self.max_results
 
             # 1. 语义检索
-            retrieval_results = await self._semantic_retrieval(question, kb_id, retrieval_limit)
+            retrieval_results = await self._semantic_retrieval(
+                question, kb_id, retrieval_limit
+            )
             if not retrieval_results:
                 return {"success": False, "error": "未找到相关文档"}
 
@@ -118,9 +120,9 @@ class QAService:
 
             # 按相似度排序（相似度分数越大越好，降序排列）
             sorted_results = sorted(
-                unique_results, 
-                key=lambda x: x.get("similarity_score", 0), 
-                reverse=True  # 降序排列，相似度高的在前
+                unique_results,
+                key=lambda x: x.get("similarity_score", 0),
+                reverse=True,  # 降序排列，相似度高的在前
             )
 
             return sorted_results
@@ -181,7 +183,21 @@ class QAService:
                 "4. 保持答案的准确性和完整性\n"
                 "5. 使用清晰、易懂的语言\n"
                 "6. 对于数值数据，请保持原始精度，不要进行不必要的四舍五入\n"
-                "7. 如果数据包含单位或特殊符号，请完整保留"
+                "7. 如果数据包含单位或特殊符号，请完整保留\n"
+                "8. 当答案需要引用图片时，仅引用与问题最相关的一张图片。该图片路径必须完全来自‘相关文档内容’，不得编造；若没有合适图片，请不要输出任何图片引用。\n"
+                "9. 输出图片路径时一律使用正斜杠‘/’（将‘\\’替换为‘/’）。\n"
+                "10. 请在答案末尾以一个合法 JSON 的代码块输出图片引用信息，字段为：\n"
+                "    {\n"
+                '      "images": [\n'
+                "        {\n"
+                '          "path": "<从‘相关文档内容’中复制的本地图片路径（使用正斜杠）>",\n'
+                '          "reason": "<选择该图的简要理由，50字内>"\n'
+                "        }\n"
+                "      ]\n"
+                "    }\n"
+                "    正文不要重复粘贴图片路径；严禁输出 data: URI、base64 或网络 URL。\n"
+                "11. 确保该 JSON 代码块完全合法且可被直接解析，不要加入注释或多余文本。\n"
+                "12. 若问题未涉及图片或无法确定可用图片，请不要输出上述 JSON 代码块。"
             )
 
             user_prompt = (
@@ -192,7 +208,23 @@ class QAService:
                 "- 如果涉及表格数据，请保持表格的完整格式\n"
                 "- 如果用户询问特定行或列的数据，请完整展示相关信息\n"
                 "- 对于数值比较或计算，请提供具体的数据支持\n"
-                "- 如果文档中没有相关信息，请明确说明无法找到相关信息"
+                "- 如果文档中没有相关信息，请明确说明无法找到相关信息\n\n"
+                "- 图片引用输出规范（仅在需要引用图片时执行）：\n"
+                "  - 请仅引用与问题最相关的一张图片，且路径必须来自上文‘相关文档内容’，不得编造；若没有合适图片则不要输出图片引用。\n"
+                "  - 统一使用正斜杠‘/’输出路径。\n"
+                "  - 请在答案末尾追加一个合法的 JSON 代码块，严格使用如下字段和格式，不要添加多余文字或注释：\n\n"
+                "```json\n"
+                "{\n"
+                '  "images": [\n'
+                "    {\n"
+                '      "path": "<从上述‘相关文档内容’中复制的一条本地图片路径，使用正斜杠>",\n'
+                '      "reason": "<简要说明选择原因，50字内>"\n'
+                "    }\n"
+                "  ]\n"
+                "}\n"
+                "```\n\n"
+                "  - 正文中不要重复出现图片路径；不要输出 data: URI、base64 或网络 URL。\n"
+                "  - 若不能确定路径来自上述文档内容，请不要输出该 JSON 代码块。"
             )
 
             answer = await zhipu_complete_async(

@@ -7,12 +7,15 @@ import asyncio
 import json
 from qa_service import QAService
 from utils.logger import logger
+from utils.answer_postprocessor import format_answer_with_images_if_json
 
 
 def print_markdown_result(result: dict):
     """格式化输出结果，支持 Markdown"""
     print(f"\n=== 问题 ===\n{result.get('question')}")
-    print(f"\n=== 答案 (Markdown) ===\n{result.get('answer')}\n")  # 直接输出 Markdown，不转义
+    print(
+        f"\n=== 答案 (Markdown) ===\n{result.get('answer')}\n"
+    )  # 直接输出 Markdown，不转义
     print(f"\n=== 来源信息 (前3个) ===")
     for i, src in enumerate(result.get("sources", []), 1):
         print(f"\n来源 {i}:")
@@ -29,12 +32,12 @@ async def test_basic_qa():
     with QAService() as qa_service:
         try:
             questions = [
-                "近十年人均发电量是4730.25（千瓦小时）的是哪一年？",
-                "2024年居民人均粮食消耗量是多少？",
-                "2024年全国的地级市数有多少个？",
-                "2021年全国的乡镇级区划数有多少个？",
+                "2019年至2023年城镇新增就业人数的变化趋势?如果资料中包含图片，请返回具体的图片。",
+                "2023年年末中国人口统计数据中全国总人口是多少？",
+                # "2024年全国的地级市数有多少个？",
+                # "2021年全国的乡镇级区划数有多少个？",
             ]
-            kb_id = 1
+            kb_id = 200
 
             for i, question in enumerate(questions, 1):
                 logger.info(f"测试问题 {i}: {question}")
@@ -53,6 +56,13 @@ async def test_basic_qa():
                 # 如果成功，再用更友好的格式打印
                 if result.get("success"):
                     print(f"\n--- 格式化输出 ---")
+                    # 后处理：当答案中包含图片引用(JSON)时，附加图片预览
+                    result = format_answer_with_images_if_json(
+                        result,
+                        max_images=1,
+                        max_bytes=1_500_000,
+                        image_width_px=720,
+                    )
                     print_markdown_result(result)
                 else:
                     print(f"问题 {i} 没有找到相关结果或出现错误: {result.get('error')}")
@@ -95,14 +105,18 @@ async def test_error_cases():
             # 测试不存在的知识库
             logger.info("测试不存在的知识库")
             result2 = await qa_service.answer_question(question="测试问题", kb_id=999)
-            print(f"不存在知识库结果: {json.dumps(result2, ensure_ascii=False, indent=2)}")
+            print(
+                f"不存在知识库结果: {json.dumps(result2, ensure_ascii=False, indent=2)}"
+            )
 
             # 测试无相关信息的问题
             logger.info("测试无相关信息的问题")
             result3 = await qa_service.answer_question(
                 question="火星上有多少人口？", kb_id=1
             )
-            print(f"无相关信息结果: {json.dumps(result3, ensure_ascii=False, indent=2)}")
+            print(
+                f"无相关信息结果: {json.dumps(result3, ensure_ascii=False, indent=2)}"
+            )
 
         except Exception as e:
             logger.error(f"错误情况测试失败: {str(e)}")
