@@ -71,6 +71,11 @@ class ImageExtractor:
         """确保存储目录存在"""
         os.makedirs(self.storage_path, exist_ok=True)
 
+    def clear_cache(self) -> None:
+        """清空图片关系缓存，用于处理新文档时重置状态"""
+        self._rel_cache.clear()
+        logger.debug("图片提取器缓存已清空")
+
     # --------- 新增：定位方法（段落） ---------
     def discover_images_in_paragraph(
         self, paragraph
