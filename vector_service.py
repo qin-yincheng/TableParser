@@ -75,9 +75,12 @@ class VectorService:
             },
             {"name": "content", "dataType": "text", "description": "分块内容"},
             {"name": "description", "dataType": "text", "description": "LLM生成的描述"},
-            {"name": "keywords", "dataType": "text", "description": "关键词列表（逗号分隔）"},
+            {
+                "name": "keywords",
+                "dataType": "text",
+                "description": "关键词列表（逗号分隔）",
+            },
             {"name": "parent_id", "dataType": "text", "description": "父分块ID"},
-            {"name": "context", "dataType": "text", "description": "上下文内容"},
             # 表格特有字段
             {"name": "sheet", "dataType": "text", "description": "Excel工作表名"},
             {"name": "table_id", "dataType": "text", "description": "表格ID"},
@@ -86,10 +89,22 @@ class VectorService:
             {"name": "paragraph_index", "dataType": "int", "description": "段落索引"},
             # 图片特有字段
             {"name": "image_path", "dataType": "text", "description": "图片存储路径"},
-            {"name": "original_filename", "dataType": "text", "description": "原始图片文件名"},
+            {
+                "name": "original_filename",
+                "dataType": "text",
+                "description": "原始图片文件名",
+            },
             {"name": "image_type", "dataType": "text", "description": "图片类型"},
-            {"name": "context_relation", "dataType": "text", "description": "上下文关系"},
-            {"name": "key_information", "dataType": "text", "description": "关键信息（逗号分隔）"},
+            {
+                "name": "context_relation",
+                "dataType": "text",
+                "description": "上下文关系",
+            },
+            {
+                "name": "key_information",
+                "dataType": "text",
+                "description": "关键信息（逗号分隔）",
+            },
         ]
 
         return self.weaviate_ops.create_collection(
@@ -134,23 +149,6 @@ class VectorService:
         # 从chunk中提取数据
         metadata = chunk.get("metadata", {})
 
-        # 处理context字段，确保是字符串格式
-        context = chunk.get("context", "")
-        if isinstance(context, dict):
-            # 如果是字典，格式化为字符串
-            context_parts = []
-            if context.get("document_title"):
-                context_parts.append(f"文档标题：{context['document_title']}")
-            if context.get("preceding"):
-                context_parts.append(f"前文：{context['preceding']}")
-            if context.get("following"):
-                context_parts.append(f"后文：{context['following']}")
-            if context.get("image_position"):
-                context_parts.append(f"图片位置：{context['image_position']}")
-            context_str = "，".join(context_parts) if context_parts else "无上下文信息"
-        else:
-            context_str = str(context)
-
         # 组装数据对象 - 将数组转换为字符串
         data_obj = {
             "doc_id": chunk.get("doc_id", metadata.get("doc_id", "")),
@@ -160,19 +158,22 @@ class VectorService:
             "description": metadata.get("description", ""),
             "keywords": self._convert_array_to_string(metadata.get("keywords", [])),
             "parent_id": chunk.get("parent_id", ""),
-            "context": context_str,
             # 表格特有字段
             "sheet": metadata.get("sheet", ""),
             "table_id": metadata.get("table_id", ""),
             "row": metadata.get("row", 0),
             "header": self._convert_array_to_string(metadata.get("header", [])),
             "paragraph_index": metadata.get("paragraph_index", 0),
-            # 图片特有字段  
-            "image_path": chunk.get("content", "") if chunk.get("type") == "image" else "",
+            # 图片特有字段
+            "image_path": (
+                chunk.get("content", "") if chunk.get("type") == "image" else ""
+            ),
             "original_filename": metadata.get("original_filename", ""),
             "image_type": metadata.get("image_type", ""),
             "context_relation": metadata.get("context_relation", ""),
-            "key_information": self._convert_array_to_string(metadata.get("key_information", [])),
+            "key_information": self._convert_array_to_string(
+                metadata.get("key_information", [])
+            ),
         }
 
         return self.weaviate_ops.insert_data(collection_name, data_obj, vector)
@@ -250,7 +251,6 @@ class VectorService:
                 "description",
                 "keywords",
                 "parent_id",
-                "context",
                 "sheet",
                 "table_id",
                 "row",
@@ -269,11 +269,17 @@ class VectorService:
             if "properties" in result:
                 properties = result["properties"]
                 if "keywords" in properties:
-                    properties["keywords"] = self._convert_string_to_array(properties["keywords"])
+                    properties["keywords"] = self._convert_string_to_array(
+                        properties["keywords"]
+                    )
                 if "header" in properties:
-                    properties["header"] = self._convert_string_to_array(properties["header"])
+                    properties["header"] = self._convert_string_to_array(
+                        properties["header"]
+                    )
                 if "key_information" in properties:
-                    properties["key_information"] = self._convert_string_to_array(properties["key_information"])
+                    properties["key_information"] = self._convert_string_to_array(
+                        properties["key_information"]
+                    )
 
         return results
 
@@ -308,7 +314,6 @@ class VectorService:
                 "description",
                 "keywords",
                 "parent_id",
-                "context",
                 "sheet",
                 "table_id",
                 "row",
@@ -327,11 +332,17 @@ class VectorService:
             if "properties" in result:
                 properties = result["properties"]
                 if "keywords" in properties:
-                    properties["keywords"] = self._convert_string_to_array(properties["keywords"])
+                    properties["keywords"] = self._convert_string_to_array(
+                        properties["keywords"]
+                    )
                 if "header" in properties:
-                    properties["header"] = self._convert_string_to_array(properties["header"])
+                    properties["header"] = self._convert_string_to_array(
+                        properties["header"]
+                    )
                 if "key_information" in properties:
-                    properties["key_information"] = self._convert_string_to_array(properties["key_information"])
+                    properties["key_information"] = self._convert_string_to_array(
+                        properties["key_information"]
+                    )
 
         return results
 
@@ -389,14 +400,14 @@ class VectorService:
     ) -> List[Dict[str, Any]]:
         """
         通过混合查询（文本和向量）获取最相关的对象
-        
+
         Args:
             kb_id: 知识库ID
             question: 问题文本
             limit: 返回结果数量限制
             similarity_threshold: 可选的相似度阈值，低于此阈值的结果将被过滤
             alpha: 混合比例，0.7表示文本和向量各占一定比例
-            
+
         Returns:
             List[Dict[str, Any]]: 查询结果列表
         """
@@ -409,11 +420,13 @@ class VectorService:
             vector = await self.embedding_service.generate_question_embedding(question)
         except Exception as e:
             from utils.logger import logger
+
             logger.error(f"生成问题向量失败: {e}")
             return []
 
         if not vector:
             from utils.logger import logger
+
             logger.error("无法生成问题向量")
             return []
 
@@ -426,13 +439,12 @@ class VectorService:
             similarity_threshold=similarity_threshold,
             properties=[
                 "doc_id",
-                "chunk_id", 
+                "chunk_id",
                 "chunk_type",
                 "content",
                 "description",
                 "keywords",
                 "parent_id",
-                "context",
                 "sheet",
                 "table_id",
                 "row",
@@ -451,11 +463,17 @@ class VectorService:
             if "properties" in result:
                 properties = result["properties"]
                 if "keywords" in properties:
-                    properties["keywords"] = self._convert_string_to_array(properties["keywords"])
+                    properties["keywords"] = self._convert_string_to_array(
+                        properties["keywords"]
+                    )
                 if "header" in properties:
-                    properties["header"] = self._convert_string_to_array(properties["header"])
+                    properties["header"] = self._convert_string_to_array(
+                        properties["header"]
+                    )
                 if "key_information" in properties:
-                    properties["key_information"] = self._convert_string_to_array(properties["key_information"])
+                    properties["key_information"] = self._convert_string_to_array(
+                        properties["key_information"]
+                    )
 
         return results
 

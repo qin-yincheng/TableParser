@@ -32,12 +32,12 @@ async def test_basic_qa():
     with QAService() as qa_service:
         try:
             questions = [
-                "2019年至2023年城镇新增就业人数的变化趋势?如果资料中包含图片，请返回具体的图片。",
-                "2023年年末中国人口统计数据中全国总人口是多少？",
+                "2024年1-10月，互联网业务收入的同比增长率是多少？",
+                # "2023年年末中国人口统计数据中全国总人口是多少？",
                 # "2024年全国的地级市数有多少个？",
                 # "2021年全国的乡镇级区划数有多少个？",
             ]
-            kb_id = 200
+            kb_id = 1
 
             for i, question in enumerate(questions, 1):
                 logger.info(f"测试问题 {i}: {question}")
