@@ -289,6 +289,8 @@ class DocFileParser:
             para_idx = 0
             # 全局图片索引，保证文档范围内唯一且递增
             global_image_index = 0
+            # 构块阶段全局去重：记录已处理过的图片关系ID（rel_id）
+            seen_rel_ids = set()
             for idx, block in enumerate(block_items):
                 if isinstance(block, Paragraph):
                     has_text = bool(block.text.strip())
@@ -321,6 +323,9 @@ class DocFileParser:
                                 rel_id = item.get("rel_id")
                                 if not rel_id:
                                     continue
+                                # 去重：同一图片（rel_id）仅生成一个图片块
+                                if rel_id in seen_rel_ids:
+                                    continue
                                 image_meta = self.image_extractor.get_or_save_by_rel(
                                     document,
                                     rel_id,
@@ -329,6 +334,7 @@ class DocFileParser:
                                 )
                                 if not image_meta:
                                     continue
+                                seen_rel_ids.add(rel_id)
                                 paragraph_index_for_anchor = (
                                     (para_idx + 1)
                                     if has_text
@@ -408,6 +414,9 @@ class DocFileParser:
                                         rel_id = item.get("rel_id")
                                         if not rel_id:
                                             continue
+                                        # 去重：同一图片（rel_id）仅生成一个图片块
+                                        if rel_id in seen_rel_ids:
+                                            continue
                                         image_meta = (
                                             self.image_extractor.get_or_save_by_rel(
                                                 document,
@@ -418,6 +427,7 @@ class DocFileParser:
                                         )
                                         if not image_meta:
                                             continue
+                                        seen_rel_ids.add(rel_id)
                                         anchor_meta = {
                                             "container_type": "table_cell",
                                             "table_id": table_id,
