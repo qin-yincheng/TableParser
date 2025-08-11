@@ -49,7 +49,7 @@ class ImageAnalyzer:
 
         Args:
             image_path: 图片文件路径
-            context: 上下文信息字典
+            context: 上下文信息字典，包含preceding, following, document_title, image_position
 
         Returns:
             分析结果字典

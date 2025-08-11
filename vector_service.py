@@ -134,6 +134,23 @@ class VectorService:
         # 从chunk中提取数据
         metadata = chunk.get("metadata", {})
 
+        # 处理context字段，确保是字符串格式
+        context = chunk.get("context", "")
+        if isinstance(context, dict):
+            # 如果是字典，格式化为字符串
+            context_parts = []
+            if context.get("document_title"):
+                context_parts.append(f"文档标题：{context['document_title']}")
+            if context.get("preceding"):
+                context_parts.append(f"前文：{context['preceding']}")
+            if context.get("following"):
+                context_parts.append(f"后文：{context['following']}")
+            if context.get("image_position"):
+                context_parts.append(f"图片位置：{context['image_position']}")
+            context_str = "，".join(context_parts) if context_parts else "无上下文信息"
+        else:
+            context_str = str(context)
+
         # 组装数据对象 - 将数组转换为字符串
         data_obj = {
             "doc_id": chunk.get("doc_id", metadata.get("doc_id", "")),
@@ -143,7 +160,7 @@ class VectorService:
             "description": metadata.get("description", ""),
             "keywords": self._convert_array_to_string(metadata.get("keywords", [])),
             "parent_id": chunk.get("parent_id", ""),
-            "context": chunk.get("context", ""),
+            "context": context_str,
             # 表格特有字段
             "sheet": metadata.get("sheet", ""),
             "table_id": metadata.get("table_id", ""),

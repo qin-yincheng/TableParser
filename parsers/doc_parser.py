@@ -211,6 +211,12 @@ class DocFileParser:
         if not os.path.exists(file_path):
             logger.error(f"文件不存在: {file_path}")
             return []
+
+        # 清空图片提取器缓存，确保每个文档的图片处理都是独立的
+        if hasattr(self, "image_extractor") and self.image_extractor:
+            self.image_extractor.clear_cache()
+            logger.debug(f"已清空图片提取器缓存，准备处理新文档: {file_path}")
+
         _, ext = os.path.splitext(file_path)
         ext = ext.lower().lstrip(".")
         doc_id = os.path.basename(file_path)
@@ -1156,9 +1162,8 @@ class DocFileParser:
                 context = self.context_collector.collect_context_for_image(
                     image_chunk, all_chunks
                 )
-                image_chunk["context"] = (
-                    f"前文：{context.get('preceding', '')} 后文：{context.get('following', '')}"
-                )
+                # 方案一：保持完整的上下文结构，不立即格式化
+                image_chunk["context"] = context
 
             # 并发分析所有图片
             tasks = []
@@ -1180,9 +1185,9 @@ class DocFileParser:
             image_path = image_chunk["content"]
             context = image_chunk["context"]
 
-            # 使用ImageAnalyzer进行分析，它会自动处理上下文和调用VisionModelClient
+            # 方案一：传递完整的上下文字典，而不是字符串
             analysis_result = await self.image_analyzer.analyze_image_with_context(
-                image_path, {"context": context}
+                image_path, context
             )
 
             # 更新图片块
