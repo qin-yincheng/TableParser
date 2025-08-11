@@ -269,7 +269,6 @@ class QueryService:
             "description",
             "keywords",
             "parent_id",
-            "context",
             "sheet",
             "table_id",
             "row",

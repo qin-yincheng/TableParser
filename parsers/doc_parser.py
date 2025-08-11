@@ -184,7 +184,7 @@ class DocFileParser:
                     image_config.get("storage_path", "storage/images")
                 )
                 self.context_collector = ContextCollector(
-                    image_config.get("context_window", 3)
+                    image_config.get("context_window", 1)
                 )
                 self.vision_model = VisionModelClient(image_config.get("api_key"))
                 self.image_analyzer = ImageAnalyzer(

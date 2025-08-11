@@ -60,6 +60,7 @@ class QAService:
 
             # 3. 构建答案上下文
             context = self._build_context(merged_results)
+            print(context)
 
             # 4. 生成答案
             answer = await self._generate_answer(question, context)
@@ -360,7 +361,7 @@ class QAService:
                     "similarity_score": result.get("similarity_score", 0.0),
                     "source_info": result.get("source_info", {}),
                 }
-                for result in results[:3]  # 只返回前3个来源
+                for result in results[:8]  # 只返回前3个来源
             ],
             "metadata": {"total_sources": len(results)},
         }
