@@ -32,9 +32,9 @@ async def test_basic_qa():
     with QAService() as qa_service:
         try:
             questions = [
-                "2024年1-10月，互联网业务收入的同比增长率是多少？",
-                # "2023年年末中国人口统计数据中全国总人口是多少？",
-                # "2024年全国的地级市数有多少个？",
+                "2023年，我国建筑业增加值和利润的增长情况如何？其中国有控股企业的利润表现如何？",
+                "2023年，我国货物运输总量和周转量的增长情况如何？其中水路运输的表现如何？",
+                "2023年，我国房地产开发投资及其主要组成部分的变动情况如何？住宅投资和销售面积的变化分别是多少？",
                 # "2021年全国的乡镇级区划数有多少个？",
             ]
             kb_id = 1
@@ -57,12 +57,12 @@ async def test_basic_qa():
                 if result.get("success"):
                     print(f"\n--- 格式化输出 ---")
                     # 后处理：当答案中包含图片引用(JSON)时，附加图片预览
-                    result = format_answer_with_images_if_json(
-                        result,
-                        max_images=1,
-                        max_bytes=1_500_000,
-                        image_width_px=720,
-                    )
+                    # result = format_answer_with_images_if_json(
+                    #     result,
+                    #     max_images=1,
+                    #     max_bytes=1_500_000,
+                    #     image_width_px=720,
+                    # )
                     print_markdown_result(result)
                 else:
                     print(f"问题 {i} 没有找到相关结果或出现错误: {result.get('error')}")

@@ -293,15 +293,15 @@ class QAService:
         metadata = result.get("metadata", {})
 
         # 构建来源信息
-        source_desc = f"[来源: {source_info.get('file_name', '未知文件')}"
+        source_desc = f"[来源: {metadata.get('doc_id', '未知文件')}"
 
         chunk_type = result.get("chunk_type", "text")
         if chunk_type == "table_full":
-            source_desc += f", 表格: {source_info.get('table_title', '未知表格')}"
+            source_desc += f", 表格: {metadata.get('table_id', '未知表格')}"
         elif chunk_type == "table_row":
-            source_desc += f", 表格行: {source_info.get('row_index', '未知行')}"
+            source_desc += f", 表格行: {metadata.get('row', '未知行')}"
         else:
-            source_desc += f", 段落: {source_info.get('paragraph_index', '未知段落')}"
+            source_desc += f", 段落: {metadata.get('paragraph_index', '未知段落')}"
 
         source_desc += "]"
 
