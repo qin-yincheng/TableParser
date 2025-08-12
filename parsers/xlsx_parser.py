@@ -24,7 +24,11 @@ class XlsxFileParser:
 
     def __init__(self, fragment_config: Optional[FragmentConfig] = None):
         """初始化解析器"""
-        self.table_config = fragment_config.table_processing if fragment_config else TableProcessingConfig()
+        self.table_config = (
+            fragment_config.table_processing
+            if fragment_config
+            else TableProcessingConfig()
+        )
 
     def parse(self, file_path: str) -> List[Dict]:
         """
@@ -53,20 +57,29 @@ class XlsxFileParser:
                     if block_df.empty:
                         continue
                     header_rows = self._detect_header_rows(ws, start_row, end_row)
-                    
+
                     # 传递worksheet信息给表头处理
-                    headers = self._get_multi_headers_with_worksheet(block_df, header_rows, ws, start_row)
-                    
+                    headers = self._get_multi_headers_with_worksheet(
+                        block_df, header_rows, ws, start_row
+                    )
+
                     # 根据配置获取表格格式
-                    table_content, table_headers, table_merged_cells = self._convert_table_to_format(block_df, header_rows, ws, start_row)
-                    
+                    table_content, table_headers, table_merged_cells = (
+                        self._convert_table_to_format(
+                            block_df, header_rows, ws, start_row
+                        )
+                    )
+
                     parent_table_info = self._get_parent_table_info(
                         headers, merged_cells
                     )
                     context = self._get_context_for_table(df, start_row, end_row)
-                    
+
                     # 根据配置决定是否生成完整表格块
-                    if self.table_config.table_chunking_strategy in ["full_only", "full_and_rows"]:
+                    if self.table_config.table_chunking_strategy in [
+                        "full_only",
+                        "full_and_rows",
+                    ]:
                         table_chunk = {
                             "type": "table_full",
                             "content": table_content,
@@ -86,12 +99,18 @@ class XlsxFileParser:
                             "parent_id": None,
                         }
                         all_chunks.append(table_chunk)
-                    
+
                     # 根据配置决定是否生成行级分块
                     if self.table_config.table_chunking_strategy == "full_and_rows":
                         row_chunks = self._generate_table_row_chunks(
-                            block_df, doc_id, sheet_name, table_id, start_row, 
-                            headers, parent_table_info, header_rows
+                            block_df,
+                            doc_id,
+                            sheet_name,
+                            table_id,
+                            start_row,
+                            headers,
+                            parent_table_info,
+                            header_rows,
                         )
                         all_chunks.extend(row_chunks)
         except Exception as e:
@@ -126,13 +145,33 @@ class XlsxFileParser:
                 # 如果没有运行的事件循环，使用asyncio.run
                 enhanced_chunks = asyncio.run(enhance_all_chunks(all_chunks))
 
-            logger.info(f"成功增强 {len(enhanced_chunks)} 个分块")
+            # 统计增强的块类型
+            enhanced_table_chunks = [
+                chunk
+                for chunk in enhanced_chunks
+                if chunk.get("type") in ["table_full", "table_row"]
+            ]
+            enhanced_fragment_chunks = [
+                chunk
+                for chunk in enhanced_chunks
+                if chunk.get("type") == "text"
+                and chunk.get("metadata", {}).get("is_fragment")
+            ]
+            logger.info(
+                f"成功增强 {len(enhanced_chunks)} 个分块（表格块：{len(enhanced_table_chunks)}，分片文本块：{len(enhanced_fragment_chunks)}）"
+            )
             return enhanced_chunks
         except Exception as e:
             logger.error(f"LLM增强分块失败: {str(e)}")
             return all_chunks  # 如果增强失败，返回原始分块
 
-    def _convert_table_to_format(self, df: pd.DataFrame, header_rows: int, ws: Worksheet = None, start_row: int = 0) -> Tuple[str, List[str], List[Dict]]:
+    def _convert_table_to_format(
+        self,
+        df: pd.DataFrame,
+        header_rows: int,
+        ws: Worksheet = None,
+        start_row: int = 0,
+    ) -> Tuple[str, List[str], List[Dict]]:
         """根据配置将表格转换为指定格式，正确处理合并单元格"""
         try:
             if self.table_config.table_format == "markdown":
@@ -144,23 +183,21 @@ class XlsxFileParser:
             return self._df_to_html_multiheader(df, header_rows, ws, start_row)
 
     def _generate_table_row_chunks(
-        self, 
-        block_df: pd.DataFrame, 
-        doc_id: str, 
-        sheet_name: str, 
-        table_id: str, 
+        self,
+        block_df: pd.DataFrame,
+        doc_id: str,
+        sheet_name: str,
+        table_id: str,
         start_row: int,
-        headers: List[str], 
+        headers: List[str],
         parent_table_info: str,
-        header_rows: int
+        header_rows: int,
     ) -> List[Dict]:
         """生成表格行分块"""
         row_chunks = []
         for r_idx in range(header_rows, block_df.shape[0]):
             row_content = self._row_to_format(block_df.iloc[r_idx], headers)
-            row_context = self._get_context_for_row(
-                block_df, r_idx, header_rows
-            )
+            row_context = self._get_context_for_row(block_df, r_idx, header_rows)
             row_chunk = {
                 "type": "table_row",
                 "content": row_content,
@@ -241,43 +278,53 @@ class XlsxFileParser:
         """获取多级表头，正确处理合并单元格的层次结构。"""
         if df.shape[0] < header_rows:
             return []
-        
+
         # 简化实现：直接拼接表头行的内容
         headers = []
         for col in range(df.shape[1]):
             header_parts = []
             for row in range(header_rows):
-                cell_value = str(df.iloc[row, col]) if pd.notna(df.iloc[row, col]) else ""
+                cell_value = (
+                    str(df.iloc[row, col]) if pd.notna(df.iloc[row, col]) else ""
+                )
                 if cell_value.strip():
                     header_parts.append(cell_value)
             header = "/".join(header_parts) if header_parts else ""
             headers.append(header)
-        
+
         return headers
 
-    def _get_multi_headers_with_worksheet(self, df: pd.DataFrame, header_rows: int, ws: Worksheet, start_row: int) -> List[str]:
+    def _get_multi_headers_with_worksheet(
+        self, df: pd.DataFrame, header_rows: int, ws: Worksheet, start_row: int
+    ) -> List[str]:
         """获取多级表头，并传递worksheet信息。"""
         if df.shape[0] < header_rows:
             return []
-        
+
         # 获取合并单元格信息（从Excel文件获取）
-        merged_cells = self._get_excel_merged_cells_with_worksheet(ws, start_row, header_rows)
-        
+        merged_cells = self._get_excel_merged_cells_with_worksheet(
+            ws, start_row, header_rows
+        )
+
         # 构建表头映射
-        header_mapping = self._build_header_mapping_with_worksheet(df, header_rows, merged_cells, ws, start_row)
-        
+        header_mapping = self._build_header_mapping_with_worksheet(
+            df, header_rows, merged_cells, ws, start_row
+        )
+
         # 生成最终表头
         headers = []
         for col in range(df.shape[1]):
             header = header_mapping.get(col, "")
             headers.append(header)
-        
+
         return headers
 
-    def _get_excel_merged_cells_with_worksheet(self, ws: Worksheet, start_row: int, header_rows: int) -> List[Dict]:
+    def _get_excel_merged_cells_with_worksheet(
+        self, ws: Worksheet, start_row: int, header_rows: int
+    ) -> List[Dict]:
         """从Excel worksheet获取表头区域的合并单元格信息。"""
         merged_cells = []
-        
+
         # 检查表头区域的合并单元格
         for row in range(start_row + 1, start_row + header_rows + 1):
             for col in range(1, ws.max_column + 1):
@@ -286,50 +333,74 @@ class XlsxFileParser:
                     # 检查是否有合并单元格
                     colspan = self._get_cell_colspan(ws, row, col)
                     if colspan > 1:
-                        merged_cells.append({
-                            "row": row - start_row - 1,  # 转换为DataFrame索引
-                            "col": col - 1,  # 转换为DataFrame索引
-                            "colspan": colspan,
-                            "text": str(cell.value)
-                        })
-        
+                        merged_cells.append(
+                            {
+                                "row": row - start_row - 1,  # 转换为DataFrame索引
+                                "col": col - 1,  # 转换为DataFrame索引
+                                "colspan": colspan,
+                                "text": str(cell.value),
+                            }
+                        )
+
         return merged_cells
 
     def _get_cell_colspan(self, ws: Worksheet, row: int, col: int) -> int:
         """获取单元格的列跨度。"""
         # 检查该单元格是否被合并
         for merged_range in ws.merged_cells.ranges:
-            if merged_range.min_row <= row <= merged_range.max_row and merged_range.min_col <= col <= merged_range.max_col:
+            if (
+                merged_range.min_row <= row <= merged_range.max_row
+                and merged_range.min_col <= col <= merged_range.max_col
+            ):
                 return merged_range.max_col - merged_range.min_col + 1
         return 1
 
-    def _build_header_mapping_with_worksheet(self, df: pd.DataFrame, header_rows: int, merged_cells: List[Dict], ws: Worksheet, start_row: int) -> Dict[int, str]:
+    def _build_header_mapping_with_worksheet(
+        self,
+        df: pd.DataFrame,
+        header_rows: int,
+        merged_cells: List[Dict],
+        ws: Worksheet,
+        start_row: int,
+    ) -> Dict[int, str]:
         """构建列到表头的映射，处理合并单元格的层次结构。"""
         header_mapping = {}
-        
+
         # 处理合并单元格
         for merge_info in merged_cells:
             parent_text = merge_info["text"]
             start_col = merge_info["col"]
             colspan = merge_info["colspan"]
-            
+
             # 为合并单元格的子列分配表头
             for col_offset in range(colspan):
                 col = start_col + col_offset
                 if col < df.shape[1]:
                     # 获取子列的表头信息
-                    child_header = self._get_child_header_with_worksheet(df, header_rows, col, parent_text, ws, start_row)
+                    child_header = self._get_child_header_with_worksheet(
+                        df, header_rows, col, parent_text, ws, start_row
+                    )
                     header_mapping[col] = child_header
-        
+
         # 处理未合并的列
         for col in range(df.shape[1]):
             if col not in header_mapping:
-                header = self._get_single_column_header_with_worksheet(df, header_rows, col, ws, start_row)
+                header = self._get_single_column_header_with_worksheet(
+                    df, header_rows, col, ws, start_row
+                )
                 header_mapping[col] = header
-        
+
         return header_mapping
 
-    def _get_child_header_with_worksheet(self, df: pd.DataFrame, header_rows: int, col: int, parent_text: str, ws: Worksheet, start_row: int) -> str:
+    def _get_child_header_with_worksheet(
+        self,
+        df: pd.DataFrame,
+        header_rows: int,
+        col: int,
+        parent_text: str,
+        ws: Worksheet,
+        start_row: int,
+    ) -> str:
         """获取合并单元格子列的表头。"""
         # 获取该列在表头行的所有非空值
         header_parts = []
@@ -337,7 +408,7 @@ class XlsxFileParser:
             cell_value = str(df.iloc[row, col]) if pd.notna(df.iloc[row, col]) else ""
             if cell_value.strip():
                 header_parts.append(cell_value)
-        
+
         # 构建层次结构表头
         if header_parts:
             if parent_text not in header_parts:
@@ -346,27 +417,50 @@ class XlsxFileParser:
         else:
             return parent_text
 
-    def _get_single_column_header_with_worksheet(self, df: pd.DataFrame, header_rows: int, col: int, ws: Worksheet, start_row: int) -> str:
+    def _get_single_column_header_with_worksheet(
+        self,
+        df: pd.DataFrame,
+        header_rows: int,
+        col: int,
+        ws: Worksheet,
+        start_row: int,
+    ) -> str:
         """获取单列的表头。"""
         header_parts = []
         for row in range(header_rows):
             cell_value = str(df.iloc[row, col]) if pd.notna(df.iloc[row, col]) else ""
             if cell_value.strip():
                 header_parts.append(cell_value)
-        
+
         return "/".join(header_parts) if header_parts else ""
 
-    def _df_to_html_multiheader(self, df: pd.DataFrame, header_rows: int, ws: Worksheet = None, start_row: int = 0) -> Tuple[str, List[str], List[Dict]]:
+    def _df_to_html_multiheader(
+        self,
+        df: pd.DataFrame,
+        header_rows: int,
+        ws: Worksheet = None,
+        start_row: int = 0,
+    ) -> Tuple[str, List[str], List[Dict]]:
         """将多级表头的DataFrame转为HTML表格，正确处理合并单元格。"""
         if df.shape[0] == 0 or header_rows == 0:
             return "<table></table>", [], []
-        
+
         # 获取合并单元格信息（从Excel文件获取）
-        merged_cells = self._get_excel_merged_cells_with_worksheet(ws, start_row, header_rows) if ws else []
+        merged_cells = (
+            self._get_excel_merged_cells_with_worksheet(ws, start_row, header_rows)
+            if ws
+            else []
+        )
 
         # 构建表头映射
-        header_mapping = self._build_header_mapping_with_worksheet(df, header_rows, merged_cells, ws, start_row) if ws else {}
-        
+        header_mapping = (
+            self._build_header_mapping_with_worksheet(
+                df, header_rows, merged_cells, ws, start_row
+            )
+            if ws
+            else {}
+        )
+
         # 生成最终表头
         headers = []
         for col in range(df.shape[1]):
@@ -376,14 +470,16 @@ class XlsxFileParser:
                 # 回退到简单方法
                 header_parts = []
                 for row in range(header_rows):
-                    cell_value = str(df.iloc[row, col]) if pd.notna(df.iloc[row, col]) else ""
+                    cell_value = (
+                        str(df.iloc[row, col]) if pd.notna(df.iloc[row, col]) else ""
+                    )
                     if cell_value.strip():
                         header_parts.append(cell_value)
                 header = "/".join(header_parts) if header_parts else ""
             headers.append(header)
-        
+
         html = ["<table border='1'>"]
-        
+
         # 构建合并单元格映射，用于HTML生成
         merge_map = {}
         for merge_info in merged_cells:
@@ -394,10 +490,12 @@ class XlsxFileParser:
                 if col < df.shape[1]:
                     merge_map[col] = {
                         "is_merged": col_offset == 0,  # 只有第一个单元格显示内容
-                        "colspan": colspan if col_offset == 0 else 0,  # 只有第一个单元格有colspan
-                        "text": merge_info["text"] if col_offset == 0 else ""
+                        "colspan": (
+                            colspan if col_offset == 0 else 0
+                        ),  # 只有第一个单元格有colspan
+                        "text": merge_info["text"] if col_offset == 0 else "",
                     }
-        
+
         # 多级表头 - 正确处理合并单元格
         for h in range(header_rows):
             html.append("<tr>")
@@ -412,10 +510,12 @@ class XlsxFileParser:
                     continue
                 else:
                     # 普通单元格
-                    cell_value = str(df.iloc[h, col]) if pd.notna(df.iloc[h, col]) else "-"
+                    cell_value = (
+                        str(df.iloc[h, col]) if pd.notna(df.iloc[h, col]) else "-"
+                    )
                     html.append(f"<th>{cell_value}</th>")
             html.append("</tr>")
-        
+
         # 表体
         for i in range(header_rows, df.shape[0]):
             html.append("<tr>")
@@ -423,21 +523,37 @@ class XlsxFileParser:
                 cell_value = str(df.iloc[i, col]) if pd.notna(df.iloc[i, col]) else "-"
                 html.append(f"<td>{cell_value}</td>")
             html.append("</tr>")
-        
+
         html.append("</table>")
         return "\n".join(html), headers, merged_cells
 
-    def _df_to_markdown_multiheader(self, df: pd.DataFrame, header_rows: int, ws: Worksheet = None, start_row: int = 0) -> Tuple[str, List[str], List[Dict]]:
+    def _df_to_markdown_multiheader(
+        self,
+        df: pd.DataFrame,
+        header_rows: int,
+        ws: Worksheet = None,
+        start_row: int = 0,
+    ) -> Tuple[str, List[str], List[Dict]]:
         """将多级表头的DataFrame转为Markdown表格，正确处理合并单元格。"""
         if df.shape[0] == 0 or header_rows == 0:
             return "", [], []
-        
+
         # 获取合并单元格信息（从Excel文件获取）
-        merged_cells = self._get_excel_merged_cells_with_worksheet(ws, start_row, header_rows) if ws else []
+        merged_cells = (
+            self._get_excel_merged_cells_with_worksheet(ws, start_row, header_rows)
+            if ws
+            else []
+        )
 
         # 构建表头映射
-        header_mapping = self._build_header_mapping_with_worksheet(df, header_rows, merged_cells, ws, start_row) if ws else {}
-        
+        header_mapping = (
+            self._build_header_mapping_with_worksheet(
+                df, header_rows, merged_cells, ws, start_row
+            )
+            if ws
+            else {}
+        )
+
         # 生成最终表头
         headers = []
         for col in range(df.shape[1]):
@@ -447,18 +563,20 @@ class XlsxFileParser:
                 # 回退到简单方法
                 header_parts = []
                 for row in range(header_rows):
-                    cell_value = str(df.iloc[row, col]) if pd.notna(df.iloc[row, col]) else ""
+                    cell_value = (
+                        str(df.iloc[row, col]) if pd.notna(df.iloc[row, col]) else ""
+                    )
                     if cell_value.strip():
                         header_parts.append(cell_value)
                 header = "/".join(header_parts) if header_parts else ""
             headers.append(header)
-        
+
         markdown_lines = []
-        
+
         # 表头 - 使用处理后的表头，体现合并单元格的层次结构
         header_row = "| " + " | ".join(headers) + " |"
         markdown_lines.append(header_row)
-        
+
         # 分隔线 - 使用标准格式并添加对齐方式
         separator_cells = []
         for col in range(df.shape[1]):
@@ -467,21 +585,27 @@ class XlsxFileParser:
             separator_cells.append(alignment)
         separator_row = "| " + " | ".join(separator_cells) + " |"
         markdown_lines.append(separator_row)
-        
+
         # 表体 - 过滤空行，确保数据行连续
         for i in range(header_rows, df.shape[0]):
             # 检查当前行是否为空行
             row_data = df.iloc[i]
             if row_data.notna().any():  # 只有当行中有非空数据时才添加
-                data_row = "| " + " | ".join([str(x) if pd.notna(x) else "-" for x in row_data]) + " |"
+                data_row = (
+                    "| "
+                    + " | ".join([str(x) if pd.notna(x) else "-" for x in row_data])
+                    + " |"
+                )
                 markdown_lines.append(data_row)
-        
+
         return "\n".join(markdown_lines), headers, merged_cells
 
-    def _get_column_alignment(self, df: pd.DataFrame, col: int, header_rows: int) -> str:
+    def _get_column_alignment(
+        self, df: pd.DataFrame, col: int, header_rows: int
+    ) -> str:
         """根据列位置确定对齐方式：第一列左对齐，其他列右对齐"""
         if col == 0:
-            return "---"   # 第一列左对齐
+            return "---"  # 第一列左对齐
         else:
             return "---:"  # 其他列右对齐
 
@@ -568,8 +692,6 @@ class XlsxFileParser:
         merged_patterns = ["营业总收入", "净利润", "每股收益", "净资产", "现金流量"]
         return any(pattern in text for pattern in merged_patterns)
 
-
-
     @classmethod
     def can_handle(cls, ext: str) -> bool:
         return ext.lower() == "xlsx"
@@ -629,7 +751,31 @@ async def enhance_chunk(chunk: dict) -> dict:
 
 async def enhance_all_chunks(chunks: List[Dict]) -> List[Dict]:
     """
-    批量异步增强所有分块。
+    批量异步增强所有分块，只对分片text块和表格块进行增强。
     """
-    tasks = [enhance_chunk(chunk) for chunk in chunks]
-    return await asyncio.gather(*tasks)
+    # 过滤出需要增强的分块：
+    # 1. 表格块（table_full和table_row）始终增强
+    # 2. 分片text块需要增强
+    # 3. 非分片text块不增强
+    chunks_to_enhance = [
+        chunk
+        for chunk in chunks
+        if (
+            # 表格块始终增强
+            chunk.get("type") in ["table_full", "table_row"]
+            or
+            # 分片text块需要增强
+            (
+                chunk.get("type") == "text"
+                and chunk.get("metadata", {}).get("is_fragment")
+            )
+        )
+    ]
+
+    # 只对符合条件的块进行增强
+    tasks = [enhance_chunk(chunk) for chunk in chunks_to_enhance]
+    enhanced_chunks = await asyncio.gather(*tasks)
+
+    # 将非增强的块和增强后的块合并
+    non_enhanced_chunks = [chunk for chunk in chunks if chunk not in chunks_to_enhance]
+    return enhanced_chunks + non_enhanced_chunks

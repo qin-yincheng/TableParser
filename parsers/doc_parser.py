@@ -269,7 +269,21 @@ class DocFileParser:
                 # 如果没有运行的事件循环，使用asyncio.run
                 enhanced_chunks = asyncio.run(enhance_all_chunks(chunks))
 
-            logger.info(f"成功增强 {len(enhanced_chunks)} 个分块")
+            # 统计增强的块类型
+            enhanced_table_chunks = [
+                chunk
+                for chunk in enhanced_chunks
+                if chunk.get("type") in ["table_full", "table_row"]
+            ]
+            enhanced_fragment_chunks = [
+                chunk
+                for chunk in enhanced_chunks
+                if chunk.get("type") == "text"
+                and chunk.get("metadata", {}).get("is_fragment")
+            ]
+            logger.info(
+                f"成功增强 {len(enhanced_chunks)} 个分块（表格块：{len(enhanced_table_chunks)}，分片文本块：{len(enhanced_fragment_chunks)}）"
+            )
             return enhanced_chunks
         except Exception as e:
             logger.error(f"LLM增强分块失败: {str(e)}")
@@ -1927,17 +1941,34 @@ async def enhance_chunk(chunk: dict) -> dict:
 
 
 async def enhance_all_chunks(chunks: list[dict]) -> list[dict]:
-    """批量异步增强所有分块，跳过已处理的图片块"""
-    # 过滤出需要增强的分块（排除image类型）
-    chunks_to_enhance = [chunk for chunk in chunks if chunk.get("type") != "image"]
+    """批量异步增强所有分块，只对分片text块和表格块进行增强"""
+    # 过滤出需要增强的分块：
+    # 1. 表格块（table_full和table_row）始终增强
+    # 2. 分片text块需要增强
+    # 3. 非分片text块不增强
+    # 4. 图片块不增强
+    chunks_to_enhance = [
+        chunk
+        for chunk in chunks
+        if (
+            # 表格块始终增强
+            chunk.get("type") in ["table_full", "table_row"]
+            or
+            # 分片text块需要增强
+            (
+                chunk.get("type") == "text"
+                and chunk.get("metadata", {}).get("is_fragment")
+            )
+        )
+    ]
 
-    # 只对非图片分块进行增强
+    # 只对符合条件的块进行增强
     tasks = [enhance_chunk(chunk) for chunk in chunks_to_enhance]
     enhanced_chunks = await asyncio.gather(*tasks)
 
-    # 将图片块和增强后的分块合并
-    image_chunks = [chunk for chunk in chunks if chunk.get("type") == "image"]
-    return enhanced_chunks + image_chunks
+    # 将非增强的块和增强后的块合并
+    non_enhanced_chunks = [chunk for chunk in chunks if chunk not in chunks_to_enhance]
+    return enhanced_chunks + non_enhanced_chunks
 
 
 # 示例主流程（可根据实际集成位置调整）
