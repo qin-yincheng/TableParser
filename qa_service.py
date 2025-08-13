@@ -60,7 +60,6 @@ class QAService:
 
             # 3. 构建答案上下文
             context = self._build_context(merged_results)
-            print(context)
 
             # 4. 生成答案
             answer = await self._generate_answer(question, context)
