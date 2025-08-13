@@ -77,30 +77,47 @@ class EmbeddingService:
         if chunk_type == "image":
             # 图片类型：使用AI分析结果构建向量化文本
             embedding_parts = []
-            
+
             # 添加描述
             if description:
                 embedding_parts.append(f"图片描述：{description}")
-            
+
             # 添加关键词
             if keywords:
                 embedding_parts.append(f"关键词：{', '.join(keywords)}")
-            
-            # 添加图片类型
-            image_type = metadata.get("image_type", "")
-            if image_type:
-                embedding_parts.append(f"图片类型：{image_type}")
-            
-            # 添加上下文关系
-            context_relation = metadata.get("context_relation", "")
-            if context_relation:
-                embedding_parts.append(f"上下文关系：{context_relation}")
-            
-            # 添加关键信息
-            key_information = metadata.get("key_information", [])
-            if key_information:
-                embedding_parts.append(f"关键信息：{'; '.join(key_information)}")
-            
+
+            # 可选：追加可检索问法（仅用于向量化，不回写description）
+            searchable_queries = metadata.get("searchable_queries", [])
+            if isinstance(searchable_queries, list) and searchable_queries:
+                # 去重、去空，并限制条数，避免稀释语义
+                cleaned = []
+                seen = set()
+                for q in searchable_queries:
+                    if not isinstance(q, str):
+                        continue
+                    qn = q.strip()
+                    if not qn:
+                        continue
+                    if qn in seen:
+                        continue
+                    seen.add(qn)
+                    cleaned.append(qn)
+                    if len(cleaned) >= 5:
+                        break
+                if cleaned:
+                    embedding_parts.append(f"搜索意图：{'; '.join(cleaned)}")
+
+            # 以下字段暂不参与图片块向量化，保留注释以便回滚：
+            # image_type = metadata.get("image_type", "")
+            # if image_type:
+            #     embedding_parts.append(f"图片类型：{image_type}")
+            # context_relation = metadata.get("context_relation", "")
+            # if context_relation:
+            #     embedding_parts.append(f"上下文关系：{context_relation}")
+            # key_information = metadata.get("key_information", [])
+            # if key_information:
+            #     embedding_parts.append(f"关键信息：{'; '.join(key_information)}")
+
             # 如果没有任何AI分析结果，使用基本信息
             if not embedding_parts:
                 original_filename = metadata.get("original_filename", "")
@@ -108,9 +125,9 @@ class EmbeddingService:
                     embedding_parts.append(f"图片文件：{original_filename}")
                 else:
                     embedding_parts.append("图片内容")
-            
+
             embedding_text = "\n".join(embedding_parts)
-            
+
         elif chunk_type in ["table_full", "table_row"]:
             # 表格类型：只使用描述+关键词
             embedding_parts = []

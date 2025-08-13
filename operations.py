@@ -85,67 +85,51 @@ class WeaviateOperations:
                         data_type = DataType.TEXT
                         tokenization = Tokenization.GSE
                         module_config = {
-                            "invertedIndexConfig": {
-                                "stopwords": {
-                                    "preset": "none"
-                                }
-                            }
+                            "invertedIndexConfig": {"stopwords": {"preset": "none"}}
                         }
                         weaviate_property = Property(
                             name=prop_name,
                             data_type=data_type,
                             description=description,
                             tokenization=tokenization,
-                            module_config=module_config
+                            module_config=module_config,
                         )
 
                     elif raw_type == "int":
                         data_type = DataType.INT
                         weaviate_property = Property(
-                            name=prop_name,
-                            data_type=data_type,
-                            description=description
+                            name=prop_name, data_type=data_type, description=description
                         )
 
                     elif raw_type == "number" or raw_type == "float":
                         data_type = DataType.NUMBER
                         weaviate_property = Property(
-                            name=prop_name,
-                            data_type=data_type,
-                            description=description
+                            name=prop_name, data_type=data_type, description=description
                         )
 
                     elif raw_type == "bool":
                         data_type = DataType.BOOL
                         weaviate_property = Property(
-                            name=prop_name,
-                            data_type=data_type,
-                            description=description
+                            name=prop_name, data_type=data_type, description=description
                         )
 
                     elif raw_type == "date":
                         data_type = DataType.DATE
                         weaviate_property = Property(
-                            name=prop_name,
-                            data_type=data_type,
-                            description=description
+                            name=prop_name, data_type=data_type, description=description
                         )
 
                     elif raw_type == "uuid":
                         data_type = DataType.UUID
                         weaviate_property = Property(
-                            name=prop_name,
-                            data_type=data_type,
-                            description=description
+                            name=prop_name, data_type=data_type, description=description
                         )
 
                     else:
                         # 默认使用TEXT类型
                         data_type = DataType.TEXT
                         weaviate_property = Property(
-                            name=prop_name,
-                            data_type=data_type,
-                            description=description
+                            name=prop_name, data_type=data_type, description=description
                         )
 
                     weaviate_properties.append(weaviate_property)
@@ -258,7 +242,9 @@ class WeaviateOperations:
                     properties=properties,
                 )
 
-            logger.debug(f"向集合 '{collection_name}' 插入数据成功, ID: {result} - {properties}")
+            logger.debug(
+                f"向集合 '{collection_name}' 插入数据成功, ID: {result} - {properties}"
+            )
             return result
 
         except Exception as e:
@@ -323,10 +309,7 @@ class WeaviateOperations:
             return (0, len(items))
 
     def paginate_query(
-        self,
-        collection_name: str,
-        limit: int = 100,
-        after: Optional[str] = None
+        self, collection_name: str, limit: int = 100, after: Optional[str] = None
     ) -> Dict[str, Any]:
         """
         分页遍历查询集合中的对象，返回向量和所有属性
@@ -360,14 +343,11 @@ class WeaviateOperations:
                 limit=limit,
                 after=after,
                 include_vector=True,
-                return_properties=property_names  # 使用具体的属性名列表替代"*"
+                return_properties=property_names,  # 使用具体的属性名列表替代"*"
             )
 
             if not query_result or not query_result.objects:
-                return {
-                    "objects": [],
-                    "next_cursor": None
-                }
+                return {"objects": [], "next_cursor": None}
 
             # 整理结果
             objects = []
@@ -375,24 +355,22 @@ class WeaviateOperations:
                 result = {
                     "id": obj.uuid,
                     "vector": obj.vector,
-                    "properties": obj.properties
+                    "properties": obj.properties,
                 }
                 objects.append(result)
 
             # 获取下一页游标
-            next_cursor = query_result.objects[-1].uuid if len(query_result.objects) == limit else None
+            next_cursor = (
+                query_result.objects[-1].uuid
+                if len(query_result.objects) == limit
+                else None
+            )
 
-            return {
-                "objects": objects,
-                "next_cursor": next_cursor
-            }
+            return {"objects": objects, "next_cursor": next_cursor}
 
         except Exception as e:
             logger.error(f"分页查询集合 '{collection_name}' 失败: {e}")
-            return {
-                "objects": [],
-                "next_cursor": None
-            }
+            return {"objects": [], "next_cursor": None}
 
     def query_by_vector(
         self,
@@ -466,7 +444,7 @@ class WeaviateOperations:
         query_vector: List[float],
         limit: int = 10,
         properties: List[str] = None,
-        similarity_threshold: Optional[float] = None
+        similarity_threshold: Optional[float] = None,
     ) -> List[Dict[str, Any]]:
         """
         通过混合查询（文本和向量）获取最相关的对象
@@ -497,7 +475,7 @@ class WeaviateOperations:
                 query=query,
                 vector=query_vector,
                 limit=limit,
-                alpha=0.7,  # 混合比例，0.7表示文本和向量各占一定比例
+                alpha=0.4,  # 混合比例，0.7表示文本和向量各占一定比例
                 return_properties=properties,
                 return_metadata=MetadataQuery(score=True),
             )
@@ -513,14 +491,17 @@ class WeaviateOperations:
                     similarity_score = 0.0  # 如果没有相似度信息，默认设置为0.0
 
                 # 应用相似度阈值过滤
-                if similarity_threshold is not None and similarity_score < similarity_threshold:
+                if (
+                    similarity_threshold is not None
+                    and similarity_score < similarity_threshold
+                ):
                     continue
 
                 # 构建结果对象
                 result = {
                     "id": obj.uuid,
                     "score": similarity_score,
-                    "properties": obj.properties
+                    "properties": obj.properties,
                 }
                 results.append(result)
 
@@ -580,7 +561,9 @@ class WeaviateOperations:
             return []
 
     def delete_by_filter(
-        self, collection_name: str, filter_query: Union[Dict[str, Any], Optional[_Filters]]
+        self,
+        collection_name: str,
+        filter_query: Union[Dict[str, Any], Optional[_Filters]],
     ) -> int:
         """
         通过过滤条件删除对象
@@ -606,7 +589,7 @@ class WeaviateOperations:
             result = collection.data.delete_many(
                 # same where operator as in the GraphQL API
                 where=filter_query,
-                verbose=True
+                verbose=True,
             )
             logger.info(f"从集合 '{collection_name}' 删除对象成功, 删除: {result}")
             return result
@@ -641,11 +624,13 @@ class WeaviateOperations:
             # 提取属性信息
             properties = []
             for prop in config.properties:
-                properties.append({
-                    "name": prop.name,
-                    "dataType": prop.data_type,
-                    "description": prop.description
-                })
+                properties.append(
+                    {
+                        "name": prop.name,
+                        "dataType": prop.data_type,
+                        "description": prop.description,
+                    }
+                )
 
             # 构建集合信息
             info = {
@@ -654,7 +639,7 @@ class WeaviateOperations:
                 "vectorizer": config.vectorizer,
                 "vector_index_type": config.vector_index_config,
                 "properties": properties,
-                "count": collection.aggregate.over_all()
+                "count": collection.aggregate.over_all(),
             }
 
             return info
@@ -736,7 +721,11 @@ class WeaviateOperations:
             aggregate_result = collection.aggregate.over_all()
 
             # 提取计数结果
-            if aggregate_result and hasattr(aggregate_result, 'total_count') and aggregate_result.total_count is not None:
+            if (
+                aggregate_result
+                and hasattr(aggregate_result, "total_count")
+                and aggregate_result.total_count is not None
+            ):
                 count = aggregate_result.total_count
                 logger.debug(f"集合 '{collection_name}' 包含 {count} 个对象")
                 return count
