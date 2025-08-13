@@ -1219,6 +1219,11 @@ class DocFileParser:
             image_chunk["metadata"]["key_information"] = analysis_result.get(
                 "key_information", []
             )
+            # 仅用于向量化阶段：临时拼接，不落库
+            if isinstance(analysis_result.get("searchable_queries"), list):
+                image_chunk["metadata"]["searchable_queries"] = analysis_result.get(
+                    "searchable_queries", []
+                )
 
             logger.debug(f"图片分析完成: {image_path}")
 

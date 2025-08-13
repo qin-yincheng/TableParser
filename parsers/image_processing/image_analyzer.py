@@ -132,6 +132,7 @@ class ImageAnalyzer:
             "image_type",
             "context_relation",
             "key_information",
+            "searchable_queries",
         ]
 
         for field in required_fields:
@@ -139,6 +140,8 @@ class ImageAnalyzer:
                 if field == "keywords":
                     result[field] = []
                 elif field == "key_information":
+                    result[field] = []
+                elif field == "searchable_queries":
                     result[field] = []
                 else:
                     result[field] = ""
@@ -148,6 +151,23 @@ class ImageAnalyzer:
             result["keywords"] = []
         if not isinstance(result.get("key_information"), list):
             result["key_information"] = []
+        # 确保searchable_queries是列表类型并进行清洗
+        if not isinstance(result.get("searchable_queries"), list):
+            result["searchable_queries"] = []
+        else:
+            cleaned_queries = []
+            seen_queries = set()
+            for query in result["searchable_queries"]:
+                if not isinstance(query, str):
+                    continue
+                normalized = query.strip()
+                if not normalized:
+                    continue
+                if normalized in seen_queries:
+                    continue
+                seen_queries.add(normalized)
+                cleaned_queries.append(normalized)
+            result["searchable_queries"] = cleaned_queries
 
         # 确保其他字段是字符串类型
         for field in ["description", "image_type", "context_relation"]:
@@ -170,6 +190,7 @@ class ImageAnalyzer:
             "image_type": "unknown",
             "context_relation": "无法确定与文档的关系",
             "key_information": [],
+            "searchable_queries": [],
         }
 
 
